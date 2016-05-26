@@ -42,8 +42,8 @@ class Student(object):
 
             @mysql(sql)
             def get_routine_appraise(results=''):
-                return {'base': results[2],'encourage': results[3], 'develop': results[4], 'rank': results[5]}
-            routine= get_routine_appraise()
+                return {'base': results[2], 'encourage': results[3], 'develop': results[4], 'rank': results[5]}
+            routine = get_routine_appraise()
             self.routine_base = routine['base']
             self.routine_encou = routine['encourage']
             self.routine_develop = routine['develop']
@@ -117,8 +117,9 @@ class Student(object):
         
     def get_recom(self):
         your_recom = self.get_gpa()
-        if type(your_recom) == type({}):
-            sql="select MAX(rank) from creditcur where Class = %d"% self.Class
+        if isinstance(your_recom, dict):
+            sql = "select MAX(rank) from creditcur where Class = %d" % self.Class
+
             @mysql(sql)
             def get2(results=''):
                 if results:
@@ -129,15 +130,16 @@ class Student(object):
             your_recom['max_rank'] = max_rank['max_rank']
             self.stu_amount = your_recom['max_rank']
             if self.stu_amount:
-                percent=self.stu_amount/5
-                sql="select *from creditcur where Class = %d and rank= %d"% (self.Class,percent)
+                percent = self.stu_amount/5
+                sql = "select *from creditcur where Class = %d and rank= %d" % (self.Class, percent)
+
                 @mysql(sql)
                 def get(results=''):
-                   if results:
-                       return {'20gpa':results[4]}
-                   else:
-                       return {'20gpa':''}
-                your_recom['twenty_per']=get()['20gpa']
+                    if results:
+                        return {'20gpa': results[4]}
+                    else:
+                        return {'20gpa': ''}
+                your_recom['twenty_per'] = get()['20gpa']
         return your_recom
 
     def get_tutor(self):
