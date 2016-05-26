@@ -4,7 +4,7 @@
 import json
 import urllib2
 import config
-from lib.database import mysql
+from nova.get_user_info import get_stuid
 
 
 def get_openid(code):
@@ -36,4 +36,5 @@ def openid_handler(openid, post_url):
     :param post_url: the url of the article
     :return: return the result of the mysql's update
     """
-    pass
+    stuid = get_stuid(openid)
+
