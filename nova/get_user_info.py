@@ -152,7 +152,7 @@ class Student(object):
             tutor = get()
             self.tutor = tutor['tutor']
             self.tutor_mail = tutor['tutor_mail']
-            tutor_info = {'status':1}
+            tutor_info = {'status': 1}
             tutor_info['same_tutor'] = []
             if self.tutor == '#N/A':
                 tutor_info['status'] = 0
