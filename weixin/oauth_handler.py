@@ -3,6 +3,7 @@
 # github: https://github.com/imndszy
 import json
 import urllib2
+import time
 from ..config import APP_ID,SECRET
 from ..nova.get_user_info import get_stuid
 from ..lib.database import mysql
@@ -29,7 +30,6 @@ def get_openid(code):
     result = urllib2.urlopen(url).read()
     return json.loads(result)['openid']
 
-
 def openid_handler(openid, post_url):
     """
     update the mysql database using openid and post_url
@@ -38,10 +38,33 @@ def openid_handler(openid, post_url):
     :return: return the result of the mysql's update
     """
     stuid = get_stuid(openid)
+    read = int(time.time())
     sql = "select nID from notecontent where url = '"+post_url+"'"
 
     @mysql(sql)
-    def get_url(results='')
+    def get_url(results=''):
+        if results:
+            nid = results[0]
+        else:
+            #log here
+            pass
+        return nid
+    nid = get_url()
+
+    sql2 = "select * from noteresponse where nID = %d" % nid
+
+    @mysql(sql2)
+    def get_read_info(results=''):
+        if results:
+            earliest = results[1]
+            latest = results[2]
+            read_id = results[3].split(",")[:-1]  #"a list"
+            read_time = results[4].split(",")[:-1]   #"a list"
+            read_pop = results[5]
+        else:
+            #log here
+            pass
+
 
 
 
