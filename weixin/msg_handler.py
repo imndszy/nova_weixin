@@ -2,6 +2,7 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import time
+from msg_format import *
 
 
 class MsgHandler(object):

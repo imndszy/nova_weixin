@@ -3,8 +3,8 @@
 # github: https://github.com/imndszy
 import json
 import urllib2
-import config
-from nova.get_user_info import get_stuid
+from ..config import APP_ID,SECRET
+from ..nova.get_user_info import get_stuid
 
 
 def get_openid(code):
@@ -24,7 +24,7 @@ def get_openid(code):
                有错误时返回的json:{"errcode":40029,"errmsg":"invalid code"}
     """
     url = "https://api.weixin.qq.com/sns/oauth2/access_token?" \
-          "appid=%s&secret=%s&code=%s&grant_type=authorization_code" % (config.APP_ID, config.SECRET, code)
+          "appid=%s&secret=%s&code=%s&grant_type=authorization_code" % (APP_ID, SECRET, code)
     result = urllib2.urlopen(url).read()
     return json.loads(result)['openid']
 

@@ -2,7 +2,7 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import time
-import config
+from ..config import APP_ID,SECRET
 import urllib2
 import json
 
@@ -17,8 +17,8 @@ def get_token():
         past_time = 1400000000
     now_time = int(time.time())
     if now_time-past_time > 1000:
-        app_id = config.APP_ID
-        app_secret = config.SECRET
+        app_id = APP_ID
+        app_secret = SECRET
         url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s' % \
               (app_id, app_secret)
         result = urllib2.urlopen(url).read()

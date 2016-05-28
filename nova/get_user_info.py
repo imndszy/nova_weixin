@@ -3,7 +3,7 @@
 # github: https://github.com/imndszy
 import MySQLdb
 import functools
-from lib.database import mysql
+from ..lib.database import mysql
 
 
 class Student(object):

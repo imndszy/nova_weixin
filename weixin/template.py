@@ -4,7 +4,7 @@
 import json
 import time
 import urllib2
-import config
+from ..config import TEMPLATE_ID
 import get_acc_token
 
 
@@ -41,7 +41,7 @@ import get_acc_token
 #     request = urllib2.urlopen(url, json.dumps(data, ensure_ascii=False))
 #     return json.loads(request.read())
 
-def send_common_template_msg(mes_url, template_id=config.TEMPLATE_ID, title='这里是标题', touser='o19fSvhseI04YpNJkVYVIBTEjESs'):
+def send_common_template_msg(mes_url, template_id=TEMPLATE_ID, title='这里是标题', touser='o19fSvhseI04YpNJkVYVIBTEjESs'):
     acc_token = get_acc_token.get_token()
     ISOTIMEFORMAT='%Y-%m-%d %X'
     now = time.strftime(ISOTIMEFORMAT, time.localtime())

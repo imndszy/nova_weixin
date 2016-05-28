@@ -3,8 +3,7 @@
 # github: https://github.com/imndszy
 import json
 import urllib2
-
-from weixin import get_acc_token
+import get_acc_token
 
 
 def send_customer_service_message_txt(touser='o19fSvhseI04YpNJkVYVIBTEjESs', content='你好！'):

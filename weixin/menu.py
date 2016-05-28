@@ -3,7 +3,7 @@
 # github: https://github.com/imndszy
 import json
 import urllib2
-import config
+from ..config import MENU
 import get_acc_token
 
 
@@ -11,7 +11,7 @@ def create_menu():
     acc_token = get_acc_token.get_token()
     if acc_token:
         url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s" % acc_token
-        data = config.MENU
+        data = MENU
         request = urllib2.urlopen(url, json.dumps(data, ensure_ascii=False))
         return json.loads(request.read())
     else:
