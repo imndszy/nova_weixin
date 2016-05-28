@@ -37,7 +37,7 @@ class Student(object):
         self.tutor_mail = 'imjtrszy@163.com'
     
     def get_routine_appraise(self):
-        if self.stuid != 1:
+        if self.stuid != -1:
             sql = "select *from routine_appraise_13 where StuID = %d" % self.stuid
 
             @mysql(sql)
@@ -55,7 +55,7 @@ class Student(object):
             return "您尚未绑定学号！"
     
     def get_gpa(self):
-        if self.stuid != 1:
+        if self.stuid != -1:
             sql = "select *from creditcur where StuID = %d" % self.stuid
 
             @mysql(sql)
@@ -143,7 +143,7 @@ class Student(object):
         return your_recom
 
     def get_tutor(self):
-        if self.stuid != 1:
+        if self.stuid != -1:
             sql = "select *from tutor where StuID = %d" % self.stuid
 
             @mysql(sql)
@@ -182,5 +182,5 @@ def get_stuid(openid):
             return stuid
         else:
             # stuid = "NOT_IN_LIST"
-            return 1
-        return get()
+            return -1
+    return get()

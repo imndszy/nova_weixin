@@ -5,6 +5,7 @@ import json
 import urllib2
 from ..config import APP_ID,SECRET
 from ..nova.get_user_info import get_stuid
+from ..lib.database import mysql
 
 
 def get_openid(code):
@@ -37,4 +38,10 @@ def openid_handler(openid, post_url):
     :return: return the result of the mysql's update
     """
     stuid = get_stuid(openid)
+    sql = "select nID from notecontent where url = '"+post_url+"'"
+
+    @mysql(sql)
+    def get_url(results='')
+
+
 

@@ -29,7 +29,7 @@ def mysql(sql):
                 conn.close()
                 return result
             except MySQLdb.Error,e:
-                return "Mysql Error %d:%s" % (e.args[0],e.args[1])
+                return -1 #"Mysql Error %d:%s" % (e.args[0],e.args[1])
         return wrapper
     return decorator
 
