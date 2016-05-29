@@ -75,8 +75,14 @@ def openid_handler(openid, post_url):
 
     read_time.append(str(stuid)+':'+str(read))  #a list
     read_time = ','.join(read_time)+','  #a string
-    sql_all = "update noteresponse set earlistRead = %d,latestRead = %d,readList='"\
-              +read_id+"',"+"readTime = '"+read_time+"',"+"readPop =%d where nID = %d" % (earliest,latest,read_pop,nid)
+    sql_all = "update noteresponse set readList='"+read_id+"',"+"readTime = '"+read_time+"',"\
+              +"earlistRead = %d,latestRead = %d,readPop =%d where nID = %d;" % (earliest,latest,read_pop,nid)
+
+    @mysql(sql_all)
+    def update(results=''):
+        #log here
+        return results
+
 
 
 
