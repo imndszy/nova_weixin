@@ -2,7 +2,12 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import config
-from flask import Flask, request, make_response, redirect
+from flask import Flask, request, make_response, redirect,session,render_template,url_for
+from flask.ext.bootstrap import Bootstrap
+from flask.ext.moment import Moment
+from flask.ext.wtf import Form
+from wtforms import StringField, SubmitField
+from wtforms.validators import Required
 import hashlib
 import xml.etree.ElementTree as ET
 
@@ -43,6 +48,7 @@ def oauth(message_url):
         openid = get_openid(code)
         from weixin.oauth_handler import openid_handler
         openid_handler(openid, post_url)
+        return redirect(post_url)
 
 
 def verification():
@@ -72,3 +78,6 @@ def parse(rec):
     for child in root:
         msg[child.tag] = child.text
     return msg
+
+if __name__ == "__main__":
+    app.run()

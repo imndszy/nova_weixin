@@ -1,4 +1,6 @@
-flask
-mysql-python
-requests
-flask-wtf
+Flask-0.10.1
+MySQL_python-1.2.5
+requests-2.10.0
+Flask_WTF-0.12
+flask-moment-0.5.1
+flask-bootstrap-3.3.6.0
