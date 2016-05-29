@@ -1,0 +1,4 @@
+flask
+mysql-python
+requests
+flask-wtf
