@@ -4,7 +4,7 @@
 import json
 import time
 import urllib2
-from ..config import TEMPLATE_ID
+from nova_weixin.config import TEMPLATE_ID
 import get_acc_token
 
 

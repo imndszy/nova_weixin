@@ -3,7 +3,7 @@
 # github: https://github.com/imndszy
 import MySQLdb
 import functools
-from ..config import DB_HOSTNAME,DB_NAME,DB_PASSWORD,DB_USERNAME
+from nova_weixin.config import DB_HOSTNAME,DB_NAME,DB_PASSWORD,DB_USERNAME
 
 
 def mysql(sql):

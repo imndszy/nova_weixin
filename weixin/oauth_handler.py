@@ -4,9 +4,9 @@
 import json
 import urllib2
 import time
-from ..config import APP_ID,SECRET
-from ..nova.get_user_info import get_stuid
-from ..lib.database import mysql
+from nova_weixin.config import APP_ID,SECRET
+from nova_weixin.nova.get_user_info import get_stuid
+from nova_weixin.lib.database import mysql
 
 
 def get_openid(code):

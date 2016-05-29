@@ -3,7 +3,7 @@
 # github: https://github.com/imndszy
 import json
 import urllib2
-from ..config import MENU
+from nova_weixin.config import MENU
 import get_acc_token
 
 
@@ -19,4 +19,5 @@ def create_menu():
 
 
 if __name__ == "__main__":
-    print create_menu()
+    #create_menu()
+    print "menu test"

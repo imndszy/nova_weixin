@@ -2,7 +2,7 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import time
-from ..config import APP_ID,SECRET
+from nova_weixin.config import APP_ID,SECRET
 import urllib2
 import json
 
@@ -34,7 +34,8 @@ def get_token():
     return acc_token
 
 if __name__ == "__main__":
-    get_token()
+    #get_token()
+    print "test"
 
 
 
