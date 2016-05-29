@@ -25,6 +25,7 @@ def mysql(sql):
                     results = list(info)
                 kwargs['results'] = results
                 result = func(*args, **kwargs)
+                conn.commit()
                 cursor.close()
                 conn.close()
                 return result

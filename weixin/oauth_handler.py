@@ -56,14 +56,29 @@ def openid_handler(openid, post_url):
     @mysql(sql2)
     def get_read_info(results=''):
         if results:
-            earliest = results[1]
-            latest = results[2]
-            read_id = results[3].split(",")[:-1]  #"a list"
-            read_time = results[4].split(",")[:-1]   #"a list"
-            read_pop = results[5]
+            return results
         else:
             #log here
             pass
+    results = get_read_info()
+    earliest = results[1]
+    read_id = results[3].split(",")[:-1]  # "a list"
+    read_time = results[4].split(",")[:-1]  # "a list"
+    read_pop = results[5]
+    if earliest == 0:
+        earliest = read
+    latest = read
+    if stuid not in read_id:
+        read_id.append(str(stuid))
+        read_id = ','.join(read_id)+',' #a string
+        read_pop = read_pop+1
+
+    read_time.append(str(stuid)+':'+str(read))  #a list
+    read_time = ','.join(read_time)+','  #a string
+    sql_all = "update noteresponse set earlistRead = %d,latestRead = %d,readList='"\
+              +read_id+"',"+"readTime = '"+read_time+"',"+"readPop =%d where nID = %d" % (earliest,latest,read_pop,nid)
+
+
 
 
 
