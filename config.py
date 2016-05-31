@@ -75,6 +75,10 @@ MENU = {
     ]
 }
 
+root = ''
+passwd = ''
+CSRF_ENABLED = True
+SECRET_KEY = 'you-will-never-guess'
 
 DB_HOSTNAME = 'localhost'
 DB_PORT = '3306'

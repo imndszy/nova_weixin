@@ -4,16 +4,14 @@
 import config
 from flask import Flask, request, make_response, redirect,session,render_template,url_for
 from flask.ext.bootstrap import Bootstrap
-from flask.ext.moment import Moment
-from flask.ext.wtf import Form
-from wtforms import StringField, SubmitField
-from wtforms.validators import Required
 import hashlib
 import xml.etree.ElementTree as ET
 
+bootstrap = Bootstrap()
 app = Flask(__name__)
 app.debug = True
 
+app.config.from_object('config')
 
 @app.route('/', methods=['GET'])
 def wechat_auth():
@@ -78,6 +76,9 @@ def parse(rec):
     for child in root:
         msg[child.tag] = child.text
     return msg
+
+from notice import auth as auth_blueprint
+app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
 if __name__ == "__main__":
     app.run()
