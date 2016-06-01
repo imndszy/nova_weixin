@@ -1,8 +1,8 @@
 # -*- coding:utf8 -*- 
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-import MySQLdb
 import functools
+import MySQLdb
 from nova_weixin.config import DB_HOSTNAME,DB_NAME,DB_PASSWORD,DB_USERNAME
 
 
