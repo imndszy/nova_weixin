@@ -72,14 +72,3 @@ MENU = {
 
     ]
 }
-
-root = 'aaa'
-root_id = 111
-passwd = 'bbb'
-CSRF_ENABLED = True
-
-DB_HOSTNAME = 'localhost'
-DB_PORT = '3306'
-DB_USERNAME = 'root'
-DB_PASSWORD = 'root'
-DB_NAME = 'weixin'

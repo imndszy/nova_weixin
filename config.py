@@ -81,11 +81,11 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 # passwd = 'bbb'
 # CSRF_ENABLED = True
 #
-# DB_HOSTNAME = 'localhost'
-# DB_PORT = '3306'
-# DB_USERNAME = 'root'
-# DB_PASSWORD = 'root'
-# DB_NAME = 'weixin'
+DB_HOSTNAME = 'localhost'
+DB_PORT = '3306'
+DB_USERNAME = 'root'
+DB_PASSWORD = 'root'
+DB_NAME = 'weixin'
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'xxxxx'
