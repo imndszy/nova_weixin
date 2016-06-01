@@ -7,6 +7,6 @@ from wtforms.validators import DataRequired
 
 
 class LoginForm(Form):
-    username = StringField('用户名',validators=[DataRequired()])
-    password = PasswordField('密码', validators=[DataRequired()])
-    submit = SubmitField('登陆')
+    username = StringField('username',validators=[DataRequired()])
+    password = PasswordField('password', validators=[DataRequired()])
+    submit = SubmitField('login')

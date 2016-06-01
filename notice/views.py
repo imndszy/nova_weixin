@@ -6,7 +6,7 @@ from nova_weixin.config import root,passwd
 from . import auth
 from .forms import LoginForm
 
-@auth.route('/login', methods=['GET', 'POST'])
+@auth.route('/login', methods = ['GET', 'POST'])
 def login():
     user = None
     form = LoginForm()
@@ -17,3 +17,7 @@ def login():
             return redirect(request.args.get('next') or url_for('main.index'))
         flash("Invalid username or password!")
     return render_template('auth/login.html',form=form)
+
+@auth.route('/article',methods = ['GET','POST'])
+def article():
+    pass

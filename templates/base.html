@@ -20,12 +20,7 @@
             </button>
             <a class="navbar-brand" href="{{ url_for('main.index') }}">Nova</a>
         </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="{{ url_for('main.index') }}">Nova</a></li>
-            </ul>
 
-        </div>
     </div>
 </div>
 {% endblock %}
@@ -45,5 +40,4 @@
 
 {% block scripts %}
 {{ super() }}
-{{ moment.include_moment() }}
 {% endblock %}

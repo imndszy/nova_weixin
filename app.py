@@ -12,13 +12,14 @@ app = Flask(__name__)
 app.debug = True
 
 app.config.from_object('config')
+bootstrap.init_app(app)
 
 @app.route('/', methods=['GET'])
 def wechat_auth():
     echostr = request.args.get('echostr', '')
     if verification():
         return make_response(echostr)
-    return "这里是szy的公众号测试接口！！ Here is szy's testing port!!    \n联系我：imjtrszy@163.com"
+    return render_template("index.html")
 
 
 @app.route('/', methods=['POST'])
@@ -79,6 +80,9 @@ def parse(rec):
 
 from notice import auth as auth_blueprint
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
+
+from main import main as main_blueprint
+app.register_blueprint(main_blueprint,url_prefix='/main')
 
 if __name__ == "__main__":
     app.run()
