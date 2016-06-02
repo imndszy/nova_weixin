@@ -31,7 +31,7 @@ def create_app(config_name):
     app.register_blueprint(main_blueprint)
     
     from .weixin import weixin as weixin_blueprint
-    app.register_blueprint(weixin_blueprint,url_prefix='/weixin')
+    app.register_blueprint(weixin_blueprint, url_prefix='/weixin')
 
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
