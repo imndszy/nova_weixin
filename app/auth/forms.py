@@ -1,25 +1,9 @@
 from flask.ext.wtf import Form
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
+from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo,URL
 from wtforms import ValidationError
 from ..models import User
-from lib.database import mysql
 
-def get_class_info():
-    sql = "select * from member"
-    @mysql(sql)
-    def get_class(results=''):
-        return results
-    class_list = get_class()
-    class_dict = dict()
-    for i in class_list:
-        class_dict[i[1]] = i[2]
-    return class_dict
-
-def get_students():
-    class_dict = get_class_info()
-    stus_dict = dict()
-    pass
 
 class LoginForm(Form):
     email = StringField('Email', validators=[DataRequired(), Length(1, 64),
@@ -29,12 +13,10 @@ class LoginForm(Form):
     submit = SubmitField('Log In')
 
 
-class EventForm(Form):
-    sql = "select * from member"
-    @mysql(sql)
-    def get_class(self):
-    pass
-
+class ArticleForm(Form):
+    url = StringField('article url',validators = [DataRequired(),URL()])
+    image_url = StringField('image url', validators=[Required(), URL()])
+    submit = SubmitField('Submit')
 
 class RegistrationForm(Form):
     email = StringField('Email', validators=[DataRequired(), Length(1, 64),
