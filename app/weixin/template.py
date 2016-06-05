@@ -6,6 +6,9 @@ import time
 import urllib2
 import get_acc_token
 from weixinconfig import TEMPLATE_ID
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 
 # 以下是用于南京大学交换生网站的预留接口

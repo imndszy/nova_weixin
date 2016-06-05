@@ -5,10 +5,12 @@ import time
 from weixinconfig import APP_ID,SECRET
 import urllib2
 import json
+import os
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 def get_token():
-    with open('acc_token') as f:
+    with open(basedir+'/acc_token') as f:
         data = f.read()
     if data:
         past_time = int(data[0:10])
@@ -29,7 +31,7 @@ def get_token():
         else:
             acc_token = json.loads(result).get('access_token')
             string = str(int(time.time()))+acc_token
-            with open('acc_token', 'w') as f:
+            with open(basedir+'/acc_token', 'w') as f:
                 f.write(string)
     return acc_token
 

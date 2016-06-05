@@ -5,6 +5,8 @@ APP_ID = 'wx925d02f38'
 SECRET = 'aed361bef88'
 TOKEN = ''
 TEMPLATE_ID = ''
+ACC_TOKEN = ''
+LAST_QUERY_TIME = ''
 MENU = {
     "button": [
         {

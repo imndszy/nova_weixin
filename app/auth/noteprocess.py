@@ -4,6 +4,7 @@
 from lib.database import mysql
 from app.weixin.template import send_common_template_msg
 from nova.get_user_info import get_openid
+from urllib import quote
 
 
 def note_index(article_url,image_url,stu_list,nid):
@@ -37,9 +38,13 @@ def note_response(nid):
 
 
 def send(_title,article_url,stu_list):
+    url = quote(article_url)
+    post_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?' \
+                 'appid=wx92a9c338a5d02f38&redirect_uri=http://121.42.216.141/code/' \
+             '%s&response_type=code&scope=snsapi_base&state=123#wechat_redirect' % url
     for i in stu_list:
         openid = get_openid(i)
-        result = send_common_template_msg(article_url, title = _title, touser = openid)
-        if result.get['errcode'] != 0:
+        result = send_common_template_msg(post_url, title = _title, touser = openid)
+        if result.get('errcode') != 0:
             pass
     return 0
