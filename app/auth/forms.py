@@ -1,3 +1,6 @@
+# -*- coding:utf8 -*-
+# Author: shizhenyu96@gamil.com
+# github: https://github.com/imndszy
 from flask.ext.wtf import Form
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo,URL

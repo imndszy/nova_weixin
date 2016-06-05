@@ -11,7 +11,8 @@ def mysql(sql):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             try:
-                conn = MySQLdb.connect(host=DB_HOSTNAME, user=DB_USERNAME, passwd=DB_PASSWORD, db=DB_NAME)
+                conn = MySQLdb.connect(host=DB_HOSTNAME, user=DB_USERNAME, passwd=DB_PASSWORD,
+                                       db=DB_NAME, charset='utf8')
                 cursor = conn.cursor()
                 count = cursor.execute(sql)
                 if count <= 1:

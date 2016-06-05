@@ -8,7 +8,7 @@ ROOT_USER = 'root'
 DB_HOSTNAME = 'localhost'
 DB_PORT = '3306'
 DB_USERNAME = 'root'
-DB_PASSWORD = 'root'
+DB_PASSWORD = 'zxcv'
 DB_NAME = 'weixin'
 
 

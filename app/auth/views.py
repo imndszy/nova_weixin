@@ -1,3 +1,6 @@
+# -*- coding:utf8 -*-
+# Author: shizhenyu96@gamil.com
+# github: https://github.com/imndszy
 from flask import render_template, redirect, request, url_for, flash, session
 from flask.ext.login import login_user, logout_user, login_required, \
     current_user
@@ -78,7 +81,7 @@ def choose_stu():
         return render_template('auth/stu.html')
     return redirect(url_for('auth.article'))
 
-@auth.route('/finish',method=['GET','POST'])
+@auth.route('/finish',methods=['GET','POST'])
 @login_required
 def finish():
     if session['finish'] == 'finished':
@@ -106,5 +109,5 @@ def register():
             return redirect(url_for('auth.login'))
         else:
             flash('Must be Novaer!')
-            return redirect(url_for('main.index'))
+            return redirect(url_for('main.wrong'))
     return render_template('auth/register.html', form=form)

@@ -6,17 +6,6 @@ import os
 
 
 def classes():
-    """
-    :return: example return :
-    {u'111111': u'\u5c71\u897f', u'131278': u'13\u5de5\u5de5',
-    u'131279': u'13\u91d1\u5de5', u'151271': u'15\u81ea\u52a8',
-    u'121271': u'12\u4fe1\u5de5', u'121270': u'12\u81ea\u52a8',
-    u'131270': u'13\u81ea\u52a8', u'131271': u'13\u4fe1\u5de5',
-    u'151278': u'15\u5de5\u5de5', u'121279': u'12\u91d1\u5de5',
-    u'121278': u'12\u5de5\u5de5', u'141271': u'14\u4fe1\u5de5',
-    u'141270': u'14\u81ea\u52a8', u'141279': u'14\u91d1\u5de5',
-    u'141278': u'14\u5de5\u5de5'}
-    """
     sql = "select *from member"
 
     @mysql(sql)
@@ -30,13 +19,7 @@ def classes():
 
     return class_dict
 
-
 def stu(classes):
-    """
-    get students in separate class
-    :param classes: list of class_id
-    :return: students dict whose key is class_id
-    """
     if len(classes)<1:
         return -1
     stu_dict = dict()
@@ -61,19 +44,18 @@ def create_class_html(class_dict):
 <div class="page-header">
     <h1>choose classes first</h1>
 </div>
-<div>
-        <h3>全选后再选中某个班级代表排除这个班级</h3>
-</div>
 <form method="post">
-<input type = "checkbox" name = "checked" value ="choose_all"> 全选
+<input type = "checkbox" name = "checked" value ="choose_all"> 全选 <br/>
 """
+    print class_dict.items()
     for key,value in class_dict.items():
-        temp = u'<input type="checkbox" name="checked" value="%s" > %s <br/>\n' % (key,value)
+        temp = u'<input type="checkbox" name="checked" value="%s" > %s \n' % (key,value)
         content = content+temp+'<br/>'
     content = content+u"""<input type="submit">
 </form>
 {% endblock %}"""
     content = content.encode('utf-8')
+    print content
     with open(pwd,'w') as class_file:
         class_file.write(content)
 
@@ -95,7 +77,7 @@ def create_stu_html(stu_dict,class_dict):
     <input type = "checkbox" name = "checked" value ="choose_stu_all"> 全选 <br/>
     """
     for key,value in stu_dict.items():
-        temp = u'<p>%s</p><br/>\n' % class_dict[key]
+        temp = u'<p>%s</p>\n' % class_dict[key]
         for j in value:
             temp = temp+u'<input type="checkbox" name="checked" value="%s" > %s \n' % (str(j[0]),str(j[0])+' '+j[1])
         content = content+temp+'<br/>'
@@ -105,3 +87,9 @@ def create_stu_html(stu_dict,class_dict):
     content = content.encode('utf-8')
     with open(pwd, 'w') as class_file:
         class_file.write(content)
+
+
+if __name__ == '__main__':
+    class_dict = classes()
+    stu_dict = stu(class_dict.keys())
+    create_stu_html(stu_dict,class_dict)
