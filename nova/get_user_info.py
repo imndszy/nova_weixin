@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-from nova_weixin.lib.database import mysql
+from lib.database import mysql
 
 
 class Student(object):
@@ -181,5 +181,18 @@ def get_stuid(openid):
             return stuid
         else:
             # stuid = "NOT_IN_LIST"
+            return -1
+    return get()
+
+
+def get_openid(stuid):
+    sql = "select openid from biding where stuid = '"+stuid+"'"
+
+    @mysql(sql)
+    def get(results=''):
+        if results:
+            openid = results[0]
+            return openid
+        else:
             return -1
     return get()

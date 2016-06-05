@@ -6,7 +6,9 @@ from .. import db
 from ..models import User
 from .forms import LoginForm, RegistrationForm,ArticleForm
 from get_users import classes,stu,create_class_html,create_stu_html
-
+from noteprocess import note_index,note_content,note_response,send
+from config import ROOT_USER
+import time
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -27,8 +29,10 @@ def article():
     if form.validate_on_submit():
         article_url = form.url.data
         image_url = form.image_url.data
+        title = form.title.data
         session['article_url'] = article_url
         session['image_url'] = image_url
+        session['title'] = title
         class_dict = classes()
         create_class_html(class_dict)
         return redirect(request.args.get('next') or url_for('auth.choose_class'))
@@ -51,19 +55,35 @@ def choose_class():
 @auth.route('/choose_stu',methods=['GET', 'POST'])
 @login_required
 def choose_stu():
-    article_url = session['article_url']
-    image_url = session['image_url']
-    if request.method == 'POST':
-        stu_list = request.form.getlist('checked')
-        class_list = session['classes']
-        chosen_class_stu= []
-        for m in stu(class_list).values():
-            for n in m:
-                chosen_class_stu.append(str(n[0]))
-        if 'choose_stu_all' in stu_list:
-            stu_list = [i for i in chosen_class_stu if i not in stu_list]
+    if session['classes']:
+        article_url = session['article_url']
+        image_url = session['image_url']
+        title = session['title']
+        if request.method == 'POST':
+            stu_list = request.form.getlist('checked')
+            class_list = session['classes']
+            chosen_class_stu= []
+            for m in stu(class_list).values():
+                for n in m:
+                    chosen_class_stu.append(str(n[0]))
+            if 'choose_stu_all' in stu_list:
+                stu_list = [i for i in chosen_class_stu if i not in stu_list]
+            nid = int(time.time())
+            note_index(article_url,image_url,stu_list,nid)
+            note_content(article_url,image_url,title,nid)
+            note_response(nid)
+            send(title,article_url,stu_list)
+            session['finish'] = 'finished'
+            return redirect(url_for('auth.finish'))
+        return render_template('auth/stu.html')
+    return redirect(url_for('auth.article'))
 
-    return render_template('auth/stu.html')
+@auth.route('/finish',method=['GET','POST'])
+@login_required
+def finish():
+    if session['finish'] == 'finished':
+        return render_template('auth/finish.html')
+    return redirect(url_for('auth.article'))
 
 @auth.route('/logout')
 @login_required
@@ -77,10 +97,14 @@ def logout():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(email=form.email.data,
-                    username=form.username.data,
-                    password=form.password.data)
-        db.session.add(user)
-        flash('You can now login.')
-        return redirect(url_for('auth.login'))
+        if form.username.data == ROOT_USER:
+            user = User(email=form.email.data,
+                        username=form.username.data,
+                        password=form.password.data)
+            db.session.add(user)
+            flash('You can now login.')
+            return redirect(url_for('auth.login'))
+        else:
+            flash('Must be Novaer!')
+            return redirect(url_for('main.index'))
     return render_template('auth/register.html', form=form)

@@ -3,7 +3,7 @@
 # github: https://github.com/imndszy
 import functools
 import MySQLdb
-from ..config import DB_HOSTNAME, DB_NAME, DB_PASSWORD, DB_USERNAME
+from config import DB_HOSTNAME, DB_NAME, DB_PASSWORD, DB_USERNAME
 
 
 def mysql(sql):

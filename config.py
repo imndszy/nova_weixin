@@ -4,6 +4,7 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+ROOT_USER = 'root'
 DB_HOSTNAME = 'localhost'
 DB_PORT = '3306'
 DB_USERNAME = 'root'

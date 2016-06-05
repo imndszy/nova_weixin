@@ -21,7 +21,7 @@ def wechat_msg():
     rec = request.data
     msg = parse(rec)
     from msg_handler import MsgHandler
-    MsgHandler(msg)
+    message = MsgHandler(msg)
 
 
 @weixin.route('/index', methods=['GET', 'POST'])

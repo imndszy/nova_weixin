@@ -3,6 +3,18 @@
 # github: https://github.com/imndszy
 import time
 from msg_format import *
+from nova_weixin.lib.database import mysql
+from nova_weixin.nova.get_user_info import get_stuid
+
+
+def save_into_database(content,openid):
+    stuid = get_stuid(openid)
+    sql = "insert into queryrecord values('%s',%s,'%s','')" % (content,int(time.time()),stuid)
+
+    @mysql(sql)
+    def save(results=''):
+        return results
+    return 0
 
 
 class MsgHandler(object):
@@ -14,9 +26,11 @@ class MsgHandler(object):
         self.msgid = msg.get('MsgId', 'not_event')
         if self.type == 'text':
             self.content = msg.get('Content')
+            save_into_database(self.content,self.from_user)
         elif self.type == 'image':
             self.picurl = msg.get('PicUrl')
             self.media_id = msg.get('MediaId')
+            save_into_database(self.picurl, self.from_user)
         elif self.type == 'voice':
             self.voice_format = msg.get('Format')
             self.media_id = msg.get('MediaId')

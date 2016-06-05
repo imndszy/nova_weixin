@@ -5,7 +5,7 @@ import json
 import time
 import urllib2
 import get_acc_token
-from nova_weixin.config import TEMPLATE_ID
+from weixinconfig import TEMPLATE_ID
 
 
 # 以下是用于南京大学交换生网站的预留接口
@@ -41,7 +41,7 @@ from nova_weixin.config import TEMPLATE_ID
 #     request = urllib2.urlopen(url, json.dumps(data, ensure_ascii=False))
 #     return json.loads(request.read())
 
-def send_common_template_msg(mes_url, template_id=TEMPLATE_ID, title='这里是标题', touser='o19fSvhseI04YpNJkVYVIBTEjESs'):
+def send_common_template_msg(mes_url, title='这里是标题', touser='o19fSvhseI04YpNJkVYVIBTEjESs',template_id=TEMPLATE_ID):
     acc_token = get_acc_token.get_token()
     ISOTIMEFORMAT='%Y-%m-%d %X'
     now = time.strftime(ISOTIMEFORMAT, time.localtime())

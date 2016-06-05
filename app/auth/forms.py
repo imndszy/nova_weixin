@@ -15,7 +15,8 @@ class LoginForm(Form):
 
 class ArticleForm(Form):
     url = StringField('article url',validators = [DataRequired(),URL()])
-    image_url = StringField('image url', validators=[Required(), URL()])
+    image_url = StringField('image url', validators=[URL()])
+    title = StringField('title',validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class RegistrationForm(Form):

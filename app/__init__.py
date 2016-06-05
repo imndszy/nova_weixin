@@ -4,7 +4,7 @@ from flask.ext.mail import Mail
 from flask.ext.moment import Moment
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
-from nova_weixin.config import config
+from config import config
 
 bootstrap = Bootstrap()
 mail = Mail()
@@ -29,11 +29,11 @@ def create_app(config_name):
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
-    
-    from .weixin import weixin as weixin_blueprint
-    app.register_blueprint(weixin_blueprint, url_prefix='/weixin')
 
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
+
+    from .weixin import weixin as weixin_blueprint
+    app.register_blueprint(weixin_blueprint, url_prefix='/weixin')
 
     return app
