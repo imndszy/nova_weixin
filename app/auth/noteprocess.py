@@ -1,10 +1,10 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
+from urllib import quote
 from lib.database import mysql
 from app.weixin.template import send_common_template_msg
 from nova.get_user_info import get_openid
-from urllib import quote
 
 
 def note_index(article_url,image_url,stu_list,nid):
@@ -44,7 +44,9 @@ def send(_title,article_url,stu_list):
              '%s&response_type=code&scope=snsapi_base&state=123#wechat_redirect' % url
     for i in stu_list:
         openid = get_openid(i)
+        openid = openid.encode('utf8')
         result = send_common_template_msg(post_url, title = _title, touser = openid)
         if result.get('errcode') != 0:
-            pass
+            print result
+            return -1
     return 0

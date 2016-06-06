@@ -1,11 +1,11 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
+import hashlib
+import xml.etree.ElementTree as ET
 from . import weixin
 import weixinconfig
 from flask import request, make_response, redirect,render_template
-import hashlib
-import xml.etree.ElementTree as ET
 
 
 @weixin.route('/', methods=['GET'])
@@ -22,6 +22,10 @@ def wechat_msg():
     msg = parse(rec)
     from msg_handler import MsgHandler
     message = MsgHandler(msg)
+    if msg['MsgType'] == 'event':
+        from msg_handler import handle_event
+        content = handle_event(msg)
+        return res_text_msg(msg,content)
 
 
 @weixin.route('/index', methods=['GET', 'POST'])
@@ -76,3 +80,10 @@ def parse(rec):
     for child in root:
         msg[child.tag] = child.text
     return msg
+
+text_rep = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>"
+
+def res_text_msg(msg, content):
+    response = make_response(text_rep % (msg['FromUserName'],msg['ToUserName'],str(int(time.time())), content))
+    response.content_type='application/xml'
+    return response

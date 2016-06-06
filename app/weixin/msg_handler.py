@@ -2,10 +2,13 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import time
-from msg_format import *
+# from msg_format import *
 from nova_weixin.lib.database import mysql
-from nova_weixin.nova.get_user_info import get_stuid
+from nova_weixin.nova.get_user_info import get_stuid,Student
 
+
+person_info_key = ['daily_assess', 'gpa', 'recom', 'tutor']
+mes_key = ['not_read_mes', 'history_mes', 'recent_mes']
 
 def save_into_database(content,openid):
     stuid = get_stuid(openid)
@@ -15,6 +18,76 @@ def save_into_database(content,openid):
     def save(results=''):
         return results
     return 0
+
+def handle_event(msg):
+    if msg['Event'] == 'CLICK':
+        if msg['EventKey'] in person_info_key:
+            stu = Student(msg['FromUserName'])
+
+            if msg['EventKey'] == person_info_key[0]:  # 日常行为考核
+                rout = stu.get_routine_appraise()
+                if type(rout) == type({}):
+                    content = '总分: ' + str(stu.routine) + '\n基础考核项: ' + str(stu.routine_base) + '\n鼓励参与项: ' + str(
+                        stu.routine_encou) + '\n成果奖励项: ' + str(stu.routine_develop) + '\n排名:' + str(stu.routine_rank)
+                else:
+                    content = rout
+                return content
+
+            if msg['EventKey'] == person_info_key[1]:  # gpa查询
+                gpa = stu.get_gpa()
+                if type(gpa) == type({}):
+                    your_gpa = str(stu.gpa)
+                    your_gpa_rank = str(stu.gpa_rank)
+                    rank_percent = str(round(float(stu.gpa_rank) / gpa['max'] * 100, 2)) + '%'
+                    your_next_gpa = str(round(gpa['next'], 4))
+                    your_prev_gpa = str(round(gpa['prev'], 4))
+                    your_first_gpa = str(round(gpa['first'], 4))
+                    content = 'GPA: ' + your_gpa + '\nRank: ' + your_gpa_rank + '\n您位于' + rank_percent + '\n前一名的绩点: ' + your_prev_gpa + '\n后一名的绩点: ' + your_next_gpa + '\n第一名的绩点: ' + your_first_gpa
+                else:
+                    content = gpa
+                return content
+
+            if msg['EventKey'] == person_info_key[2]:  # 推免查询
+                gpa = stu.get_recom()
+                if type(gpa) == type({}):
+                    your_gpa = str(stu.gpa)
+                    your_gpa_rank = str(stu.gpa_rank)
+                    rank_percent = str(round(float(stu.gpa_rank) / gpa['max'] * 100, 2)) + '%'
+                    your_next_gpa = str(round(gpa['next'], 4))
+                    your_prev_gpa = str(round(gpa['prev'], 4))
+                    your_first_gpa = str(round(gpa['first'], 4))
+                    twenty_per_gpa = str(round(gpa['twenty_per'], 4))
+                    content = '总GPA排名\n' + '*' * 22 + '\nGPA: ' + your_gpa + '\nRank: ' + your_gpa_rank + '\n您位于' + rank_percent + '\n前一名的绩点: ' + your_prev_gpa + '\n后一名的绩点: ' + your_next_gpa + '\n第一名的绩点: ' + your_first_gpa + '\n排名20%的GPA:' + twenty_per_gpa
+                else:
+                    content = gpa
+                return content
+
+            if msg['EventKey'] == person_info_key[3]:  # 导师查询
+                tutor = stu.get_tutor()
+                if type(tutor) == type({}):
+                    if tutor['status']:
+                        content = '您的导师是: ' + stu.tutor + '\nemail:' + stu.tutor_mail + '\n' + '=' * 18 + '\n'
+                        if tutor['same_tutor']:
+                            content = content + '导师与您相同的有:\n\n'
+                            info_list = []
+                            for i in tutor['same_tutor']:
+                                info_list.append(i[1] + ' ' + i[2] + '\n宿舍: ' + i[4])
+                            content = content + '\n\n'.join(info_list)
+                        else:
+                            content = content + '没有人和您有相同导师！'
+                    else:
+                        content = '您当前没有导师！'
+                else:
+                    content = tutor
+                return content
+
+        if msg['EventKey'] in mes_key:
+            if msg['EventKey'] == 'not_read_mes':
+                pass
+        else:
+            return '错误的菜单值！'
+    else:
+        return 'wrong_key'
 
 
 class MsgHandler(object):

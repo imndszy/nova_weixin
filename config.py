@@ -4,11 +4,11 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-ROOT_USER = 'root'
+ROOT_USER = 'nova_cac'
 DB_HOSTNAME = 'localhost'
 DB_PORT = '3306'
 DB_USERNAME = 'root'
-DB_PASSWORD = 'zxcv'
+DB_PASSWORD = ''
 DB_NAME = 'weixin'
 
 

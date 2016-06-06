@@ -1,8 +1,8 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-from lib.database import mysql
 import os
+from lib.database import mysql
 
 
 def classes():
@@ -16,8 +16,8 @@ def classes():
     class_dict = dict()
     for i in result:
         class_dict[i[2]] = i[1]
-
     return class_dict
+
 
 def stu(classes):
     if len(classes)<1:
@@ -33,6 +33,7 @@ def stu(classes):
         stu_dict[i] = result
     return stu_dict
 
+
 def create_class_html(class_dict):
     pwd = os.path.abspath(os.path.dirname(__file__))
     pwd = pwd[:-4]+'templates/auth/class.html'
@@ -47,7 +48,6 @@ def create_class_html(class_dict):
 <form method="post">
 <input type = "checkbox" name = "checked" value ="choose_all"> 全选 <br/>
 """
-    print class_dict.items()
     for key,value in class_dict.items():
         temp = u'<input type="checkbox" name="checked" value="%s" > %s \n' % (key,value)
         content = content+temp+'<br/>'
@@ -55,9 +55,9 @@ def create_class_html(class_dict):
 </form>
 {% endblock %}"""
     content = content.encode('utf-8')
-    print content
     with open(pwd,'w') as class_file:
         class_file.write(content)
+
 
 def create_stu_html(stu_dict,class_dict):
     pwd = os.path.abspath(os.path.dirname(__file__))

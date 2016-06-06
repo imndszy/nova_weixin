@@ -2,10 +2,11 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import time
-from weixinconfig import APP_ID,SECRET
 import urllib2
 import json
 import os
+from weixinconfig import APP_ID,SECRET
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 

@@ -22,6 +22,7 @@ class ArticleForm(Form):
     title = StringField('title',validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+
 class RegistrationForm(Form):
     email = StringField('Email', validators=[DataRequired(), Length(1, 64),
                                            Email()])

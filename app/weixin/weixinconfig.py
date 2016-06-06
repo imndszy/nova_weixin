@@ -1,12 +1,14 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-APP_ID = 'wx925d02f38'
-SECRET = 'aed361bef88'
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
+APP_ID = ''
+SECRET = ''
 TOKEN = ''
 TEMPLATE_ID = ''
-ACC_TOKEN = ''
-LAST_QUERY_TIME = ''
 MENU = {
     "button": [
         {
@@ -61,12 +63,12 @@ MENU = {
                 {
                     "type": "view",
                     "name": "微信问问",
-                    "url": ""
+                    "url": "http://121.42.216.141"
                 },
                 {
                     "type": "view",
                     "name": "教务推送",
-                    "url": ""
+                    "url": "http://121.42.216.141"
                 },
             ]
 
@@ -74,3 +76,5 @@ MENU = {
 
     ]
 }
+
+

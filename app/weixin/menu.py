@@ -3,12 +3,12 @@
 # github: https://github.com/imndszy
 import json
 import urllib2
-import get_acc_token
+from get_acc_token import get_token
 from weixinconfig import MENU
 
 
 def create_menu():
-    acc_token = get_acc_token.get_token()
+    acc_token = get_token()
     if acc_token:
         url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s" % acc_token
         data = MENU
@@ -19,5 +19,5 @@ def create_menu():
 
 
 if __name__ == "__main__":
-    #create_menu()
+    print create_menu()
     print "menu test"
