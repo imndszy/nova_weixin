@@ -2,7 +2,7 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 from get_user_info import Student
-from nova_weixin.lib.database import mysql
+from app.lib.database import mysql
 
 
 class NovaMessage(Student):

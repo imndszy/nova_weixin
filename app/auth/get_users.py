@@ -2,7 +2,7 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import os
-from lib.database import mysql
+from app.lib import mysql
 
 
 def classes():
@@ -19,11 +19,11 @@ def classes():
     return class_dict
 
 
-def stu(classes):
-    if len(classes)<1:
+def stu(classes_seq):
+    if len(classes_seq) < 1:
         return -1
     stu_dict = dict()
-    for i in classes:
+    for i in classes_seq:
         sql = "select stuid,name from stuinfo where class='" + i + "'"
 
         @mysql(sql)
@@ -48,18 +48,18 @@ def create_class_html(class_dict):
 <form method="post">
 <input type = "checkbox" name = "checked" value ="choose_all"> 全选 <br/>
 """
-    for key,value in class_dict.items():
-        temp = u'<input type="checkbox" name="checked" value="%s" > %s \n' % (key,value)
+    for key, value in class_dict.items():
+        temp = u'<input type="checkbox" name="checked" value="%s" > %s \n' % (key, value)
         content = content+temp+'<br/>'
     content = content+u"""<input type="submit">
 </form>
 {% endblock %}"""
     content = content.encode('utf-8')
-    with open(pwd,'w') as class_file:
+    with open(pwd, 'w') as class_file:
         class_file.write(content)
 
 
-def create_stu_html(stu_dict,class_dict):
+def create_stu_html(stu_dict, class_dict):
     pwd = os.path.abspath(os.path.dirname(__file__))
     pwd = pwd[:-4]+'templates/auth/stu.html'
     content = u"""{% extends "base.html" %}
