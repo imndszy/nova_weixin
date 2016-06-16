@@ -2,7 +2,6 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 from urllib import quote
-
 from app.lib import mysql
 from app.weixin.template import send_common_template_msg
 from app.nova.get_user_info import get_openid
