@@ -4,7 +4,6 @@
 import json
 import urllib
 import urllib2
-import requests
 import get_acc_token
 
 
@@ -41,20 +40,19 @@ def create_ticket(action_name, expire_seconds=604800):
         return ''
 
 
-def get_qrcode(ticket):
+def get_qrcode_url(ticket):
     if ticket:
         tic = 'ticket'
         dic = {tic:ticket}
         parameter = urllib.urlencode(dic)
         url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?%s" % parameter
-        r = requests.get(url,verify  = True)
-        with open("qrcode.jpg","wb") as code:
-            code.write(r.content)
+        return url
     else:
         print "invalid ticket,check the log"
 
 if __name__ == "__main__":
-    create_ticket("QR_SCENE")
+    ticket = create_ticket("QR_SCENE")
+    get_qrcode_url(ticket)
 
 
 

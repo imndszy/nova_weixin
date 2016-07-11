@@ -36,4 +36,7 @@ def create_app(config_name):
     from .weixin import weixin as weixin_blueprint
     app.register_blueprint(weixin_blueprint)
 
+    from .bind import bind as bind_blueprint
+    app.register_blueprint(bind_blueprint, url_prefix='/bind')
+
     return app
