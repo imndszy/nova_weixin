@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+    {% import "bootstrap/wtf.html" as wtf %}
+    {% block title %}Nova {% endblock %}
+
+    {% block page_content %}
+    <div class="page-header">
+        <h1>choose students</h1>
+    </div>
+    <div>
+        <h3>全选后再选中某个学生代表排除这个学生</h3>
+    </div>
+    <form method="post">
+    <input type = "checkbox" name = "checked" value ="choose_stu_all"> 全选 <br/>
+    <p>14自动</p>
+<input type="checkbox" name="checked" value="131270046" > 131270046 程鹏 
+<input type="checkbox" name="checked" value="141270001" > 141270001 包祺 
+<input type="checkbox" name="checked" value="141270002" > 141270002 鲍洋洋 
+<input type="checkbox" name="checked" value="141270003" > 141270003 曹越 
+<input type="checkbox" name="checked" value="141270004" > 141270004 陈潢 
+<input type="checkbox" name="checked" value="141270007" > 141270007 顾斌伟 
+<input type="checkbox" name="checked" value="141270008" > 141270008 侯宛辰 
+<input type="checkbox" name="checked" value="141270009" > 141270009 胡成超 
+<input type="checkbox" name="checked" value="141270010" > 141270010 吉也 
+<input type="checkbox" name="checked" value="141270011" > 141270011 蒋丽娜 
+<input type="checkbox" name="checked" value="141270012" > 141270012 靳骄阳 
+<input type="checkbox" name="checked" value="141270017" > 141270017 李思琦 
+<input type="checkbox" name="checked" value="141270019" > 141270019 李志成 
+<input type="checkbox" name="checked" value="141270020" > 141270020 练仕琪 
+<input type="checkbox" name="checked" value="141270021" > 141270021 林元灿 
+<input type="checkbox" name="checked" value="141270022" > 141270022 刘少聪 
+<input type="checkbox" name="checked" value="141270023" > 141270023 刘思达 
+<input type="checkbox" name="checked" value="141270024" > 141270024 刘雅杰 
+<input type="checkbox" name="checked" value="141270027" > 141270027 马昱堃 
+<input type="checkbox" name="checked" value="141270029" > 141270029 乔维松 
+<input type="checkbox" name="checked" value="141270031" > 141270031 饶喻聪 
+<input type="checkbox" name="checked" value="141270033" > 141270033 侍震宇 
+<input type="checkbox" name="checked" value="141270034" > 141270034 孙程锦 
+<input type="checkbox" name="checked" value="141270037" > 141270037 汪值 
+<input type="checkbox" name="checked" value="141270038" > 141270038 王国华 
+<input type="checkbox" name="checked" value="141270039" > 141270039 王申涛 
+<input type="checkbox" name="checked" value="141270041" > 141270041 王中天 
+<input type="checkbox" name="checked" value="141270042" > 141270042 魏青 
+<input type="checkbox" name="checked" value="141270043" > 141270043 徐立鑫 
+<input type="checkbox" name="checked" value="141270044" > 141270044 徐旭东 
+<input type="checkbox" name="checked" value="141270046" > 141270046 杨蕾生 
+<input type="checkbox" name="checked" value="141270047" > 141270047 张恒源 
+<input type="checkbox" name="checked" value="141270048" > 141270048 张金相 
+<input type="checkbox" name="checked" value="141270049" > 141270049 张荣杰 
+<input type="checkbox" name="checked" value="141270050" > 141270050 张友明 
+<input type="checkbox" name="checked" value="141270051" > 141270051 张云涛 
+<input type="checkbox" name="checked" value="141270052" > 141270052 章超 
+<input type="checkbox" name="checked" value="141270053" > 141270053 赵斌 
+<input type="checkbox" name="checked" value="141270054" > 141270054 赵子杰 
+<input type="checkbox" name="checked" value="708025" > 708025 夏娟 
+<input type="checkbox" name="checked" value="141140056" > 141140056 谭祖嵩 
+<br/><input type="submit">
+    </form>
+    {% endblock %}
