@@ -7,7 +7,7 @@ import urllib2
 import get_acc_token
 
 
-def create_ticket(action_name, expire_seconds=604800):
+def create_ticket(action_name, scene_id, expire_seconds=604800):
     acc_token = get_acc_token.get_token()
     if acc_token:
         url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=%s" % acc_token
@@ -17,7 +17,7 @@ def create_ticket(action_name, expire_seconds=604800):
                 "action_name": "QR_SCENE",
                 "action_info":
                     {
-                        "scene": {"scene_id": 1}
+                        "scene": {"scene_id": scene_id}
                     }
             }
         elif action_name == "QR_LIMIT_STR_SCENE":
@@ -25,7 +25,7 @@ def create_ticket(action_name, expire_seconds=604800):
                 "action_name": "QR_LIMIT_SCENE",
                 "action_info":
                     {
-                        "scene": {"scene_id": 123}
+                        "scene": {"scene_id": scene_id}
                     }
             }
         request = urllib2.urlopen(url, json.dumps(data, ensure_ascii=False)).read()

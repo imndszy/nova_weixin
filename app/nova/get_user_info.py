@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-from app.lib import mysql
+from app.lib.database import mysql
 
 
 class Student(object):

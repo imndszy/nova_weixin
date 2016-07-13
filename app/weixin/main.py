@@ -20,8 +20,8 @@ def wechat_auth():
 def wechat_msg():
     rec = request.data
     msg = parse(rec)
-    from msg_handler import MsgHandler
-    message = MsgHandler(msg)
+    # from msg_handler import MsgHandler
+    # message = MsgHandler(msg)
     if msg['MsgType'] == 'event':
         from msg_handler import handle_event
         content = handle_event(msg)

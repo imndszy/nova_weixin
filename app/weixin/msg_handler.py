@@ -17,9 +17,22 @@ def save_into_database(content,openid):
     @mysql(sql)
     def save(results=''):
         return results
+    save()
     return 0
 
 def handle_event(msg):
+    if msg['Event'] == 'subscribe':
+        if msg['EventKey']:
+            stuid = msg['EventKey'][8:]
+            openid = msg['FromUserName']
+            sql = "update biding set openid = '%s' where stuid = %s" % (openid,stuid)
+
+            @mysql(sql)
+            def update_binding(results=''):
+                return results
+            update_binding()
+            return 0
+
     if msg['Event'] == 'CLICK':
         if msg['EventKey'] in person_info_key:
             stu = Student(msg['FromUserName'])

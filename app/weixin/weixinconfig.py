@@ -5,8 +5,8 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-APP_ID = 'wx92a9c338'
-SECRET = 'aed361bef4f49db2df58588'
+APP_ID = 'wxf38'
+SECRET = 'aed361bef8f58588'
 TOKEN = ''
 TEMPLATE_ID = ''
 MENU = {
