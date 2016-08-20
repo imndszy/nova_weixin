@@ -16,6 +16,8 @@ def note_index(stu_list, nid):
     @mysql(sql)
     def insert(results=''):
         return results
+
+    result = insert()
     return 0
 
 
@@ -25,6 +27,7 @@ def note_content(article_url, image_url, title, nid):
     @mysql(sql)
     def insert(results=''):
         return results
+    result = insert()
     return 0
 
 
@@ -34,6 +37,8 @@ def note_response(nid):
     @mysql(sql)
     def insert(results=''):
         return results
+
+    result = insert()
     return 0
 
 
@@ -42,6 +47,7 @@ def send(_title, article_url, stu_list):
     post_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?' \
         'appid=wx92a9c338a5d02f38&redirect_uri=http://121.42.216.141/code/' \
         '%s&response_type=code&scope=snsapi_base&state=123#wechat_redirect' % url
+
     for i in stu_list:
         openid = get_openid(i)
         openid = openid.encode('utf8')

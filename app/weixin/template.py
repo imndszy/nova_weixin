@@ -7,6 +7,7 @@ import urllib2
 import get_acc_token
 from weixinconfig import TEMPLATE_ID
 import sys
+import os
 reload(sys)
 sys.setdefaultencoding('utf8')
 
@@ -45,6 +46,8 @@ sys.setdefaultencoding('utf8')
 #     return json.loads(request.read())
 
 def send_common_template_msg(mes_url, title='这里是标题', touser='o19fSvhseI04YpNJkVYVIBTEjESs',template_id=TEMPLATE_ID):
+    if os.environ.get('environ') == 'debug':
+        return {'errcode':0,'errmsg':'send_common_template_msg tested ok'}
     acc_token = get_acc_token.get_token()
     ISOTIMEFORMAT='%Y-%m-%d %X'
     now = time.strftime(ISOTIMEFORMAT, time.localtime())

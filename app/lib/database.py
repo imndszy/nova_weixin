@@ -3,6 +3,7 @@
 # github: https://github.com/imndszy
 import functools
 import MySQLdb
+import logging
 from config import DB_HOSTNAME, DB_NAME, DB_PASSWORD, DB_USERNAME
 
 
@@ -31,6 +32,8 @@ def mysql(sql):
                 conn.close()
                 return result
             except MySQLdb.Error, e:
+                logging.basicConfig(filename='data.log', level=logging.DEBUG)
+                logging.debug("Mysql Error %d:%s" % (e.args[0],e.args[1]))
                 return -1 #"Mysql Error %d:%s" % (e.args[0],e.args[1])
         return wrapper
     return decorator

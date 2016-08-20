@@ -190,6 +190,7 @@ def get_openid(stuid):
 
     @mysql(sql)
     def get(results=''):
+        print "results:1",results
         if results:
             openid = results[0]
             return openid
