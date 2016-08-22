@@ -4,6 +4,7 @@
 import json
 import urllib
 import urllib2
+import logging
 import get_acc_token
 
 
@@ -31,12 +32,20 @@ def create_ticket(action_name, scene_id, expire_seconds=604800):
         request = urllib2.urlopen(url, json.dumps(data, ensure_ascii=False)).read()
         result = json.loads(request)
         if result.get('errcode'):
-            print 'failed to get ticket -- qrcode.py'    #log here
+            logging.basicConfig(format='%(asctime)s %(message)s', \
+                                datefmt='%Y/%m/%d %I:%M:%S %p', \
+                                filename='./log/qrcode.log', \
+                                level=logging.DEBUG)
+            logging.warning("failed to get ticket -- qrcode.py")
             return ''
         else:
             return result.get('ticket')
     else:
-        print "failed to get acc_token -- qrcode.py--create_ticket()"      #log here
+        logging.basicConfig(format='%(asctime)s %(message)s', \
+                            datefmt='%Y/%m/%d %I:%M:%S %p', \
+                            filename='./log/acc_token.log', \
+                            level=logging.DEBUG)
+        logging.warning("failed to get acc_token -- qrcode.py--create_ticket()")
         return ''
 
 
@@ -48,7 +57,11 @@ def get_qrcode_url(ticket):
         url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?%s" % parameter
         return url
     else:
-        print "invalid ticket,check the log"
+        logging.basicConfig(format='%(asctime)s %(message)s', \
+                            datefmt='%Y/%m/%d %I:%M:%S %p', \
+                            filename='./log/qrcode.log', \
+                            level=logging.DEBUG)
+        logging.warning("invalid ticket,--get_qrcode_url() qrcode.py")
 
 if __name__ == "__main__":
     ticket = create_ticket("QR_SCENE")

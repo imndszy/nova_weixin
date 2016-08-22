@@ -82,6 +82,7 @@ def openid_handler(openid, post_url):
     def update(results=''):
         #log here
         return results
+    result = update()
 
 
 

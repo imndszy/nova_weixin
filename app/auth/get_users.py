@@ -13,6 +13,8 @@ def classes():
         return results
 
     result = get_classes()
+    if result == -1:
+        return -1
     class_dict = dict()
     for i in result:
         class_dict[i[2]] = i[1]

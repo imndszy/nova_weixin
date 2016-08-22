@@ -37,6 +37,8 @@ def article():
         session['image_url'] = image_url
         session['title'] = title
         class_dict_all = classes()
+        if class_dict_all == -1:
+            return render_template('auth/fail.html')
         create_class_html(class_dict_all)
         return redirect(request.args.get('next') or url_for('auth.choose_class'))
     return render_template('auth/article.html', form=form)

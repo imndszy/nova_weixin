@@ -5,6 +5,7 @@ import time
 import urllib2
 import json
 import os
+import logging
 from weixinconfig import APP_ID,SECRET
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -26,9 +27,13 @@ def get_token():
               (app_id, app_secret)
         result = urllib2.urlopen(url).read()
         if json.loads(result).get('errcode'):
-            print "fail to get acc_token --get_acc_token.py"
+            logging.basicConfig(format='%(asctime)s %(message)s', \
+                                datefmt='%Y/%m/%d %I:%M:%S %p', \
+                                filename='./log/acc_token.log', \
+                                level=logging.DEBUG)
+            logging.debug("fail to get acc_token --get_acc_token.py")
             acc_token = "fail to get acc_token --get_acc_token.py"
-            pass
+
         else:
             acc_token = json.loads(result).get('access_token')
             string = str(int(time.time()))+acc_token

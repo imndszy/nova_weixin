@@ -31,8 +31,11 @@ def mysql(sql):
                 cursor.close()
                 conn.close()
                 return result
-            except MySQLdb.Error, e:
-                logging.basicConfig(filename='data.log', level=logging.DEBUG)
+            except MySQLdb.Error as e:
+                logging.basicConfig(format='%(asctime)s %(message)s',\
+                                    datefmt='%Y/%m/%d %I:%M:%S %p',\
+                                    filename='./log/database.log', \
+                                    level=logging.DEBUG)
                 logging.debug("Mysql Error %d:%s" % (e.args[0],e.args[1]))
                 return -1 #"Mysql Error %d:%s" % (e.args[0],e.args[1])
         return wrapper
