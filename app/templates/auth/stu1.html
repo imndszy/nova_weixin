@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Nova {% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>choose students</h1>
+</div>
+<div>
+    <h3>全选后再选中某个学生代表排除这个学生</h3>
+</div>
+<form method="post">
+<input type = "checkbox" name = "checked" value ="choose_stu_all"> 全选 <br/>
+{% for i in stu_dict %}
+    <p>{{class_dict[i]}}</p>
+    {% for j in stu_dict[i] %}
+        <input type="checkbox" name="checked" value="{{j[0]}}"> {{j[0]}}{{' '}}{{j[1]}}
+    {% endfor %}
+{% endfor %}
+
+<br/><input type="submit">
+    </form>
+    {% endblock %}

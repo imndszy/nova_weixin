@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block title %}Nova {% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>choose classes first</h1>
+</div>
+<form method="post">
+<input type = "checkbox" name = "checked" value ="choose_all"> 全选 <br/>
+<input type="checkbox" name="checked" value="111111" > 山西
+{% for i in class_dict %}
+    <br/><input type="checkbox" name="checked" value="{{i}}" > {{class_dict[i]}}
+{% endfor %}
+
+<br/><input type="submit">
+</form>
+{% endblock %}

@@ -1,6 +1,7 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
+import logging
 from app.lib.database import mysql
 
 
@@ -190,10 +191,15 @@ def get_openid(stuid):
 
     @mysql(sql)
     def get(results=''):
-        print "results:1",results
         if results:
             openid = results[0]
             return openid
         else:
+            logging.basicConfig(format='%(asctime)s %(message)s', \
+                                datefmt='%Y/%m/%d %I:%M:%S %p', \
+                                filename='./log/user.log', \
+                                level=logging.DEBUG)
+            logging.warning("unable to fetch openid with the stuid {0} "
+                            "-- get_openid() get_user_info.py".format(stuid))
             return -1
     return get()
