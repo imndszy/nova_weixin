@@ -46,6 +46,8 @@ sys.setdefaultencoding('utf8')
 #     return json.loads(request.read())
 
 def send_common_template_msg(mes_url, title='这里是标题', touser='o19fSvhseI04YpNJkVYVIBTEjESs',template_id=TEMPLATE_ID):
+    if touser == -1:
+        return {'errcode':1,'errmsg':'unknown openid ,check user.log'}
     if os.environ.get('environ') == 'debug':
         return {'errcode':0,'errmsg':'send_common_template_msg tested ok'}
     acc_token = get_acc_token.get_token()
