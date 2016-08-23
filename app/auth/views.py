@@ -37,9 +37,10 @@ def article():
         session['image_url'] = image_url
         session['title'] = title
         class_dict_all = classes()
+        session['class_dict'] = class_dict_all
         if class_dict_all == -1:
             return render_template('auth/fail.html')
-        create_class_html(class_dict_all)
+        #create_class_html(class_dict_all)
         return redirect(request.args.get('next') or url_for('auth.choose_class'))
     return render_template('auth/article.html', form=form)
 
@@ -47,16 +48,18 @@ def article():
 @auth.route('/choose_class', methods=['GET', 'POST'])
 @login_required
 def choose_class():
+    class_dict_all = session['class_dict']
     if request.method == 'POST':
         class_list = request.form.getlist('checked')
-        class_dict_all = classes()
+        # class_dict_all = classes()
         if 'choose_all' in class_list:
             class_list = [i for i in class_dict_all.keys() if i not in class_list]
         session['classes'] = class_list
         stu_dict_all = stu(class_list)
-        create_stu_html(stu_dict_all, class_dict_all)
+        session['stu_dict'] = stu_dict_all
+        #create_stu_html(stu_dict_all, class_dict_all)
         return redirect(url_for('auth.choose_stu'))
-    return render_template('auth/class.html')
+    return render_template('auth/class1.html',class_dict = class_dict_all)
 
 
 @auth.route('/choose_stu', methods=['GET', 'POST'])
@@ -66,6 +69,7 @@ def choose_stu():
         article_url = session['article_url'].encode('utf8')
         image_url = session['image_url'].encode('utf8')
         title = session['title'].encode('utf8')
+        stu_dict_all = session['stu_dict']
         if request.method == 'POST':
             stu_list = request.form.getlist('checked')
             class_list = session['classes']
@@ -83,7 +87,7 @@ def choose_stu():
                 return render_template('auth/fail.html')
             session['finish'] = 'finished'
             return redirect(url_for('auth.finish'))
-        return render_template('auth/stu.html')
+        return render_template('auth/stu1.html',stu_dict = stu_dict_all,class_dict = session['class_dict'])
     return redirect(url_for('auth.article'))
 
 

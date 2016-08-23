@@ -6,6 +6,7 @@ from app.lib.database import mysql
 
 
 def classes():
+    # type: () -> object
     sql = "select *from member"
 
     @mysql(sql)
