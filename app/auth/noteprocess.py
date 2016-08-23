@@ -51,14 +51,15 @@ def send(_title, article_url, stu_list):
     cnt = 0
     for i in stu_list:
         openid = get_openid(i)
-        openid = openid.encode('utf8')
+        if openid != -1:
+            openid = openid.encode('utf8')
         result = send_common_template_msg(post_url, title=_title, touser=openid)
         if result.get('errcode') != 0:
-            logging.basicConfig(format='%(asctime)s %(message)s', \
+            logging.basicConfig(format='%(asctime)s %(levelname)s%(message)s', \
                                 datefmt='%Y/%m/%d %I:%M:%S %p', \
                                 filename='./log/sendmsg.log', \
                                 level=logging.DEBUG)
-            logging.warning("sending template msg error in noteprocess.py:"+str(result))
+            logging.warning("sending template msg error --send() noteprocess.py:"+str(result))
             cnt = cnt+1
     if 0<cnt<len(stu_list):
         return -2
