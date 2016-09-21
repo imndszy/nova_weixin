@@ -32,6 +32,7 @@ def handle_event(msg):
                 return results
             update_binding()
             return 0
+        return "感谢关注！"
 
     if msg['Event'] == 'CLICK':
         if msg['EventKey'] in person_info_key:
