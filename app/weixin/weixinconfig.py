@@ -70,6 +70,12 @@ MENU = {
                     "name": "教务推送",
                     "url": "http://121.42.216.141"
                 },
+                {
+                    "type": "scancode_push",
+                    "name": "扫码推事件",
+                    "key": "rselfmenu_0_1",
+                    "sub_button": []
+                }
             ]
 
         }
