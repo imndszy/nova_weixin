@@ -41,8 +41,10 @@ def handle_event(msg):
             if msg['EventKey'] == person_info_key[0]:  # 日常行为考核
                 rout = stu.get_routine_appraise()
                 if type(rout) == type({}):
-                    content = '总分: ' + str(stu.routine) + '\n基础考核项: ' + str(stu.routine_base) + '\n鼓励参与项: ' + str(
-                        stu.routine_encou) + '\n成果奖励项: ' + str(stu.routine_develop) + '\n排名:' + str(stu.routine_rank)
+                    content = '总分: ' + str(stu.routine) + '\n基础考核项: ' + str(stu.routine_base) + '\n鼓励参与项: ' \
+                              + str(
+                        stu.routine_encou) + '\n成果奖励项: ' + str(stu.routine_develop) + '\n排名:' + \
+                              str(stu.routine_rank)
                 else:
                     content = rout
                 return content
@@ -56,7 +58,9 @@ def handle_event(msg):
                     your_next_gpa = str(round(gpa['next'], 4))
                     your_prev_gpa = str(round(gpa['prev'], 4))
                     your_first_gpa = str(round(gpa['first'], 4))
-                    content = 'GPA: ' + your_gpa + '\nRank: ' + your_gpa_rank + '\n您位于' + rank_percent + '\n前一名的绩点: ' + your_prev_gpa + '\n后一名的绩点: ' + your_next_gpa + '\n第一名的绩点: ' + your_first_gpa
+                    content = 'GPA: ' + your_gpa + '\nRank: ' + your_gpa_rank + '\n您位于' + rank_percent + \
+                              '\n前一名的绩点: ' + your_prev_gpa + '\n后一名的绩点: ' + your_next_gpa + '\n第一名的绩点: ' \
+                              + your_first_gpa
                 else:
                     content = gpa
                 return content
@@ -71,7 +75,9 @@ def handle_event(msg):
                     your_prev_gpa = str(round(gpa['prev'], 4))
                     your_first_gpa = str(round(gpa['first'], 4))
                     twenty_per_gpa = str(round(gpa['twenty_per'], 4))
-                    content = '总GPA排名\n' + '*' * 22 + '\nGPA: ' + your_gpa + '\nRank: ' + your_gpa_rank + '\n您位于' + rank_percent + '\n前一名的绩点: ' + your_prev_gpa + '\n后一名的绩点: ' + your_next_gpa + '\n第一名的绩点: ' + your_first_gpa + '\n排名20%的GPA:' + twenty_per_gpa
+                    content = '总GPA排名\n' + '*' * 22 + '\nGPA: ' + your_gpa + '\nRank: ' + your_gpa_rank + '\n您位于' \
+                              + rank_percent + '\n前一名的绩点: ' + your_prev_gpa + '\n后一名的绩点: ' + your_next_gpa \
+                              + '\n第一名的绩点: ' + your_first_gpa + '\n排名20%的GPA:' + twenty_per_gpa
                 else:
                     content = gpa
                 return content
