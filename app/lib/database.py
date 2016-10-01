@@ -4,7 +4,8 @@
 import functools
 import MySQLdb
 import logging
-from config import DB_HOSTNAME, DB_NAME, DB_PASSWORD, DB_USERNAME
+
+from ..config import DB_HOSTNAME, DB_NAME, DB_PASSWORD, DB_USERNAME
 
 
 def mysql(sql):

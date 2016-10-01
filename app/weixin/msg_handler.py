@@ -3,8 +3,8 @@
 # github: https://github.com/imndszy
 import time
 # from msg_format import *
-from app.lib.database import mysql
-from app.nova.get_user_info import get_stuid,Student
+from ..lib.database import mysql
+from ..nova.get_user_info import get_stuid,Student
 
 
 person_info_key = ['daily_assess', 'gpa', 'recom', 'tutor']

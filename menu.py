@@ -2,9 +2,10 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import json
-import urllib2
-from get_acc_token import get_token
-from weixinconfig import MENU
+import requests
+
+from app.weixin.get_acc_token import get_token
+from app.weixin.weixinconfig import MENU
 
 
 def create_menu():
@@ -12,8 +13,8 @@ def create_menu():
     if acc_token:
         url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s" % acc_token
         data = MENU
-        request = urllib2.urlopen(url, json.dumps(data, ensure_ascii=False))
-        return json.loads(request.read())
+        request = requests.post(url, json.dumps(data, ensure_ascii=False))
+        return request.text
     else:
         return "failed to get access_token!--menu.py"
 

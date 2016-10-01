@@ -3,18 +3,16 @@
 # github: https://github.com/imndszy
 import json
 import time
-import urllib2
-import get_acc_token
-from weixinconfig import TEMPLATE_ID
-import sys
+import requests
 import os
-reload(sys)
-sys.setdefaultencoding('utf8')
+
+from .get_acc_token import get_token
+from .weixinconfig import TEMPLATE_ID
 
 
 # 以下是用于南京大学交换生网站的预留接口
 # def send_exchange_template_msg(mes_url,template_id = config.TEMPLATE_ID, title='这里是标题', touser='hahhh'):
-#     acc_token = get_acc_token.get_token()
+#     acc_token = get_token()
 #     ISOTIMEFORMAT='%Y-%m-%d %X'
 #     now = time.strftime(ISOTIMEFORMAT, time.localtime())
 #     url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s' % acc_token
@@ -42,15 +40,15 @@ sys.setdefaultencoding('utf8')
 #                    }
 #            }
 #        }
-#     request = urllib2.urlopen(url, json.dumps(data, ensure_ascii=False))
-#     return json.loads(request.read())
+#     request = requests.post(url, json.dumps(data, ensure_ascii=False))
+#     return request.text
 
 def send_common_template_msg(mes_url, title='这里是标题', touser='o19fSvhseI04YpNJkVYVIBTEjESs',template_id=TEMPLATE_ID):
     if touser == -1:
         return {'errcode':1,'errmsg':'unknown openid ,check user.log'}
     if os.environ.get('environ') == 'debug':
         return {'errcode':0,'errmsg':'send_common_template_msg tested ok'}
-    acc_token = get_acc_token.get_token()
+    acc_token = get_token()
     ISOTIMEFORMAT='%Y-%m-%d %X'
     now = time.strftime(ISOTIMEFORMAT, time.localtime())
     url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s' % acc_token
@@ -78,5 +76,5 @@ def send_common_template_msg(mes_url, title='这里是标题', touser='o19fSvhse
                    }
            }
        }
-    request = urllib2.urlopen(url, json.dumps(data, ensure_ascii=False))
-    return json.loads(request.read())
+    request = requests.post(url, json.dumps(data, ensure_ascii=False))
+    return request.text

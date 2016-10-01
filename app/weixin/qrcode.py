@@ -5,11 +5,12 @@ import json
 import urllib
 import urllib2
 import logging
-import get_acc_token
+
+from .get_acc_token import get_token
 
 
 def create_ticket(action_name, scene_id, expire_seconds=604800):
-    acc_token = get_acc_token.get_token()
+    acc_token = get_token()
     if acc_token:
         url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=%s" % acc_token
         if action_name == "QR_SCENE":

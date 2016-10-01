@@ -1,11 +1,12 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-from . import bind
 from flask import (render_template, redirect, request, url_for, flash, session)
 from forms import BindForm,ReBindForm
-from bind_database import get_bind_info,verify_password,save_new_student
-from app.weixin.qrcode import create_ticket,get_qrcode_url
+
+from . import bind
+from .bind_database import get_bind_info,verify_password,save_new_student
+from ..weixin.qrcode import create_ticket,get_qrcode_url
 
 @bind.route('/register',methods=['GET','POST'])
 def register():

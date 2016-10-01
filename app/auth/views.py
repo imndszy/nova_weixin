@@ -4,13 +4,14 @@
 import time
 from flask import (render_template, redirect, request, url_for, flash, session)
 from flask.ext.login import login_user, logout_user, login_required
+
 from . import auth
 from .. import db
 from ..models import User
 from .forms import LoginForm, RegistrationForm, ArticleForm
-from get_users import classes, stu, create_class_html, create_stu_html
-from noteprocess import note_index, note_content, note_response, send
-from config import ROOT_USER
+from .get_users import classes, stu, create_class_html, create_stu_html
+from .noteprocess import note_index, note_content, note_response, send
+from ..config import ROOT_USER
 
 
 @auth.route('/login', methods=['GET', 'POST'])

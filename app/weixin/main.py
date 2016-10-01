@@ -3,9 +3,10 @@
 # github: https://github.com/imndszy
 import hashlib
 import xml.etree.ElementTree as ET
-from . import weixin
-import weixinconfig
 from flask import request, make_response, redirect,render_template
+
+from . import weixin
+from .weixinconfig import TOKEN
 
 
 @weixin.route('/', methods=['GET'])
@@ -57,7 +58,7 @@ def verification():
     """
     verify the weixin token
     """
-    token = weixinconfig.TOKEN
+    token = TOKEN
     data = request.args
     signature = data.get('signature', '')
     timestamp = data.get('timestamp', '')

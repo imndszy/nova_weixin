@@ -2,7 +2,8 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import logging
-from app.lib.database import mysql
+
+from ..lib.database import mysql
 
 
 class Student(object):

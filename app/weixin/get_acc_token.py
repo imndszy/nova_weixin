@@ -6,7 +6,8 @@ import urllib2
 import json
 import os
 import logging
-from weixinconfig import APP_ID,SECRET
+
+from .weixinconfig import APP_ID,SECRET
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 

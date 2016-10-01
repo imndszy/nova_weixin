@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-from app.lib.database import mysql
+from ..lib.database import mysql
 
 
 def get_bind_info(stuid,passwd):
