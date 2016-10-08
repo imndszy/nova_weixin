@@ -5,17 +5,17 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 ROOT_USER = 'nova_cac'
+USER_EMAIL = 'sme@nju.edu.cn'
+USER_PASSWD = '789456'
 DB_HOSTNAME = 'localhost'
 DB_PORT = '3306'
-DB_USERNAME = 'root'
-DB_PASSWORD = ''
+DB_USERNAME = 'szy'
+DB_PASSWORD = '123456'
 DB_NAME = 'weixin'
 
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'xxxxx'
-    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     @staticmethod
     def init_app(app):
@@ -24,14 +24,11 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-                              'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
     os.environ['environ'] = 'debug'
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+    pass
 
 config = {
     'development': DevelopmentConfig,

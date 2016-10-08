@@ -11,7 +11,6 @@ def get_bind_info(stuid,passwd):
     def get_result(results=''):
         return results
     result = get_result()
-    print result
     if result :
         return result[0]
     return 0
