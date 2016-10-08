@@ -24,11 +24,11 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    os.environ['environ'] = 'debug'
 
 
 class ProductionConfig(Config):
     pass
+
 
 config = {
     'development': DevelopmentConfig,

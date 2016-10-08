@@ -5,4 +5,4 @@
 
 from flask import Blueprint
 auth = Blueprint('auth', __name__)
-from . import views
+from nova_weixin.app.auth import views

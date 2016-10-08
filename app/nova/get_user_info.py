@@ -3,7 +3,7 @@
 # github: https://github.com/imndszy
 import logging
 
-from ..lib.database import mysql
+from nova_weixin.app.lib.database import mysql
 
 
 class Student(object):

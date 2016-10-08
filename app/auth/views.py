@@ -3,13 +3,12 @@
 # github: https://github.com/imndszy
 import time
 from flask import (render_template, redirect, request, url_for, flash, session)
-from flask.ext.login import login_user, logout_user, login_required
 
-from . import auth
-from .forms import LoginForm, RegistrationForm, ArticleForm
-from .get_users import classes, stu, create_class_html, create_stu_html
-from .noteprocess import note_index, note_content, note_response, send
-from ..config import USER_EMAIL,USER_PASSWD
+from nova_weixin.app.auth import auth
+from nova_weixin.app.auth.forms import LoginForm,ArticleForm
+from nova_weixin.app.auth.get_users import classes, stu
+from nova_weixin.app.auth.noteprocess import note_index, note_content, note_response, send
+from nova_weixin.app.config import USER_EMAIL,USER_PASSWD
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -105,6 +104,8 @@ def finish():
 def logout():
     if session.get('login'):
         session.pop('login')
+        session.pop('classes')
+        session.pop('stu_dict')
         flash('You have been logged out.')
         return redirect(url_for('main.index'))
     return redirect(url_for('login'))

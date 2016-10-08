@@ -6,7 +6,7 @@ import urllib
 import urllib2
 import logging
 
-from .get_acc_token import get_token
+from nova_weixin.app.weixin.get_acc_token import get_token
 
 
 def create_ticket(action_name, scene_id, expire_seconds=604800):

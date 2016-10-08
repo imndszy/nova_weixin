@@ -7,7 +7,7 @@ import json
 import os
 import logging
 
-from .weixinconfig import APP_ID,SECRET
+from nova_weixin.app.weixin.weixinconfig import APP_ID,SECRET
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 

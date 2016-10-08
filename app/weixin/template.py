@@ -6,8 +6,8 @@ import time
 import requests
 import os
 
-from .get_acc_token import get_token
-from .weixinconfig import TEMPLATE_ID
+from nova_weixin.app.weixin.get_acc_token import get_token
+from nova_weixin.app.weixin.weixinconfig import TEMPLATE_ID
 
 
 # 以下是用于南京大学交换生网站的预留接口
@@ -46,7 +46,7 @@ from .weixinconfig import TEMPLATE_ID
 def send_common_template_msg(mes_url, title='这里是标题', touser='o19fSvhseI04YpNJkVYVIBTEjESs',template_id=TEMPLATE_ID):
     if touser == -1:
         return {'errcode':1,'errmsg':'unknown openid ,check user.log'}
-    if os.environ.get('environ') == 'debug':
+    if os.environ.get('config_flask') == 'development' or os.environ.get('config_flask') == 'default':
         return {'errcode':0,'errmsg':'send_common_template_msg tested ok'}
     acc_token = get_token()
     ISOTIMEFORMAT='%Y-%m-%d %X'
@@ -77,4 +77,4 @@ def send_common_template_msg(mes_url, title='这里是标题', touser='o19fSvhse
            }
        }
     request = requests.post(url, json.dumps(data, ensure_ascii=False))
-    return request.text
+    return json.loads(request.text)

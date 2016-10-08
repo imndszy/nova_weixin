@@ -56,6 +56,7 @@ def send(_title, article_url, stu_list):
         if openid != -1:
             openid = openid.encode('utf8')
         result = send_common_template_msg(post_url, title=_title, touser=openid)
+        logging.warning("sending template msg error --send() noteprocess.py:" + str(result))
         if result.get('errcode') != 0:
             logging.basicConfig(format='%(asctime)s %(levelname)s%(message)s', \
                                 datefmt='%Y/%m/%d %I:%M:%S %p', \

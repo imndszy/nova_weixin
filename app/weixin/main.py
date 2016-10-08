@@ -5,8 +5,8 @@ import hashlib
 import xml.etree.ElementTree as ET
 from flask import request, make_response, redirect,render_template
 
-from . import weixin
-from .weixinconfig import TOKEN
+from nova_weixin.app.weixin import weixin
+from nova_weixin.app.weixin.weixinconfig import TOKEN
 
 
 @weixin.route('/', methods=['GET'])

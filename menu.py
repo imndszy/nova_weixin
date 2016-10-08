@@ -4,8 +4,8 @@
 import json
 import requests
 
-from app.weixin.get_acc_token import get_token
-from app.weixin.weixinconfig import MENU
+from nova_weixin.app.weixin.get_acc_token import get_token
+from nova_weixin.app.weixin.weixinconfig import MENU
 
 
 def create_menu():

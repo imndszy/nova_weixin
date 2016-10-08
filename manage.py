@@ -3,7 +3,7 @@
 # github: https://github.com/imndszy
 import os
 
-from app import create_app
+from nova_weixin.app import create_app
 
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')

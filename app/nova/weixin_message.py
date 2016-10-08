@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-from get_user_info import Student
+from nova_weixin.app.nova.get_user_info import Student
 
 #from ..lib.database import mysql
 

@@ -3,7 +3,7 @@
 # github: https://github.com/imndszy
 import json
 import requests
-from get_acc_token import get_token
+from nova_weixin.app.weixin.get_acc_token import get_token
 
 
 def send_customer_service_message_txt(touser='o19fSvhseI04YpNJkVYVIBTEjESs', content='你好！'):
