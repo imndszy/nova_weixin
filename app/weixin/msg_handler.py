@@ -1,6 +1,11 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
+"""
+
+以下用到encode的地方均是因为从数据库取出的数据为utf8
+
+"""
 import time
 # from msg_format import *
 from nova_weixin.app.lib.database import mysql
@@ -86,12 +91,12 @@ def handle_event(msg):
                 tutor = stu.get_tutor()
                 if type(tutor) == type({}):
                     if tutor['status']:
-                        content = '您的导师是: ' + stu.tutor + '\nemail:' + stu.tutor_mail + '\n' + '=' * 18 + '\n'
+                        content = '您的导师是: ' + stu.tutor.encode('utf8') + '\nemail:' + stu.tutor_mail.encode('utf8') + '\n' + '=' * 18 + '\n'
                         if tutor['same_tutor']:
                             content = content + '导师与您相同的有:\n\n'
                             info_list = []
                             for i in tutor['same_tutor']:
-                                info_list.append(i[1] + ' ' + i[2] + '\n宿舍: ' + i[4])
+                                info_list.append(i[1].encode('utf8') + ' ' + i[2].encode('utf8') + '\n宿舍: ' + i[4].encode('utf8'))
                             content = content + '\n\n'.join(info_list)
                         else:
                             content = content + '没有人和您有相同导师！'

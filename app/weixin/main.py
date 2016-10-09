@@ -1,6 +1,7 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
+import time
 import hashlib
 import xml.etree.ElementTree as ET
 from flask import request, make_response, redirect,render_template
@@ -47,9 +48,9 @@ def oauth(message_url):
     if not code:
         return post_url
     else:
-        from weixin.oauth_handler import get_openid
+        from nova_weixin.app.weixin.oauth_handler import get_openid
         openid = get_openid(code)
-        from weixin.oauth_handler import openid_handler
+        from nova_weixin.app.weixin.oauth_handler import openid_handler
         openid_handler(openid, post_url)
         return redirect(post_url)
 

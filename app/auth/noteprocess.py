@@ -2,11 +2,13 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import logging
+
 from urllib import quote
 
-from ..lib.database import mysql
-from ..weixin.template import send_common_template_msg
-from ..nova.get_user_info import get_openid
+from nova_weixin.app.lib.database import mysql
+from nova_weixin.app.weixin.template import send_common_template_msg
+from nova_weixin.app.nova.get_user_info import get_openid
+from nova_weixin.app.config import ADDRESS as address
 
 
 
@@ -48,25 +50,26 @@ def note_response(nid):
 def send(_title, article_url, stu_list):
     url = quote(article_url)
     post_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?' \
-        'appid=wx92a9c338a5d02f38&redirect_uri=http://121.42.216.141/code/' \
-        '%s&response_type=code&scope=snsapi_base&state=123#wechat_redirect' % url
+        'appid=wx92a9c338a5d02f38&redirect_uri=%s/code/' \
+        '%s&response_type=code&scope=snsapi_base&state=123#wechat_redirect' % (address,url)
     cnt = 0
     for i in stu_list:
         openid = get_openid(i)
         if openid != -1:
             openid = openid.encode('utf8')
         result = send_common_template_msg(post_url, title=_title, touser=openid)
+        logging.basicConfig(level=logging.DEBUG,
+                            format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+                            datefmt='%a, %d %b %Y %H:%M:%S',
+                            filename='./log/sendmsg.log',
+                            filemode='w')
         logging.warning("sending template msg error --send() noteprocess.py:" + str(result))
         if result.get('errcode') != 0:
-            logging.basicConfig(format='%(asctime)s %(levelname)s%(message)s', \
-                                datefmt='%Y/%m/%d %I:%M:%S %p', \
-                                filename='./log/sendmsg.log', \
-                                level=logging.DEBUG)
             logging.warning("sending template msg error --send() noteprocess.py:"+str(result))
             cnt = cnt+1
     if 0<cnt<len(stu_list):
-        return -2
+        return -2                #说明部分人发送成功
     elif cnt == len(stu_list):
-        return -1
+        return -1                #说明一个都上不去
     else:
         return 0
