@@ -1,12 +1,13 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-import os
+import os, sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from nova_weixin.app import create_app
+import nova_weixin.app
 
 
-app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+app = nova_weixin.app.create_app(os.getenv('FLASK_CONFIG') or 'default')
 
 
 if __name__ == "__main__":
