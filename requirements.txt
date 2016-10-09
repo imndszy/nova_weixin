@@ -6,6 +6,5 @@ Flask-WTF==0.12
 Jinja2==2.8
 WTForms==1.0.5
 Werkzeug==0.10.4
-alembic==0.6.2
 requests==2.10.0
 Mysql-python==1.2.5
