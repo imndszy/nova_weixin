@@ -42,17 +42,21 @@ def oauth(message_url):
     :param message_url:公众号文章链接
     :return:跳转至相应链接
     """
-    from urllib import unquote
-    post_url = unquote(str(message_url))
+    post_url = str(message_url)
+    post_url=post_url.replace('$','?').replace('@','#').replace('!','&')
     code = request.args.get('code', '')
     if not code:
-        return post_url
+        return redirect(post_url)
     else:
         from nova_weixin.app.weixin.oauth_handler import get_openid
         openid = get_openid(code)
-        from nova_weixin.app.weixin.oauth_handler import openid_handler
-        openid_handler(openid, post_url)
-        return redirect(post_url)
+        try:
+            from nova_weixin.app.weixin.oauth_handler import openid_handler
+            openid_handler(openid, post_url)
+        except:
+            pass
+        finally:
+            return redirect(post_url)
 
 
 def verification():

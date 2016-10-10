@@ -3,6 +3,7 @@
 # github: https://github.com/imndszy
 import json
 import requests
+import logging
 
 from nova_weixin.app.weixin.get_acc_token import get_token
 from nova_weixin.app.weixin.weixinconfig import MENU
@@ -20,5 +21,9 @@ def create_menu():
 
 
 if __name__ == "__main__":
-    print create_menu()
-    print "menu test"
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+                        datefmt='%a, %d %b %Y %H:%M:%S',
+                        filename='./log/menu.log',
+                        filemode='w')
+    logging.info('执行菜单更新操作'+str(create_menu()))

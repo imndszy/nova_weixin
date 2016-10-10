@@ -47,8 +47,7 @@ def openid_handler(openid, post_url):
         if results:
             nid = results[0]
         else:
-            #log here
-            pass
+            nid = -1
         return nid
     nid = get_url()
 

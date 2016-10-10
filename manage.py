@@ -7,7 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import nova_weixin.app
 
 
-app = nova_weixin.app.create_app(os.getenv('FLASK_CONFIG') or 'default')
+app = nova_weixin.app.create_app(os.getenv('FLASK_CONFIG') or 'production')
 
 
 if __name__ == "__main__":

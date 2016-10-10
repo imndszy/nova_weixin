@@ -12,7 +12,7 @@ DB_PORT = '3306'
 DB_USERNAME = 'szy'
 DB_PASSWORD = '123456'
 DB_NAME = 'weixin'
-ADDRESS = '123.123.132.13'
+ADDRESS = 'http://www.njuszy.cn'
 
 
 class Config:
