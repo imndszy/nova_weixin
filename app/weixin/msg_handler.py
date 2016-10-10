@@ -3,7 +3,7 @@
 # github: https://github.com/imndszy
 """
 
-以下用到encode的地方均是因为从数据库取出的数据为utf8
+以下用到encode的地方均是因为从数据库取出的数据为utf8，否则会出现UnicodeError
 
 """
 import time

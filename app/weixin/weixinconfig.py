@@ -2,10 +2,10 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 
-APP_ID = 'wx92a9c338a5d02f38'
-SECRET = 'aed361bef86c682fcc4f49db2df58588'
+APP_ID = 'wx92a9c02f38'
+SECRET = 'aed361bef8658588'
 TOKEN = ''
-TEMPLATE_ID = 'vgdLo0dsD4iSatQ8ChbgmpOuQR4Hh6mEj9rd76t4bTU'
+TEMPLATE_ID = ''
 MENU = {
     "button": [
         {

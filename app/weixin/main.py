@@ -42,7 +42,7 @@ def oauth(message_url):
     :param message_url:公众号文章链接
     :return:跳转至相应链接
     """
-    post_url = str(message_url)
+    post_url = str(message_url).replace(':/','://')
     post_url=post_url.replace('$','?').replace('@','#').replace('!','&')
     code = request.args.get('code', '')
     if not code:
