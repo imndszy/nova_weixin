@@ -58,6 +58,22 @@ def oauth(message_url):
         finally:
             return redirect(post_url)
 
+# @weixin.route('/history', methods=['GET', 'POST'])
+# def oauth_history():
+#     """
+#     这个函数微信自定义菜单链接的跳转
+#     :return:跳转至相应链接
+#     """
+#     code = request.args.get('code', '')
+#     return render_template('base2.html')
+#     # if not code:
+#     #     return redirect('http://www.njuszy.cn')
+#     # else:
+#     #     from nova_weixin.app.weixin.oauth_handler import get_openid
+#     #     openid = get_openid(code)
+#     #     #handle_history(openid)
+#     #     return redirect('http://www.njuszy.cn')
+
 
 def verification():
     """

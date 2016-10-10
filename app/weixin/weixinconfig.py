@@ -1,6 +1,7 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
+from nova_weixin.app.config import ADDRESS
 
 APP_ID = 'wx92a9c02f38'
 SECRET = 'aed361bef8658588'
@@ -18,15 +19,19 @@ MENU = {
                     "key": "not_read_mes"
                 },
                 {
-                    "type": "click",
+                    "type": "view",
                     "name": "历史消息",
-                    "key": "history_mes"
-                },
-                {
-                    "type": "click",
-                    "name": "近期消息",
-                    "key": "recent_mes"
-                }]
+                    "url": "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s"
+                           "&redirect_uri=%s"
+                           "/history&response_type=code&scope=snsapi_base&state=123&connect_redirect=1#wechat_redirect"
+                           % (APP_ID,ADDRESS)
+                }#,
+                # {
+                #     "type": "click",
+                #     "name": "近期消息",
+                #     "key": "recent_mes"
+                # }
+                ]
 
         },
         {

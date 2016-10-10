@@ -13,7 +13,7 @@ from nova_weixin.app.nova.get_user_info import get_stuid,Student
 
 
 person_info_key = ['daily_assess', 'gpa', 'recom', 'tutor']
-mes_key = ['not_read_mes', 'history_mes', 'recent_mes']
+mes_key = ['not_read_mes', 'history_mes']
 
 def save_into_database(content,openid):
     stuid = get_stuid(openid)
@@ -40,6 +40,8 @@ def handle_event(msg):
         return "感谢关注！"
 
     if msg['Event'] == 'CLICK':
+        if msg['EventKey'] in mes_key:
+            return handle_mes_key(msg)
         if msg['EventKey'] in person_info_key:
             stu = Student(msg['FromUserName'])
 
@@ -113,6 +115,12 @@ def handle_event(msg):
             return '错误的菜单值！'
     else:
         return 'wrong_key'
+
+def handle_mes_key(msg):
+    if msg['EventKey'] == 'not_read_mes':
+        pass
+    elif msg['EventKey'] == 'history_mes':
+        pass
 
 
 class MsgHandler(object):
