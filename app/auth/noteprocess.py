@@ -7,6 +7,7 @@ from nova_weixin.app.lib.database import mysql
 from nova_weixin.app.weixin.template import send_common_template_msg
 from nova_weixin.app.nova.get_user_info import get_openid
 from nova_weixin.app.config import ADDRESS as address
+from nova_weixin.app.weixin.weixinconfig import APP_ID
 
 
 
@@ -54,8 +55,8 @@ def send(_title, article_url, stu_list):
     article_url = article_url.replace('?','$').replace('#','@').replace('&','!')
     url = address+'/code/'+article_url
     post_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?' \
-        'appid=wx92a9c338a5d02f38&redirect_uri=%s' \
-        '&response_type=code&scope=snsapi_base&state=123#wechat_redirect' % url
+        'appid=%s&redirect_uri=%s' \
+        '&response_type=code&scope=snsapi_base&state=123#wechat_redirect' % (APP_ID,url)
     cnt = 0
     for i in stu_list:
         openid = get_openid(i)
