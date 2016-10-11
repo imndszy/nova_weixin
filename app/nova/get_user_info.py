@@ -10,7 +10,6 @@ class Student(object):
     def __init__(self, openid):
         self.openid = openid
         self.Class = 100000
-        
         # def get_stuid(openid):
         #     sql = "select StuID from biding where OpenID = '"+openid+"'"
         #     @mysql(sql)
@@ -35,41 +34,44 @@ class Student(object):
         self.stu_amount = 55
         self.tutor = '我'
         self.tutor_mail = 'imjtrszy@163.com'
-    
+
     def get_routine_appraise(self):
         if self.stuid != -1:
-            sql = "select *from routine_appraise_13 where StuID = %d" % self.stuid
+            sql = "select *from routine_appraise_13"\
+                  "where StuID = %d" % self.stuid
 
             @mysql(sql)
             def get_routine_appraise(results=''):
-                return {'base': results[2], 'encourage': results[3], 'develop': results[4], 'rank': results[5]}
+                return {'base': results[2], 'encourage': results[3],
+                        'develop': results[4], 'rank': results[5]}
             routine = get_routine_appraise()
             self.routine_base = routine['base']
             self.routine_encou = routine['encourage']
             self.routine_develop = routine['develop']
-            self.routine = self.routine_base+self.routine_encou+self.routine_develop
+            self.routine = self.routine_base + self.routine_encou + self.routine_develop
             self.routine_rank = routine['rank']
             routine['total'] = self.routine
             return routine
         else:
             return "您尚未绑定学号！"
-    
+
     def get_gpa(self):
         if self.stuid != -1:
             sql = "select *from creditcur where StuID = %d" % self.stuid
 
             @mysql(sql)
             def get1(results=''):
-                return {'class': results[1], 'gpa': results[4], 'rank': results[5]}
+                return {'class': results[1], 'gpa': results[4],
+                        'rank': results[5]}
             your_gpa = get1()
             if your_gpa['gpa']:
                 self.gpa = round(your_gpa['gpa'], 4)
                 self.Class = your_gpa['class']
                 self.gpa_rank = your_gpa['rank']
-                self.gpa_rank_next = self.gpa_rank+1
-                self.gpa_rank_prev = self.gpa_rank-1
-                
-                sql = "select *from creditcur where Class = %d and rank= %d" % (self.Class, self.gpa_rank_next)
+                self.gpa_rank_next = self.gpa_rank + 1
+                self.gpa_rank_prev = self.gpa_rank - 1
+                sql = "select *from creditcur where "\
+                      "Class = %d and rank= %d" % (self.Class, self.gpa_rank_next)
 
                 @mysql(sql)
                 def get2(results=''):
@@ -79,8 +81,8 @@ class Student(object):
                         return {'gpa': 'NONE_ELE'}
                 next_gpa = get2()
                 your_gpa['next'] = next_gpa['gpa']
-                
-                sql = "select *from creditcur where Class = %d and rank= %d" % (self.Class, self.gpa_rank_prev)
+                sql = "select *from creditcur where "\
+                      "Class = %d and rank= %d" % (self.Class, self.gpa_rank_prev)
 
                 @mysql(sql)
                 def get3(results=''):
@@ -90,8 +92,8 @@ class Student(object):
                         return {'gpa': 'NONE_ELE'}
                 prev_gpa = get3()
                 your_gpa['prev'] = prev_gpa['gpa']
-                
-                sql = "select *from creditcur where Class = %d and rank= %d" % (self.Class, 1)
+                sql = "select *from creditcur where "\
+                      "Class = %d and rank= %d" % (self.Class, 1)
 
                 @mysql(sql)
                 def get4(results=''):
@@ -101,8 +103,8 @@ class Student(object):
                         return {'gpa': 'NONE_ELE'}
                 first_gpa = get4()
                 your_gpa['first'] = first_gpa['gpa']
-                
-                sql = "select max(rank) as max_rank from creditcur where class = %d" % self.Class
+                sql = "select max(rank) as max_rank from creditcur "\
+                      "where class = %d" % self.Class
 
                 @mysql(sql)
                 def get5(results=''):
@@ -114,11 +116,12 @@ class Student(object):
                 return '您没有记录在案的GPA数据！'
         else:
             return "您尚未绑定学号！"
-        
+
     def get_recom(self):
         your_recom = self.get_gpa()
         if isinstance(your_recom, dict):
-            sql = "select MAX(rank) from creditcur where Class = %d" % self.Class
+            sql = "select MAX(rank) from creditcur "\
+                  "where Class = %d" % self.Class
 
             @mysql(sql)
             def get2(results=''):
@@ -130,8 +133,9 @@ class Student(object):
             your_recom['max_rank'] = max_rank['max_rank']
             self.stu_amount = your_recom['max_rank']
             if self.stu_amount:
-                percent = self.stu_amount/5
-                sql = "select *from creditcur where Class = %d and rank= %d" % (self.Class, percent)
+                percent = self.stu_amount / 5
+                sql = "select *from creditcur where "\
+                      "Class = %d and rank= %d" % (self.Class, percent)
 
                 @mysql(sql)
                 def get(results=''):
@@ -158,7 +162,7 @@ class Student(object):
             if self.tutor == '#N/A':
                 tutor_info['status'] = 0
             else:
-                sql = "select *from tutor where tutor = '"+self.tutor+"' and stuid <> %d" % self.stuid
+                sql = "select *from tutor where tutor = '" + self.tutor + "' and stuid <> %d" % self.stuid
 
                 @mysql(sql)
                 def get1(results=''):
@@ -167,14 +171,13 @@ class Student(object):
                     tutor_info['same_tutor'] = get1()
                 else:
                     tutor_info['same_tutor'] = []
-            
             return tutor_info
         else:
             return "您尚未绑定学号！"
 
 
 def get_stuid(openid):
-    sql = "select StuID from biding where OpenID = '"+openid+"'"
+    sql = "select StuID from biding where OpenID = '" + openid + "'"
 
     @mysql(sql)
     def get(results=''):
@@ -188,7 +191,7 @@ def get_stuid(openid):
 
 
 def get_openid(stuid):
-    sql = "select openid from biding where stuid = '"+stuid+"'"
+    sql = "select openid from biding where stuid = '" + stuid + "'"
 
     @mysql(sql)
     def get(results=''):
@@ -196,9 +199,9 @@ def get_openid(stuid):
             openid = results[0]
             return openid
         else:
-            logging.basicConfig(format='%(asctime)s %(message)s', \
-                                datefmt='%Y/%m/%d %I:%M:%S %p', \
-                                filename='./log/user.log', \
+            logging.basicConfig(format='%(asctime)s %(message)s',
+                                datefmt='%Y/%m/%d %I:%M:%S %p',
+                                filename='./log/user.log',
                                 level=logging.DEBUG)
             logging.warning("unable to fetch openid with the stuid {0} "
                             "-- get_openid() get_user_info.py".format(stuid))

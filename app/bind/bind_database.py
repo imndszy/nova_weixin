@@ -4,27 +4,26 @@
 from nova_weixin.app.lib.database import mysql
 
 
-def get_bind_info(stuid,passwd):
+def get_bind_info(stuid, passwd):
     sql = "select *from biding where stuid = %s" % stuid
 
     @mysql(sql)
     def get_result(results=''):
         return results
     result = get_result()
-    if result :
+    if result:
         return result[0]
     return 0
 
 
-def verify_password(stuid,passwd):
+def verify_password(stuid, passwd):
     sql = "select certificationcode from password where stuid = %s" % stuid
-
 
     @mysql(sql)
     def get_password(results=''):
         return results
     results = get_password()
-    if results!=-1:
+    if results != -1:
         result = str(results[0])
         if(result == passwd):
             return True
@@ -32,9 +31,9 @@ def verify_password(stuid,passwd):
             return False
     return -1
 
+
 def save_new_student(stuid):
     sql = "insert into biding values('',0,%s,'','',0,0,0)" % stuid
-
 
     @mysql(sql)
     def save(results=''):
@@ -43,5 +42,3 @@ def save_new_student(stuid):
         return 0
     else:
         return -1
-
-

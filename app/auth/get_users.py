@@ -39,7 +39,7 @@ def stu(classes_seq):
 
 def create_class_html(class_dict):
     pwd = os.path.abspath(os.path.dirname(__file__))
-    pwd = pwd[:-4]+'templates/auth/class.html'
+    pwd = pwd[:-4] + 'templates/auth/class.html'
     content = u"""{% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 {% block title %}Nova {% endblock %}

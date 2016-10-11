@@ -4,7 +4,7 @@
 import time
 import hashlib
 import xml.etree.ElementTree as ET
-from flask import request, make_response, redirect,render_template
+from flask import request, make_response, redirect, render_template
 
 from nova_weixin.app.weixin import weixin
 from nova_weixin.app.weixin.weixinconfig import TOKEN
@@ -27,7 +27,7 @@ def wechat_msg():
     if msg['MsgType'] == 'event':
         from msg_handler import handle_event
         content = handle_event(msg)
-        return res_text_msg(msg,content)
+        return res_text_msg(msg, content)
 
 
 @weixin.route('/index', methods=['GET', 'POST'])
@@ -42,8 +42,8 @@ def oauth(message_url):
     :param message_url:公众号文章链接
     :return:跳转至相应链接
     """
-    post_url = str(message_url).replace(':/','://')
-    post_url=post_url.replace('$','?').replace('@','#').replace('!','&')
+    post_url = str(message_url).replace(':/', '://')
+    post_url = post_url.replace('$', '?').replace('@', '#').replace('!', '&')
     code = request.args.get('code', '')
     if not code:
         return redirect(post_url)
@@ -105,7 +105,8 @@ def parse(rec):
 
 text_rep = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>"
 
+
 def res_text_msg(msg, content):
-    response = make_response(text_rep % (msg['FromUserName'],msg['ToUserName'],str(int(time.time())), content))
-    response.content_type='application/xml'
+    response = make_response(text_rep % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())), content))
+    response.content_type = 'application/xml'
     return response

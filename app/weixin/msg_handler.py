@@ -9,15 +9,17 @@
 import time
 # from msg_format import *
 from nova_weixin.app.lib.database import mysql
-from nova_weixin.app.nova.get_user_info import get_stuid,Student
+from nova_weixin.app.nova.get_user_info import get_stuid, Student
 
 
 person_info_key = ['daily_assess', 'gpa', 'recom', 'tutor']
 mes_key = ['not_read_mes', 'history_mes']
 
-def save_into_database(content,openid):
+
+def save_into_database(content, openid):
     stuid = get_stuid(openid)
-    sql = "insert into queryrecord values('%s',%s,'%s','')" % (content,int(time.time()),stuid)
+    sql = "insert into queryrecord "\
+          "values('%s',%s,'%s','')" % (content, int(time.time()), stuid)
 
     @mysql(sql)
     def save(results=''):
@@ -25,12 +27,14 @@ def save_into_database(content,openid):
     save()
     return 0
 
+
 def handle_event(msg):
     if msg['Event'] == 'subscribe':
         if msg['EventKey']:
             stuid = msg['EventKey'][8:]
             openid = msg['FromUserName']
-            sql = "update biding set openid = '%s' where stuid = %s" % (openid,stuid)
+            sql = "update biding set openid = '%s' "\
+                  "where stuid = %s" % (openid, stuid)
 
             @mysql(sql)
             def update_binding(results=''):
