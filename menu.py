@@ -26,4 +26,4 @@ if __name__ == "__main__":
                         datefmt='%a, %d %b %Y %H:%M:%S',
                         filename='./log/menu.log',
                         filemode='w')
-    logging.info('执行菜单更新操作'+str(create_menu()))
+    logging.info('执行菜单更新操作' + str(create_menu()))

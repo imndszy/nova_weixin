@@ -5,7 +5,7 @@ import json
 import urllib2
 import time
 
-from nova_weixin.app.weixin.weixinconfig import  APP_ID,SECRET
+from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
 from nova_weixin.app.nova.get_user_info import get_stuid
 from nova_weixin.app.lib.database import mysql
 
@@ -27,9 +27,11 @@ def get_openid(code):
                有错误时返回的json:{"errcode":40029,"errmsg":"invalid code"}
     """
     url = "https://api.weixin.qq.com/sns/oauth2/access_token?" \
-          "appid=%s&secret=%s&code=%s&grant_type=authorization_code" % (APP_ID, SECRET, code)
+          "appid=%s&secret=%s&code=%s"\
+          "&grant_type=authorization_code" % (APP_ID, SECRET, code)
     result = urllib2.urlopen(url).read()
     return json.loads(result)['openid']
+
 
 def openid_handler(openid, post_url):
     """
@@ -40,7 +42,7 @@ def openid_handler(openid, post_url):
     """
     stuid = get_stuid(openid)
     read = int(time.time())
-    sql = "select nID from notecontent where url = '"+post_url+"'"
+    sql = "select nID from notecontent where url = '" + post_url + "'"
 
     @mysql(sql)
     def get_url(results=''):
@@ -70,23 +72,16 @@ def openid_handler(openid, post_url):
     latest = read
     if stuid not in read_id:
         read_id.append(str(stuid))
-        read_id = ','.join(read_id)+',' #a string
-        read_pop = read_pop+1
+        read_id = ','.join(read_id) + ','   #a string
+        read_pop = read_pop + 1
 
-    read_time.append(str(stuid)+':'+str(read))  #a list
-    read_time = ','.join(read_time)+','  #a string
-    sql_all = "update noteresponse set readList='"+read_id+"',"+"readTime = '"+read_time+"',"\
-              +"earlistRead = %d,latestRead = %d,readPop =%d where nID = %d;" % (earliest,latest,read_pop,nid)
+    read_time.append(str(stuid) + ':' + str(read))   #a list
+    read_time = ','.join(read_time) + ','   #a string
+    sql_all = "update noteresponse set readList='" + read_id + "'," + "readTime = '" + read_time + "',"\
+              + "earlistRead = %d,latestRead = %d,readPop =%d where nID = %d;" % (earliest,latest,read_pop,nid)
 
     @mysql(sql_all)
     def update(results=''):
         #log here
         return results
-    result = update()
-
-
-
-
-
-
-
+    update()
