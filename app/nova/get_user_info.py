@@ -37,7 +37,7 @@ class Student(object):
 
     def get_routine_appraise(self):
         if self.stuid != -1:
-            sql = "select *from routine_appraise_13"\
+            sql = "select *from routine_appraise_13 "\
                   "where StuID = %d" % self.stuid
 
             @mysql(sql)
