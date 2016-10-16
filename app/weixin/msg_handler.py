@@ -40,8 +40,11 @@ def handle_event(msg):
             def update_binding(results=''):
                 return results
             update_binding()
-            return 0
+            return "您已成功关注工程管理！"
         return "感谢关注！"
+
+    if msg['Event'] == 'unsubscribe':
+        return ""
 
     if msg['Event'] == 'CLICK':
         if msg['EventKey'] in mes_key:
