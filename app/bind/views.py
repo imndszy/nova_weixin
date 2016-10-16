@@ -40,7 +40,7 @@ def register():
 
 @bind.route('/qrcode', methods=['GET', 'POST'])
 def get_qrcode():
-    if session['register']:
+    if session.get('register'):
         ticket = create_ticket("QR_SCENE", int(session['stuid']))
         url = get_qrcode_url(ticket)
         return redirect(url)
@@ -49,7 +49,7 @@ def get_qrcode():
 
 @bind.route('/rebind', methods=['GET', 'POST'])
 def rebind():
-    if session['register'] and session['openid']:
+    if session.get('register') and session.get('openid'):
         form = ReBindForm()
         if form.validate_on_submit():
             coverage = form.coverage.data
