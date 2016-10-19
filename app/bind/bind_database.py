@@ -33,7 +33,7 @@ def verify_password(stuid, passwd):
 
 
 def save_new_student(stuid):
-    sql = "insert into biding values('',0,%s,'','',0,0,0)" % stuid
+    sql = "insert into biding values('',%d,'','',0,0,0)" % stuid
 
     @mysql(sql)
     def save(results=''):

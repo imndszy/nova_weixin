@@ -2,7 +2,7 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import json
-import requests
+import urllib2
 import logging
 
 from nova_weixin.app.weixin.get_acc_token import get_token
@@ -14,8 +14,8 @@ def create_menu():
     if acc_token:
         url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=%s" % acc_token
         data = MENU
-        request = requests.post(url, json.dumps(data, ensure_ascii=False))
-        return request.text
+        request = urllib2.urlopen(url, json.dumps(data, ensure_ascii=False))
+        return json.loads(request.read())
     else:
         return "failed to get access_token!--menu.py"
 

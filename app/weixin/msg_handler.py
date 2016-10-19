@@ -34,7 +34,7 @@ def handle_event(msg):
             stuid = msg['EventKey'][8:]
             openid = msg['FromUserName']
             sql = "update biding set openid = '%s' "\
-                  "where stuid = %s" % (openid, stuid)
+                  "where stuid = %d" % (openid, stuid)
 
             @mysql(sql)
             def update_binding(results=''):
