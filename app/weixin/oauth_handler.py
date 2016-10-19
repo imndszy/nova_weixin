@@ -32,6 +32,30 @@ def get_openid(code):
     result = urllib2.urlopen(url).read()
     return json.loads(result)['openid']
 
+#
+# def jiaowu(openid):
+#     stuid = get_stuid(openid)
+#     if not stuid:
+#         return -1
+#     sql = "select email,status from stuinfo where stuid=%s" % stuid
+#
+#     @mysql(sql)
+#     def get_jiaowu(results=''):
+#         return results
+#     result = get_jiaowu()
+#     if result:
+#         return result.append(stuid)
+#     else:
+#         return 0
+#
+# def jiaowu_save(stuid,email,status):
+#     sql = "update stuinfo set email = '%s',status = %d where stuid = %d" % (email,status,stuid)
+#     print sql
+#
+#     @mysql(sql)
+#     def save(results):
+#         return results
+#     save()
 
 def openid_handler(openid, post_url):
     """

@@ -4,10 +4,11 @@
 import time
 import hashlib
 import xml.etree.ElementTree as ET
-from flask import request, make_response, redirect, render_template
+from flask import request, make_response, redirect, render_template, session,jsonify
 
 from nova_weixin.app.weixin import weixin
 from nova_weixin.app.weixin.weixinconfig import TOKEN
+# from nova_weixin.app.weixin.oauth_handler import jiaowu,get_openid,jiaowu_save
 
 
 @weixin.route('/', methods=['GET'])
@@ -73,6 +74,40 @@ def oauth(message_url):
 #     #     openid = get_openid(code)
 #     #     #handle_history(openid)
 #     #     return redirect('http://www.njuszy.cn')
+
+#
+# @weixin.route('/jiaowu')
+# def oauth_jiaowu():
+#     # code = request.args.get('code', '')
+#     # if not code:
+#     #     return redirect('')
+#     # openid = get_openid(code)
+#     openid = 'o19fSvhseI04YpNJkVYVIBTEjESs'
+#     session['openid'] = openid
+#     result = jiaowu(openid)
+#     if result == -1:
+#         return '您尚未绑定学号！'
+#     if result:
+#         session['email'] = result[0]
+#         session['status'] = result[1]
+#         session['stuid'] = result[2]
+#         session['jiaowu'] = 'jiaowu'
+#     return render_template('jiaowu.html')
+#
+#
+# @weixin.route('/handle_jiaowu',methods=['GET','POST'])
+# def handle_jiaowu():
+#     if session['jiaowu'] == 'jiaowu' and request.args.get('num') == 1:
+#         da = request.values
+#         session['email'] = da.get('email')
+#         session['status'] = da.get('status')
+#         jiaowu_save(session['stuid'],session['email'],session['status'])
+#     if request.args.get('num') == 2 and session['jiaowu'] == 'jiaowu':
+#         return jsonify(result='ok',
+#                        email=session['email'],
+#                        status=session['status'])
+
+
 
 
 def verification():

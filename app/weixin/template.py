@@ -78,4 +78,4 @@ def send_common_template_msg(mes_url, title='这里是标题', touser='o19fSvhse
                     }
             }
     request = requests.post(url, json.dumps(data, ensure_ascii=False))
-    return json.loads(request.text)
+    return request.json()
