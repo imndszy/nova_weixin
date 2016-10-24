@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>教务信息邮箱推送</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<script type="text/javascript" src="../static/js/jquery.js"></script>
+<style>
+	.carditems_list { padding: 10px 0 9px 10px; border-bottom: 1px solid #ececec; background: #fff; position: relative; }
+	.cont{ padding-bottom: 120px;}
+	p{ color:#888; }
+	.sql{ color:#000; padding-left:10px; padding-right:10px; font-size:16px;}
+	.btn-success{ font-size:16px; }
+	.mybr{height:12px; clear:both; }
+</style>
+<script type=text/javascript>
+$(document).ready(function(){
+	$.ajax({
+			url:'/handle_jiaowu',
+			dataType:'json',
+			type:'get',
+			data:{
+				num:1
+			},
+			success: function(data) {
+				document.getElementById("Email").value=data.email;
+				if(data.status=="1")
+				document.getElementById("box").checked=true;
+			}
+	});
+});
+
+</script>
+
+</head>
+
+<body>
+<div class="head">
+    <span class="htit">输入个人邮箱</span>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-xs-1 col-sm-1 col-md-4"></div>
+		<div class="col-xs-10 col-sm-10 col-md-4">
+		
+			<div style="padding:20px 0px;">
+			   <!--<form class="bs-example bs-example-form" role="form">-->
+			
+				<div class="input-group">
+				   <input type="text" class="form-control" placeholder="Email" id="Email" value="" />
+				   <span class="input-group-addon">
+					  <input type="checkbox" class="cb" id="box" />
+				   </span>				   
+				</div><!-- /input-group --><div class="mybr"></div>
+				
+				<button type="button" class="btn btn-success btn-block" id="btn">提交修改</button>
+			   <!--</form>-->
+			<p class="text-primary"></br>
+				注：填写邮箱后，打钩表示 该邮箱第一时间接收教务网最新通知
+			</p>
+			</div>
+
+		</div>
+		<div class="col-xs-1 col-sm-1 col-md-4"></div>
+	</div>
+</div>
+	<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script>
+$(document).ready(function() {
+	$('#btn').click(function() {
+		if(document.getElementById("box").checked){
+			status = '1';
+		}else{
+			status = '0';
+		}
+		var 
+			email  = document.getElementById("Email").value;
+		$.ajax({
+			url:'/handle_jiaowu',
+			dataType:'json',
+			type:'POST',
+			data:{
+				num : 2,
+				email : email,
+				status : status
+			},
+			success: function(data) {
+				if (data.result=='ok') {
+					alert('提交成功');
+				}else{
+					alert('提交失败');
+				}
+			}
+		});
+	});
+});
+</script>
+</body>
+</html>

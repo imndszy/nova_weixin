@@ -8,7 +8,7 @@ from flask import request, make_response, redirect, render_template, session,jso
 
 from nova_weixin.app.weixin import weixin
 from nova_weixin.app.weixin.weixinconfig import TOKEN
-# from nova_weixin.app.weixin.oauth_handler import jiaowu,get_openid,jiaowu_save
+from nova_weixin.app.weixin.oauth_handler import jiaowu,get_openid,jiaowu_save
 
 
 @weixin.route('/', methods=['GET'])
@@ -22,7 +22,8 @@ def wechat_auth():
 @weixin.route('/', methods=['POST'])
 def wechat_msg():
     rec = request.data
-    msg = parse(rec)
+    if rec:
+        msg = parse(rec)
     # from msg_handler import MsgHandler
     # message = MsgHandler(msg)
     if msg['MsgType'] == 'event':
@@ -49,7 +50,6 @@ def oauth(message_url):
     if not code:
         return redirect(post_url)
     else:
-        from nova_weixin.app.weixin.oauth_handler import get_openid
         openid = get_openid(code)
         try:
             from nova_weixin.app.weixin.oauth_handler import openid_handler
@@ -73,41 +73,40 @@ def oauth(message_url):
 #     #     from nova_weixin.app.weixin.oauth_handler import get_openid
 #     #     openid = get_openid(code)
 #     #     #handle_history(openid)
-#     #     return redirect('http://www.njuszy.cn')
-
-#
-# @weixin.route('/jiaowu')
-# def oauth_jiaowu():
-#     # code = request.args.get('code', '')
-#     # if not code:
-#     #     return redirect('')
-#     # openid = get_openid(code)
-#     openid = 'o19fSvhseI04YpNJkVYVIBTEjESs'
-#     session['openid'] = openid
-#     result = jiaowu(openid)
-#     if result == -1:
-#         return '您尚未绑定学号！'
-#     if result:
-#         session['email'] = result[0]
-#         session['status'] = result[1]
-#         session['stuid'] = result[2]
-#         session['jiaowu'] = 'jiaowu'
-#     return render_template('jiaowu.html')
-#
-#
-# @weixin.route('/handle_jiaowu',methods=['GET','POST'])
-# def handle_jiaowu():
-#     if session['jiaowu'] == 'jiaowu' and request.args.get('num') == 1:
-#         da = request.values
-#         session['email'] = da.get('email')
-#         session['status'] = da.get('status')
-#         jiaowu_save(session['stuid'],session['email'],session['status'])
-#     if request.args.get('num') == 2 and session['jiaowu'] == 'jiaowu':
-#         return jsonify(result='ok',
-#                        email=session['email'],
-#                        status=session['status'])
+#     #     return redirect('https://www.njuszy.cn')
 
 
+@weixin.route('/jiaowu')
+def oauth_jiaowu():
+    code = request.args.get('code', '')
+    if not code:
+        return redirect('')
+    openid = get_openid(code)
+    session['openid'] = openid
+    result = jiaowu(openid)
+    if result == -1:
+        return '您尚未绑定学号！'
+    if result:
+        session['email'] = result[0]
+        session['status'] = result[1]
+        session['stuid'] = result[2]
+        session['jiaowu'] = 'jiaowu'
+    return render_template('jiaowu.html')
+
+
+@weixin.route('/handle_jiaowu',methods=['GET','POST'])
+def handle_jiaowu():
+    if session['jiaowu'] == 'jiaowu' and request.values.get('num') == '2':
+        da = request.values
+        session['email'] = da.get('email').encode('utf8')
+        session['status'] = int(da.get('status').encode('utf8'))
+        jiaowu_save(session['stuid'],session['email'],session['status'])
+        return jsonify(result='ok')
+    if request.args.get('num') == '1' and session['jiaowu'] == 'jiaowu':
+        return jsonify(result='ok',
+                       email=session['email'],
+                       status=str(session['status']))
+    return 'ok'
 
 
 def verification():
