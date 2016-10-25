@@ -8,7 +8,8 @@ from flask import request, make_response, redirect, render_template, session,jso
 
 from nova_weixin.app.weixin import weixin
 from nova_weixin.app.weixin.weixinconfig import TOKEN
-from nova_weixin.app.weixin.oauth_handler import jiaowu,get_openid,jiaowu_save
+from nova_weixin.app.weixin.oauth_handler import jiaowu,get_openid_from_code,jiaowu_save,history_articles
+from nova_weixin.app.nova.get_user_info import get_stuid,get_stu_name
 
 
 @weixin.route('/', methods=['GET'])
@@ -50,7 +51,7 @@ def oauth(message_url):
     if not code:
         return redirect(post_url)
     else:
-        openid = get_openid(code)
+        openid = get_openid_from_code(code)
         try:
             from nova_weixin.app.weixin.oauth_handler import openid_handler
             openid_handler(openid, post_url)
@@ -59,29 +60,44 @@ def oauth(message_url):
         finally:
             return redirect(post_url)
 
-# @weixin.route('/history', methods=['GET', 'POST'])
-# def oauth_history():
-#     """
-#     这个函数微信自定义菜单链接的跳转
-#     :return:跳转至相应链接
-#     """
-#     code = request.args.get('code', '')
-#     return render_template('base2.html')
-#     # if not code:
-#     #     return redirect('http://www.njuszy.cn')
-#     # else:
-#     #     from nova_weixin.app.weixin.oauth_handler import get_openid
-#     #     openid = get_openid(code)
-#     #     #handle_history(openid)
-#     #     return redirect('https://www.njuszy.cn')
+@weixin.route('/history', methods=['GET', 'POST'])
+def oauth_history():
+    # code = request.args.get('code', '')
+    # if not code:
+    #     return redirect('')
+    # openid = get_openid_from_code(code)
+    openid = "asdadasdadadas"
+    session['openid'] = openid
+    stuid = get_stuid(openid)
+    session['stuid'] = stuid
+    session['name'] = get_stu_name(stuid).encode('utf8')
+    return render_template('note.html')
 
+
+@weixin.route('/handle_history')
+def handle_history():
+    page = int(request.args.get('page'))
+    if not page:
+        return redirect('')
+    result = history_articles(session['stuid'])
+    article_list = []
+    for i in result:
+        if len(i):
+            article_list.append({'title':i[0].encode('utf8'),'url':i[1].encode('utf8')})
+    article_list.reverse()
+    if len(article_list)-page*8>8:
+        result = {'result':article_list[(page-1)*8:8*page],'name':session['name']}
+    else:
+        result = {'result':article_list[(page-1)*8:],'name':session['name']}
+    return jsonify(result)
 
 @weixin.route('/jiaowu')
 def oauth_jiaowu():
-    code = request.args.get('code', '')
-    if not code:
-        return redirect('')
-    openid = get_openid(code)
+    # code = request.args.get('code', '')
+    # if not code:
+    #     return redirect('')
+    # openid = get_openid_from_code(code)
+    openid = "asdadasdadadas"
     session['openid'] = openid
     result = jiaowu(openid)
     if result == -1:

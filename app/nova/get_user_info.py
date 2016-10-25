@@ -191,7 +191,7 @@ def get_stuid(openid):
 
 
 def get_openid(stuid):
-    sql = "select openid from biding where stuid = '" + stuid + "'"
+    sql = "select openid from biding where stuid = '" + str(stuid) + "'"
 
     @mysql(sql)
     def get(results=''):
@@ -206,4 +206,23 @@ def get_openid(stuid):
             logging.warning("unable to fetch openid with the stuid {0} "
                             "-- get_openid() get_user_info.py".format(stuid))
             return -1
+    return get()
+
+def get_stu_name(stuid):
+    sql = "select name from stuinfo where stuid = %d" % stuid
+
+    @mysql(sql)
+    def get(results=''):
+        if results:
+            name = results[0]
+            return name
+        else:
+            logging.basicConfig(format='%(asctime)s %(message)s',
+                                datefmt='%Y/%m/%d %I:%M:%S %p',
+                                filename='./log/user.log',
+                                level=logging.DEBUG)
+            logging.warning("unable to fetch openid with the stuid {0} "
+                            "-- get_openid() get_user_info.py".format(stuid))
+            return -1
+
     return get()

@@ -10,7 +10,7 @@ from nova_weixin.app.nova.get_user_info import get_stuid
 from nova_weixin.app.lib.database import mysql
 
 
-def get_openid(code):
+def get_openid_from_code(code):
     """
     fetch user's openid with code from oauth
     :param code: 向用户发起网页授权后用户同意后获取到的code，scope参数为snsapi_base，
@@ -109,3 +109,30 @@ def openid_handler(openid, post_url):
         #log here
         return results
     update()
+
+
+def history_articles(stuid):
+    sql = "select nid,stuids from noteindex"
+
+    @mysql(sql)
+    def get(results=''):
+        return results
+
+    result = get()
+    nids = []
+    for i in result:
+        if str(stuid) in i[1]:
+            nids.append(i[0])
+    articles = []
+    article_dict = dict()
+    article_dict['articles'] = dict()
+    for x in nids:
+        sql = "select title,url from notecontent where nid = %d" % x
+
+        @mysql(sql)
+        def get_content(results=''):
+            return results
+
+        re = get_content()
+        articles.append(re)
+    return articles
