@@ -70,7 +70,10 @@ MENU = {
                 {
                     "type": "view",
                     "name": "教务推送",
-                    "url": "http://121.42.216.141"
+                    "url": "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s"
+                           "&redirect_uri=%s"
+                           "/jiaowu&response_type=code&scope=snsapi_base&state=123&connect_redirect=1#wechat_redirect"
+                           % (APP_ID,ADDRESS)
                 },
                 {
                     "type": "scancode_push",
