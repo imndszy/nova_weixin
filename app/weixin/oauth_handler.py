@@ -110,6 +110,16 @@ def openid_handler(openid, post_url):
         return results
     update()
 
+#
+# def history_latest():
+#     sql = "select nid from noteindex order by nid desc limit 1"
+#
+#     @mysql(sql)
+#     def get(results=''):
+#         return results
+#     latest = get()
+#     return latest[0]
+
 
 def history_articles(stuid):
     sql = "select nid,stuids from noteindex"
@@ -127,7 +137,7 @@ def history_articles(stuid):
     article_dict = dict()
     article_dict['articles'] = dict()
     for x in nids:
-        sql = "select title,url from notecontent where nid = %d" % x
+        sql = "select nid,title,url from notecontent where nid = %d" % x
 
         @mysql(sql)
         def get_content(results=''):

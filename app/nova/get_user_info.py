@@ -42,9 +42,14 @@ class Student(object):
 
             @mysql(sql)
             def get_routine_appraise(results=''):
-                return {'base': results[2], 'encourage': results[3],
+                if results:
+                    return {'base': results[2], 'encourage': results[3],
                         'develop': results[4], 'rank': results[5]}
+                else:
+                    return None
             routine = get_routine_appraise()
+            if not routine:
+                return "当前没有您的日常行为考核信息！"
             self.routine_base = routine['base']
             self.routine_encou = routine['encourage']
             self.routine_develop = routine['develop']
@@ -61,10 +66,15 @@ class Student(object):
 
             @mysql(sql)
             def get1(results=''):
-                return {'class': results[1], 'gpa': results[4],
-                        'rank': results[5]}
+                if results:
+                    return {'class': results[1], 'gpa': results[4],
+                        'rank': int(results[5])}
+                else:
+                    return None
             your_gpa = get1()
-            if your_gpa['gpa']:
+            if not your_gpa:
+                return "当前没有您的GPA信息!!"
+            if your_gpa.get('gpa'):
                 self.gpa = round(your_gpa['gpa'], 4)
                 self.Class = your_gpa['class']
                 self.gpa_rank = your_gpa['rank']
