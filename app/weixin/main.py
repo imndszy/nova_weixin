@@ -28,10 +28,13 @@ def wechat_msg():
         msg = parse(rec)
     # from msg_handler import MsgHandler
     # message = MsgHandler(msg)
-    if msg['MsgType'] == 'event':
-        from msg_handler import handle_event
-        content = handle_event(msg)
-        return res_text_msg(msg, content)
+        if msg['MsgType'] == 'event':
+            if msg['Event'] == 'CLICK' and  msg['EventKey'] == 'not_read_msg':
+                from msg_handler import handle_mes_key
+                handle_mes_key(msg)
+            from msg_handler import handle_event
+            content = handle_event(msg)
+            return res_text_msg(msg, content)
 
 
 @weixin.route('/index', methods=['GET', 'POST'])

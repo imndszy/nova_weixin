@@ -7,7 +7,8 @@
 
 """
 import time
-# from msg_format import *
+from flask import make_response
+from msg_format import *
 from nova_weixin.app.lib.database import mysql
 from nova_weixin.app.nova.get_user_info import get_stuid, Student
 
@@ -135,7 +136,44 @@ def handle_event(msg):
 
 
 def handle_mes_key(msg):
-    if msg['EventKey'] == 'not_read_mes':
-        pass
-    elif msg['EventKey'] == 'history_mes':
-        pass
+    stuid = get_stuid(msg['FromUserName'])
+    sql = 'select nid,readlist from noteresponse'
+
+    @mysql(sql)
+    def sel(results=''):
+        return results
+    re = sel()
+    read = [i[0] for i in re if str(stuid) in i[1]]
+
+    sql = 'select nid,stuids from noteindex'
+
+    @mysql(sql)
+    def sel2(results=''):
+        return results
+
+    re2 = sel2()
+
+    send = [j[0] for j in re2 if str(stuid) in j[1]]
+
+    not_read = list(set(send)-set(read))
+
+    sql = 'select nid,title,picurl,url from notecontent'
+    @mysql(sql)
+    def sel3(results=''):
+        return results
+    content = sel3()
+    content = [(x[1],'',x[2],x[3]) for x in content if x[0] in not_read]
+    content.reverse()
+    send_content =content[:10]
+    middle_str=''
+    for i in send_content:
+        middle_str += news_rep_middle % i
+
+    head_str = news_rep_front % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())),len(send_content))
+    content = head_str+middle_str+news_rep_back
+    response = make_response(content)
+    response.content_type = 'application/xml'
+    return response
+
+
+
