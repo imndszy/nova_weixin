@@ -102,7 +102,7 @@ def openid_handler(openid, post_url):
     if earliest == 0:
         earliest = read
     latest = read
-    if stuid not in read_id:
+    if str(stuid) not in read_id:
         read_id.append(str(stuid))
         read_id = ','.join(read_id) + ','   #a string
         read_pop = read_pop + 1
