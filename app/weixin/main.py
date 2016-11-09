@@ -26,13 +26,14 @@ def wechat_msg():
     rec = request.data
     if rec:
         msg = parse(rec)
-    # from msg_handler import MsgHandler
-    # message = MsgHandler(msg)
         if msg['MsgType'] == 'event':
             if msg['Event'] == 'CLICK' and msg['EventKey'] == 'not_read_mes':
                 from msg_handler import handle_mes_key
                 content = handle_mes_key(msg)
-                return res_news_msg(content)
+                if content:
+                    return res_news_msg(content)
+                else:
+                    return res_text_msg(msg, '暂无未读消息')
             from msg_handler import handle_event
             content = handle_event(msg)
             return res_text_msg(msg, content)
