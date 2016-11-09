@@ -11,7 +11,8 @@ from flask import make_response
 from msg_format import *
 from nova_weixin.app.lib.database import mysql
 from nova_weixin.app.nova.get_user_info import get_stuid, Student
-
+from nova_weixin.app.config import ADDRESS
+from nova_weixin.app.weixin.weixinconfig import APP_ID
 
 person_info_key = ['daily_assess', 'gpa', 'recom', 'tutor']
 mes_key = ['not_read_mes', 'history_mes']
@@ -38,7 +39,7 @@ def handle_event(msg):
                   "where stuid = %d" % (openid, stuid)
 
             @mysql(sql)
-            def update_binding(results=''):
+            def update_binding(results=None):
                 return results
             update_binding()
             return "您已成功关注工程管理！"
@@ -129,31 +130,60 @@ def handle_mes_key(msg):
     sql = 'select nid,readlist from noteresponse'
 
     @mysql(sql)
-    def sel(results=''):
+    def sel(results=None):
         return results
     re = sel()
-    read = [i[0] for i in re if str(stuid) in i[1]]
-
+    if not re:
+        return ''
+    if isinstance(re[0],tuple):
+        read = [i[0] for i in re if str(stuid) in i[1]]
+    else:
+        if str(stuid) not in re[1]:
+            read = []
+        else:
+            read = re[:1]
     sql = 'select nid,stuids from noteindex'
 
     @mysql(sql)
-    def sel2(results=''):
+    def sel2(results=None):
         return results
 
     re2 = sel2()
-
-    send = [j[0] for j in re2 if str(stuid) in j[1]]
+    if not re2:
+        return ''
+    if isinstance(re2[0],tuple):
+        send = [j[0] for j in re2 if str(stuid) in j[1]]
+    else:
+        if str(stuid) not in re2[1]:
+            send = []
+        else:
+            send = re2[:1]
 
     not_read = list(set(send)-set(read))
-
+    if not not_read:
+        return ''
     sql = 'select nid,title,picurl,url from notecontent'
     @mysql(sql)
-    def sel3(results=''):
+    def sel3(results=None):
         return results
+
     content = sel3()
-    content = [(x[1],'',x[2],x[3]) for x in content if x[0] in not_read]
-    content.reverse()
-    send_content =content[:4]
+    if isinstance(content[0],tuple):
+        content.reverse()
+        send_content = content[:10]
+    else:
+        send_content = [tuple(content)]
+    def transfer_url(url):
+        arti_url = url.replace('?', '$').replace('#', '@').replace('&', '!')
+        url = ADDRESS + '/code/' + arti_url
+        post_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?' \
+                   'appid=%s&redirect_uri=%s' \
+                   '&response_type=code&scope=snsapi_base&state=123' \
+                   '#wechat_redirect' % (APP_ID, url)
+        return post_url
+
+    send_content = [(x[1],'',x[2],transfer_url(x[3])) for x in send_content if x[0] in not_read]
+
     middle_str=''
     for i in send_content:
         middle_str += news_rep_middle % i

@@ -4,6 +4,7 @@
 import json
 import urllib2
 import time
+import logging
 
 from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
 from nova_weixin.app.nova.get_user_info import get_stuid
@@ -40,7 +41,7 @@ def jiaowu(openid):
     sql = "select email,status from stuinfo where stuid=%s" % stuid
 
     @mysql(sql)
-    def get_jiaowu(results=''):
+    def get_jiaowu(results=None):
         return results
     result = get_jiaowu()
     if result:
@@ -53,7 +54,7 @@ def jiaowu_save(stuid,email,status):
     sql = "update stuinfo set email = '%s',status = %d where stuid = %d" % (email,status,stuid)
 
     @mysql(sql)
-    def save(results):
+    def save(results=None):
         return results
     save()
 
@@ -69,8 +70,10 @@ def openid_handler(openid, post_url):
     sql = "select nID from notecontent where url = '" + post_url + "'"
 
     @mysql(sql)
-    def get_url(results=''):
-        if results:
+    def get_url(results=None):
+        if len(results)>1:
+            nid = results[0][0]
+        elif len(results) == 1:
             nid = results[0]
         else:
             nid = -1
@@ -80,11 +83,16 @@ def openid_handler(openid, post_url):
     sql2 = "select * from noteresponse where nID = %d" % nid
 
     @mysql(sql2)
-    def get_read_info(results=''):
+    def get_read_info(results=None):
         if results:
             return results
         else:
-            #log here
+            logging.basicConfig(level=logging.DEBUG,
+                                format='%(asctime)s %(filename)s[line:%(lineno)d]'
+                                       '%(levelname)s %(message)s',
+                                datefmt='%a, %d %b %Y %H:%M:%S',
+                                filename='./log/database.log',
+                                filemode='w')
             pass
     results = get_read_info()
     earliest = results[1]
@@ -105,7 +113,7 @@ def openid_handler(openid, post_url):
               + "earlistRead = %d,latestRead = %d,readPop =%d where nID = %d;" % (earliest,latest,read_pop,nid)
 
     @mysql(sql_all)
-    def update(results=''):
+    def update(results=None):
         #log here
         return results
     update()
@@ -125,7 +133,7 @@ def history_articles(stuid):
     sql = "select nid,stuids from noteindex"
 
     @mysql(sql)
-    def get(results=''):
+    def get(results=None):
         return results
 
     result = get()
@@ -140,7 +148,7 @@ def history_articles(stuid):
         sql = "select nid,title,url from notecontent where nid = %d" % x
 
         @mysql(sql)
-        def get_content(results=''):
+        def get_content(results=None):
             return results
 
         re = get_content()
