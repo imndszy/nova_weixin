@@ -29,9 +29,10 @@ def wechat_msg():
     # from msg_handler import MsgHandler
     # message = MsgHandler(msg)
         if msg['MsgType'] == 'event':
-            if msg['Event'] == 'CLICK' and  msg['EventKey'] == 'not_read_msg':
+            if msg['Event'] == 'CLICK' and msg['EventKey'] == 'not_read_mes':
                 from msg_handler import handle_mes_key
-                handle_mes_key(msg)
+                content = handle_mes_key(msg)
+                return res_news_msg(content)
             from msg_handler import handle_event
             content = handle_event(msg)
             return res_text_msg(msg, content)
@@ -163,5 +164,10 @@ text_rep = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%
 
 def res_text_msg(msg, content):
     response = make_response(text_rep % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())), content))
+    response.content_type = 'application/xml'
+    return response
+
+def res_news_msg(content):
+    response = make_response(content)
     response.content_type = 'application/xml'
     return response
