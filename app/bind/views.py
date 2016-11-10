@@ -57,5 +57,7 @@ def rebind():
                 ticket = create_ticket("QR_SCENE", int(session['stuid']))
                 url = get_qrcode_url(ticket)
                 return redirect(url)
+            else:
+                return redirect(url_for('main.index'))
         return render_template('bind/rebind.html', form=form)
     return render_template('404.html')

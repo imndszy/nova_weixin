@@ -7,7 +7,7 @@ from nova_weixin.app.main import main
 
 @main.route('/')
 def index():
-    return render_template('main/index2.html')
+    return render_template('main/index.html')
 
 
 @main.route('/wrong')
