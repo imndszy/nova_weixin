@@ -34,7 +34,7 @@ def wechat_msg():
                 pass
             finally:
                 return ""
-            
+
         if msg['MsgType'] == 'event':
             if msg['Event'] == 'CLICK' and msg['EventKey'] == 'not_read_mes':
                 content = handle_mes_key(msg)

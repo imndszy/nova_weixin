@@ -80,28 +80,48 @@ class Student(object):
                 self.gpa_rank = your_gpa['rank']
                 self.gpa_rank_next = self.gpa_rank + 1
                 self.gpa_rank_prev = self.gpa_rank - 1
-                sql = "select *from creditcur where "\
-                      "Class = %d and rank= %d" % (self.Class, self.gpa_rank_next)
+
+                sql = "select max(rank) as max_rank from creditcur " \
+                      "where class = %d" % self.Class
 
                 @mysql(sql)
-                def get2(results=''):
-                    if results:
-                        return {'gpa': results[4]}
-                    else:
-                        return {'gpa': 'NONE_ELE'}
-                next_gpa = get2()
-                your_gpa['next'] = next_gpa['gpa']
-                sql = "select *from creditcur where "\
-                      "Class = %d and rank= %d" % (self.Class, self.gpa_rank_prev)
+                def get5(results=''):
+                    return results[0]
 
-                @mysql(sql)
-                def get3(results=''):
-                    if results:
-                        return {'gpa': results[4]}
-                    else:
-                        return {'gpa': 'NONE_ELE'}
-                prev_gpa = get3()
-                your_gpa['prev'] = prev_gpa['gpa']
+                max_rank = get5()
+                your_gpa['max'] = max_rank
+                if self.gpa_rank_next != max_rank:
+                    sql = "select *from creditcur where "\
+                          "Class = %d and rank= %d" % (self.Class, self.gpa_rank_next)
+
+                    @mysql(sql)
+                    def get2(results=''):
+                        if results:
+                            return {'gpa': results[4]}
+                        else:
+                            return {'gpa': 'NONE_ELE'}
+                    next_gpa = get2()
+                    your_gpa['next'] = next_gpa['gpa']
+                else:
+                    your_gpa['nonnext'] = 1
+                    your_gpa['next'] = '悲剧…后面没有了'
+
+                if self.gpa_rank_prev != 0:
+                    sql = "select *from creditcur where "\
+                          "Class = %d and rank= %d" % (self.Class, self.gpa_rank_prev)
+
+                    @mysql(sql)
+                    def get3(results=''):
+                        if results:
+                            return {'gpa': results[4]}
+                        else:
+                            return {'gpa': 'NONE_ELE'}
+                    prev_gpa = get3()
+                    your_gpa['prev'] = prev_gpa['gpa']
+                else:
+                    your_gpa['nonprev'] = 1
+                    your_gpa['prev'] = '前面木有了'
+
                 sql = "select *from creditcur where "\
                       "Class = %d and rank= %d" % (self.Class, 1)
 
@@ -113,14 +133,7 @@ class Student(object):
                         return {'gpa': 'NONE_ELE'}
                 first_gpa = get4()
                 your_gpa['first'] = first_gpa['gpa']
-                sql = "select max(rank) as max_rank from creditcur "\
-                      "where class = %d" % self.Class
 
-                @mysql(sql)
-                def get5(results=''):
-                    return results[0]
-                max_rank = get5()
-                your_gpa['max'] = max_rank
                 return your_gpa
             else:
                 return '您没有记录在案的GPA数据！'

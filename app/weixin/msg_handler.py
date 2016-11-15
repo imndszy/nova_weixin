@@ -20,7 +20,7 @@ mes_key = ['not_read_mes', 'history_mes']
 def save_into_database(content, openid):
     stuid = get_stuid(openid)
     sql = "insert into queryrecord "\
-          "values('%s',%s,'%s','')" % (content, int(time.time()), stuid)
+          "values('%s',%d,'%s','')" % (content, int(time.time()), stuid)
 
     @mysql(sql)
     def save(results=''):
@@ -71,14 +71,24 @@ def handle_event(msg):
                 your_gpa = str(stu.gpa)
                 your_gpa_rank = str(stu.gpa_rank)
                 rank_percent = str(round(float(stu.gpa_rank) / gpa['max'] * 100, 2)) + '%'
-                your_next_gpa = str(round(gpa['next'], 4))
-                your_prev_gpa = str(round(gpa['prev'], 4))
+                if gpa.get('nonnext'):
+                    your_next_gpa = gpa['next']
+                else:
+                    your_next_gpa = str(round(gpa['next'], 4))
+
+                if gpa.get('nonprev'):
+                    your_prev_gpa = gpa['prev']
+                else:
+                    your_prev_gpa = str(round(gpa['prev'], 4))
+
                 your_first_gpa = str(round(gpa['first'], 4))
+
                 content = 'GPA: ' + your_gpa + '\nRank: ' + your_gpa_rank \
                           + '\n您位于' + rank_percent + \
                           '\n前一名的绩点: ' + your_prev_gpa + '\n后一名的绩点: ' \
                           + your_next_gpa + '\n第一名的绩点: ' \
                           + your_first_gpa
+
             else:
                 content = gpa
             return content
@@ -89,8 +99,15 @@ def handle_event(msg):
                 your_gpa = str(stu.gpa)
                 your_gpa_rank = str(stu.gpa_rank)
                 rank_percent = str(round(float(stu.gpa_rank) / gpa['max'] * 100, 2)) + '%'
-                your_next_gpa = str(round(gpa['next'], 4))
-                your_prev_gpa = str(round(gpa['prev'], 4))
+                if gpa.get('nonnext'):
+                    your_next_gpa = gpa['next']
+                else:
+                    your_next_gpa = str(round(gpa['next'], 4))
+
+                if gpa.get('nonprev'):
+                    your_prev_gpa = gpa['prev']
+                else:
+                    your_prev_gpa = str(round(gpa['prev'], 4))
                 your_first_gpa = str(round(gpa['first'], 4))
                 twenty_per_gpa = str(round(gpa['twenty_per'], 4))
                 content = '总GPA排名\n' + '*' * 22 + '\nGPA: ' + your_gpa \
