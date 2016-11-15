@@ -11,6 +11,7 @@ from nova_weixin.app.weixin.weixinconfig import TOKEN
 from nova_weixin.app.weixin.oauth_handler import (jiaowu,get_openid_from_code,
                                                   jiaowu_save,history_articles)
 from nova_weixin.app.nova.get_user_info import get_stuid,get_stu_name
+from nova_weixin.app.weixin.msg_handler import handle_mes_key,handle_event,save_into_database
 
 
 @weixin.route('/', methods=['GET'])
@@ -26,15 +27,21 @@ def wechat_msg():
     rec = request.data
     if rec:
         msg = parse(rec)
+        if msg['MsgType'] == 'text':
+            try:
+                save_into_database(msg['Content'],msg['FromUser'])
+            except:
+                pass
+            finally:
+                return ""
+            
         if msg['MsgType'] == 'event':
             if msg['Event'] == 'CLICK' and msg['EventKey'] == 'not_read_mes':
-                from msg_handler import handle_mes_key
                 content = handle_mes_key(msg)
                 if content:
                     return res_news_msg(content)
                 else:
                     return res_text_msg(msg, '暂无未读消息')
-            from msg_handler import handle_event
             content = handle_event(msg)
             return res_text_msg(msg, content)
 

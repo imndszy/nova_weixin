@@ -7,7 +7,6 @@
 
 """
 import time
-from flask import make_response
 from msg_format import *
 from nova_weixin.app.lib.database import mysql
 from nova_weixin.app.nova.get_user_info import get_stuid, Student
@@ -36,7 +35,7 @@ def handle_event(msg):
             stuid = msg['EventKey'][8:]
             openid = msg['FromUserName']
             sql = "update biding set openid = '%s' "\
-                  "where stuid = %d" % (openid, stuid)
+                  "where stuid = %s" % (openid, stuid)
 
             @mysql(sql)
             def update_binding(results=None):
@@ -44,6 +43,9 @@ def handle_event(msg):
             update_binding()
             return "您已成功关注工程管理！"
         return "感谢关注！"
+
+    if msg['Event'] == 'SCAN':
+        return "您已成功再次关注…然而并没有什么用～"
 
     if msg['Event'] == 'unsubscribe':
         return ""
