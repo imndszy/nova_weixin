@@ -6,7 +6,9 @@ import os
 from flask import Flask
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.moment import Moment
-from config import config
+from .config import (config, DB_HOSTNAME, DB_PASSWORD,
+                     DB_USERNAME, DB_NAME, DB_PORT)
+from nova_weixin.packages.novamysql import create_engine
 
 bootstrap = Bootstrap()
 moment = Moment()
@@ -18,6 +20,7 @@ def create_app(config_name):
     config[config_name].init_app(app)
     os.environ['config_flask'] = config_name
 
+    create_engine(DB_USERNAME, DB_PASSWORD, DB_NAME, DB_HOSTNAME, DB_PORT)
     bootstrap.init_app(app)
     moment.init_app(app)
 
