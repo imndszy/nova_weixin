@@ -171,7 +171,7 @@ def _select(sql, first, *args):
         cursor = _db_ctx.connection.cursor()
         cursor.execute(sql, args)
         if cursor.description:
-            names = [x[0] for x in cursor.description]
+            names = [x[0].lower() for x in cursor.description]
         if first:
             values = cursor.fetchone()
             if not values:
@@ -189,6 +189,19 @@ def select_one(sql, *args):
     如果没有结果 返回None
     如果有1个结果，返回一个结果
     如果有多个结果，返回第一个结果
+    >>> u1 = dict(id=100, name='Alice', email='alice@test.org', passwd='ABC-12345', last_modified=time.time())
+    >>> u2 = dict(id=101, name='Sarah', email='sarah@test.org', passwd='ABC-12345', last_modified=time.time())
+    >>> insert('user', **u1)
+    1
+    >>> insert('user', **u2)
+    1
+    >>> u = select_one('select * from user where id=?', 100)
+    >>> u.name
+    u'Alice'
+    >>> select_one('select * from user where email=?', 'abc@email.com')
+    >>> u2 = select_one('select * from user where passwd=? order by email', 'ABC-12345')
+    >>> u2.name
+    u'Alice'
     """
     return _select(sql, True, *args)
 
@@ -197,7 +210,21 @@ def select_int(sql, *args):
     """
     执行一个sql 返回一个数值，
     注意仅一个数值，如果返回多个数值将触发异常
-
+    >>> u1 = dict(id=96900, name='Ada', email='ada@test.org', passwd='A-12345', last_modified=time.time())
+    >>> u2 = dict(id=96901, name='Adam', email='adam@test.org', passwd='A-12345', last_modified=time.time())
+    >>> insert('user', **u1)
+    1
+    >>> insert('user', **u2)
+    1
+    >>> select_int('select count(*) from user')
+    5
+    >>> select_int('select count(*) from user where email=?', 'ada@test.org')
+    1
+    >>> select_int('select count(*) from user where email=?', 'notexist@test.org')
+    0
+    >>> select_int('select id from user where email=?', 'ada@test.org')
+    96900
+    >>> select_int('select id, name from user where email=?', 'ada@test.org')
     Traceback (most recent call last):
         ...
     MultiColumnsError: Expect only one column.
@@ -211,6 +238,23 @@ def select_int(sql, *args):
 def select(sql, *args):
     """
     执行sql 以列表形式返回结果
+    >>> u1 = dict(id=200, name='Wall.E', email='wall.e@test.org', passwd='back-to-earth', last_modified=time.time())
+    >>> u2 = dict(id=201, name='Eva', email='eva@test.org', passwd='back-to-earth', last_modified=time.time())
+    >>> insert('user', **u1)
+    1
+    >>> insert('user', **u2)
+    1
+    >>> L = select('select * from user where id=?', 900900900)
+    >>> L
+    []
+    >>> L = select('select * from user where id=?', 200)
+    >>> L[0].email
+    u'wall.e@test.org'
+    >>> L = select('select * from user where passwd=? order by id desc', 'back-to-earth')
+    >>> L[0].name
+    u'Eva'
+    >>> L[1].name
+    u'Wall.E'
     """
     return _select(sql, False, *args)
 
