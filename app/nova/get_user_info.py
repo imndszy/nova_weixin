@@ -4,6 +4,7 @@
 import logging
 
 from nova_weixin.app.lib.database import mysql
+from nova_weixin.packages.novamysql import (select, select_int, select_one)
 
 
 class Student(object):
@@ -37,17 +38,7 @@ class Student(object):
 
     def get_routine_appraise(self):
         if self.stuid != -1:
-            sql = "select *from routine_appraise_13 "\
-                  "where StuID = %d" % self.stuid
-
-            @mysql(sql)
-            def get_routine_appraise(results=''):
-                if results:
-                    return {'base': results[2], 'encourage': results[3],
-                        'develop': results[4], 'rank': results[5]}
-                else:
-                    return None
-            routine = get_routine_appraise()
+            routine = select_one('select *from routine_appraise_13 where stuid = ?',self.stuid)
             if not routine:
                 return "当前没有您的日常行为考核信息！"
             self.routine_base = routine['base']
@@ -62,16 +53,8 @@ class Student(object):
 
     def get_gpa(self):
         if self.stuid != -1:
-            sql = "select *from creditcur where StuID = %d" % self.stuid
+            your_gpa = select_one('select *from creditcur where StuID = ?', self.stuid)
 
-            @mysql(sql)
-            def get1(results=''):
-                if results:
-                    return {'class': results[1], 'gpa': results[4],
-                        'rank': int(results[5])}
-                else:
-                    return None
-            your_gpa = get1()
             if not your_gpa:
                 return "当前没有您的GPA信息!!"
             if your_gpa.get('gpa'):
@@ -81,57 +64,54 @@ class Student(object):
                 self.gpa_rank_next = self.gpa_rank + 1
                 self.gpa_rank_prev = self.gpa_rank - 1
 
-                sql = "select max(rank) as max_rank from creditcur " \
-                      "where class = %d" % self.Class
+                max_rank = select_int('select max(rank) as max_rank from creditcur where class = ?',self.Class)
 
-                @mysql(sql)
-                def get5(results=''):
-                    return results[0]
-
-                max_rank = get5()
                 your_gpa['max'] = max_rank
-                if self.gpa_rank_next != max_rank:
-                    sql = "select *from creditcur where "\
-                          "Class = %d and rank= %d" % (self.Class, self.gpa_rank_next)
-
-                    @mysql(sql)
-                    def get2(results=''):
-                        if results:
-                            return {'gpa': results[4]}
-                        else:
-                            return {'gpa': 'NONE_ELE'}
-                    next_gpa = get2()
+                if self.gpa_rank != max_rank:
+                    next_gpa = select_one('select *from creditcur where Class = ? and rank= ?', self.Class, self.gpa_rank_next)
+                    # sql = "select *from creditcur where "\
+                    #       "Class = %d and rank= %d" % (self.Class, self.gpa_rank_next)
+                    #
+                    # @mysql(sql)
+                    # def get2(results=''):
+                    #     if results:
+                    #         return {'gpa': results[4]}
+                    #     else:
+                    #         return {'gpa': 'NONE_ELE'}
+                    # next_gpa = get2()
                     your_gpa['next'] = next_gpa['gpa']
                 else:
-                    your_gpa['nonnext'] = 1
+                    your_gpa['nonnext'] = 1   # 排名是否最后的标志位
                     your_gpa['next'] = '悲剧…后面没有了'
 
                 if self.gpa_rank_prev != 0:
-                    sql = "select *from creditcur where "\
-                          "Class = %d and rank= %d" % (self.Class, self.gpa_rank_prev)
-
-                    @mysql(sql)
-                    def get3(results=''):
-                        if results:
-                            return {'gpa': results[4]}
-                        else:
-                            return {'gpa': 'NONE_ELE'}
-                    prev_gpa = get3()
+                    prev_gpa = select_one('select *from creditcur where Class = ? and rank= ?', self.Class, self.gpa_rank_prev)
+                    # sql = "select *from creditcur where "\
+                    #       "Class = %d and rank= %d" % (self.Class, self.gpa_rank_prev)
+                    #
+                    # @mysql(sql)
+                    # def get3(results=''):
+                    #     if results:
+                    #         return {'gpa': results[4]}
+                    #     else:
+                    #         return {'gpa': 'NONE_ELE'}
+                    # prev_gpa = get3()
                     your_gpa['prev'] = prev_gpa['gpa']
                 else:
                     your_gpa['nonprev'] = 1
-                    your_gpa['prev'] = '前面木有了'
+                    your_gpa['prev'] = '很强！前面木有了'
 
-                sql = "select *from creditcur where "\
-                      "Class = %d and rank= %d" % (self.Class, 1)
-
-                @mysql(sql)
-                def get4(results=''):
-                    if results:
-                        return {'gpa': results[4]}
-                    else:
-                        return {'gpa': 'NONE_ELE'}
-                first_gpa = get4()
+                first_gpa = select_one('select *from creditcur where Class = ? and rank= ?', self.Class, 1)
+                # sql = "select *from creditcur where "\
+                #       "Class = %d and rank= %d" % (self.Class, 1)
+                #
+                # @mysql(sql)
+                # def get4(results=''):
+                #     if results:
+                #         return {'gpa': results[4]}
+                #     else:
+                #         return {'gpa': 'NONE_ELE'}
+                # first_gpa = get4()
                 your_gpa['first'] = first_gpa['gpa']
 
                 return your_gpa
@@ -171,81 +151,99 @@ class Student(object):
 
     def get_tutor(self):
         if self.stuid != -1:
-            sql = "select *from tutor where StuID = %d" % self.stuid
-
-            @mysql(sql)
-            def get(results=''):
-                return {'tutor_mail': results[6], 'tutor': results[5]}
-            tutor = get()
+            tutor = select_one('select *from tutor where StuID = ?', self.stuid)
+            # sql = "select *from tutor where StuID = %d" % self.stuid
+            #
+            # @mysql(sql)
+            # def get(results=''):
+            #     return {'tutor_mail': results[6], 'tutor': results[5]}
+            # tutor = get()
             self.tutor = tutor['tutor']
-            self.tutor_mail = tutor['tutor_mail']
+            self.tutor_mail = tutor['mail']
             tutor_info = dict()
             tutor_info['status'] = 1
             tutor_info['same_tutor'] = []
             if self.tutor == '#N/A':
                 tutor_info['status'] = 0
             else:
-                sql = "select *from tutor where tutor = '" + self.tutor + "' and stuid <> %d" % self.stuid
-
-                @mysql(sql)
-                def get1(results=''):
-                    return results
-                if get1():
-                    tutor_info['same_tutor'] = get1()
-                else:
-                    tutor_info['same_tutor'] = []
+                temp = select('select *from tutor where tutor = ? and stuid <> ?', self.tutor, self.stuid)
+                # sql = "select *from tutor where tutor = '" + self.tutor + "' and stuid <> %d" % self.stuid
+                #
+                # @mysql(sql)
+                # def get1(results=''):
+                #     return results
+                # if get1():
+                #     tutor_info['same_tutor'] = get1()
+                # else:
+                #     tutor_info['same_tutor'] = []
+                if temp:
+                    tutor_info['same_tutor'] = temp
+                    # [{},{]]
             return tutor_info
         else:
             return "您尚未绑定学号！"
 
 
 def get_stuid(openid):
-    sql = "select StuID from biding where OpenID = '" + openid + "'"
-
-    @mysql(sql)
-    def get(results=''):
-        if results:
-            stuid = results[0]
-            return stuid
-        else:
-            # stuid = "NOT_IN_LIST"
-            return -1
-    return get()
+    stuid = select_int('select StuID from biding where OpenID =?', openid)
+    # sql = "select StuID from biding where OpenID = '" + openid + "'"
+    #
+    # @mysql(sql)
+    # def get(results=''):
+    #     if results:
+    #         stuid = results[0]
+    #         return stuid
+    #     else:
+    #         # stuid = "NOT_IN_LIST"
+    #         return -1
+    # return get()
+    return stuid
 
 
 def get_openid(stuid):
-    sql = "select openid from biding where stuid = '" + str(stuid) + "'"
+    openid = select_one('select openid from biding where stuid = ?', stuid)
+    # sql = "select openid from biding where stuid = '" + str(stuid) + "'"
+    #
+    # @mysql(sql)
+    # def get(results=''):
+    #     if results:
+    #         openid = results[0]
+    #         return openid
+    #     else:
+    #         logging.basicConfig(format='%(asctime)s %(message)s',
+    #                             datefmt='%Y/%m/%d %I:%M:%S %p',
+    #                             filename='./log/user.log',
+    #                             level=logging.DEBUG)
+    #         logging.warning("unable to fetch openid with the stuid {0} "
+    #                         "-- get_openid() get_user_info.py".format(stuid))
+    #         return -1
+    # return get()
+    if openid:
+        return openid['openid']
+    else:
+        return -1
 
-    @mysql(sql)
-    def get(results=''):
-        if results:
-            openid = results[0]
-            return openid
-        else:
-            logging.basicConfig(format='%(asctime)s %(message)s',
-                                datefmt='%Y/%m/%d %I:%M:%S %p',
-                                filename='./log/user.log',
-                                level=logging.DEBUG)
-            logging.warning("unable to fetch openid with the stuid {0} "
-                            "-- get_openid() get_user_info.py".format(stuid))
-            return -1
-    return get()
 
 def get_stu_name(stuid):
-    sql = "select name from stuinfo where stuid = %d" % stuid
-
-    @mysql(sql)
-    def get(results=''):
-        if results:
-            name = results[0]
-            return name
-        else:
-            logging.basicConfig(format='%(asctime)s %(message)s',
-                                datefmt='%Y/%m/%d %I:%M:%S %p',
-                                filename='./log/user.log',
-                                level=logging.DEBUG)
-            logging.warning("unable to fetch openid with the stuid {0} "
-                            "-- get_openid() get_user_info.py".format(stuid))
-            return -1
-
-    return get()
+    name = select_one('select name from stuinfo where stuid = ?', stuid)
+    # sql = "select name from stuinfo where stuid = %d" % stuid
+    #
+    # @mysql(sql)
+    # def get(results=''):
+    #     if results:
+    #         name = results[0]
+    #         return name
+    #     else:
+    #         logging.basicConfig(format='%(asctime)s %(message)s',
+    #                             datefmt='%Y/%m/%d %I:%M:%S %p',
+    #                             filename='./log/user.log',
+    #                             level=logging.DEBUG)
+    #         logging.warning("unable to fetch openid with the stuid {0} "
+    #                         "-- get_openid() get_user_info.py".format(stuid))
+    #         return -1
+    #
+    # return get()
+    if name:
+        return name['name']
+    else:
+        return -1
