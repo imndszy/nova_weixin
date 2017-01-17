@@ -10,6 +10,7 @@ from nova_weixin.app.bind.bind_database import (get_bind_info,
                                                 save_new_student)
 from nova_weixin.app.weixin.qrcode import (create_ticket,
                                            get_qrcode_url)
+from nova_weixin.app.nova.get_user_info import get_openid
 
 
 @bind.route('/register', methods=['GET', 'POST'])
@@ -23,7 +24,7 @@ def register():
         verify_status = verify_password(stuid, passwd)
         if verify_status and verify_status != -1:
             session['register'] = True
-            query_result = get_bind_info(stuid, passwd)
+            query_result = get_openid(stuid)
             if query_result:                                      #该学号已经绑定微信号
                 openid = query_result.encode('utf8')
                 session['openid'] = openid

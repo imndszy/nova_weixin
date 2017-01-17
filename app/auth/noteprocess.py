@@ -77,7 +77,7 @@ def send(_title, arti_url, stu_list):
     cnt = 0
     for i in stu_list:
         openid = get_openid(i)
-        if openid != -1:
+        if openid:
             openid = openid.encode('utf8')
         result = send_common_template_msg(post_url, title=_title,
                                           touser=openid)
