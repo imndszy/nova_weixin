@@ -221,7 +221,7 @@ def get_openid(stuid):
     if openid:
         return openid['openid']
     else:
-        return -1
+        return None
 
 
 def get_stu_name(stuid):
@@ -246,4 +246,4 @@ def get_stu_name(stuid):
     if name:
         return name['name']
     else:
-        return -1
+        return None
