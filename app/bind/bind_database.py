@@ -1,35 +1,43 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
+from nova_weixin.packages.novamysql import select_int
 from nova_weixin.app.lib.database import mysql
 
 
-def get_bind_info(stuid, passwd):
-    sql = "select *from biding where stuid = %s" % stuid
-
-    @mysql(sql)
-    def get_result(results=''):
-        return results
-    result = get_result()
-    if result:
-        return result[0]
-    return 0
+# def get_bind_info(stuid, passwd):
+#     sql = "select *from biding where stuid = %s" % stuid
+#
+#     @mysql(sql)
+#     def get_result(results=''):
+#         return results
+#     result = get_result()
+#     print result
+#     if result:
+#         return result[0]
+#     return 0
 
 
 def verify_password(stuid, passwd):
-    sql = "select certificationcode from password where stuid = %s" % stuid
-
-    @mysql(sql)
-    def get_password(results=''):
-        return results
-    results = get_password()
-    if results != -1:
-        result = str(results[0])
-        if(result == passwd):
-            return True
-        else:
-            return False
-    return -1
+    result = select_int('select certificationcode from password where stuid =?',stuid)
+    # sql = "select certificationcode from password where stuid = %s" % stuid
+    #
+    # @mysql(sql)
+    # def get_password(results=''):
+    #     return results
+    # results = get_password()
+    # if results != -1:
+    #     result = str(results[0])
+    #     if(result == passwd):
+    #         return True
+    #     else:
+    #         return False
+    if not result:
+        return -1
+    if(result == passwd):
+        return True
+    else:
+        return False
 
 
 def save_new_student(stuid):
@@ -42,3 +50,6 @@ def save_new_student(stuid):
         return 0
     else:
         return -1
+
+# if __name__ == '__main__':
+#     print get_bind_info(141270033,'asd')
