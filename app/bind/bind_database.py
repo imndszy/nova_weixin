@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-from nova_weixin.packages.novamysql import select_int
+from nova_weixin.packages.novamysql import select_int, insert
 from nova_weixin.app.lib.database import mysql
 
 
@@ -41,12 +41,17 @@ def verify_password(stuid, passwd):
 
 
 def save_new_student(stuid):
-    sql = "insert into biding values('',%d,'','',0,0,0)" % stuid
-
-    @mysql(sql)
-    def save(results=''):
-        return results
-    if save() != -1:
+    result = insert('biding', openid='', stuid=stuid, subscribe='', tempcode='', latestreq=0, limited_time=0, lastrequest=0)
+    # sql = "insert into biding values('',%d,'','',0,0,0)" % stuid
+    #
+    # @mysql(sql)
+    # def save(results=''):
+    #     return results
+    # if save() != -1:
+    #     return 0
+    # else:
+    #     return -1
+    if result == 1:
         return 0
     else:
         return -1

@@ -9,6 +9,7 @@ import logging
 from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
 from nova_weixin.app.nova.get_user_info import get_stuid
 from nova_weixin.app.lib.database import mysql
+from nova_weixin.packages.novamysql import select_one, update
 
 
 def get_openid_from_code(code):
@@ -38,25 +39,36 @@ def jiaowu(openid):
     stuid = get_stuid(openid)
     if not stuid:
         return -1
-    sql = "select email,status from stuinfo where stuid=%s" % stuid
-
-    @mysql(sql)
-    def get_jiaowu(results=None):
-        return results
-    result = get_jiaowu()
-    if result:
-        result.append(stuid)
-        return result
+    info = select_one('select email,status from stuinfo where stuid=?', stuid)
+    # sql = "select email,status from stuinfo where stuid=%s" % stuid
+    #
+    # @mysql(sql)
+    # def get_jiaowu(results=None):
+    #     return results
+    # result = get_jiaowu()
+    # if result:
+    #     result.append(stuid)
+    #     return result
+    # else:
+    #     return 0
+    if info:
+        info['stuid'] = stuid
+        return info
     else:
-        return 0
+        return -1
 
 def jiaowu_save(stuid,email,status):
-    sql = "update stuinfo set email = '%s',status = %d where stuid = %d" % (email,status,stuid)
-
-    @mysql(sql)
-    def save(results=None):
-        return results
-    save()
+    result = update('update stuinfo set email = ?, status = ? where stuid = ?', email, status, stuid)
+    # sql = "update stuinfo set email = '%s',status = %d where stuid = %d" % (email,status,stuid)
+    #
+    # @mysql(sql)
+    # def save(results=None):
+    #     return results
+    # save()
+    if result == 1:
+        return 1
+    else:
+        return -1
 
 def openid_handler(openid, post_url):
     """
@@ -117,16 +129,6 @@ def openid_handler(openid, post_url):
         #log here
         return results
     update()
-
-#
-# def history_latest():
-#     sql = "select nid from noteindex order by nid desc limit 1"
-#
-#     @mysql(sql)
-#     def get(results=''):
-#         return results
-#     latest = get()
-#     return latest[0]
 
 
 def history_articles(stuid):

@@ -12,6 +12,7 @@ from nova_weixin.app.lib.database import mysql
 from nova_weixin.app.nova.get_user_info import get_stuid, Student
 from nova_weixin.app.config import ADDRESS
 from nova_weixin.app.weixin.weixinconfig import APP_ID
+from nova_weixin.packages.novamysql import insert, update
 
 person_info_key = ['daily_assess', 'gpa', 'recom', 'tutor']
 mes_key = ['not_read_mes', 'history_mes']
@@ -19,14 +20,19 @@ mes_key = ['not_read_mes', 'history_mes']
 
 def save_into_database(content, openid):
     stuid = get_stuid(openid)
-    sql = "insert into queryrecord "\
-          "values('%s',%d,'%s','')" % (content, int(time.time()), stuid)
-
-    @mysql(sql)
-    def save(results=''):
-        return results
-    save()
-    return 0
+    result = insert('queryrecord', keyword=content, time=int(time.time()), username=stuid, describe='')
+    # sql = "insert into queryrecord "\
+    #       "values('%s',%d,'%s','')" % (content, int(time.time()), stuid)
+    #
+    # @mysql(sql)
+    # def save(results=''):
+    #     return results
+    # save()
+    # return 0
+    if result == 1:
+        return 0
+    else:
+        return -1
 
 
 def handle_event(msg):
@@ -34,13 +40,14 @@ def handle_event(msg):
         if msg['EventKey']:
             stuid = msg['EventKey'][8:]
             openid = msg['FromUserName']
-            sql = "update biding set openid = '%s' "\
-                  "where stuid = %s" % (openid, stuid)
-
-            @mysql(sql)
-            def update_binding(results=None):
-                return results
-            update_binding()
+            result = update('update biding set openid = ? where stuid = ?', openid, stuid)
+            # sql = "update biding set openid = '%s' "\
+            #       "where stuid = %s" % (openid, stuid)
+            #
+            # @mysql(sql)
+            # def update_binding(results=None):
+            #     return results
+            # update_binding()
             return "您已成功关注工程管理！"
         return "感谢关注！"
 

@@ -123,30 +123,34 @@ class Student(object):
     def get_recom(self):
         your_recom = self.get_gpa()
         if isinstance(your_recom, dict):
-            sql = "select MAX(rank) from creditcur "\
-                  "where Class = %d" % self.Class
-
-            @mysql(sql)
-            def get2(results=''):
-                if results:
-                    return {'max_rank': results[0]}
-                else:
-                    return {'max_rank': ''}
-            max_rank = get2()
-            your_recom['max_rank'] = max_rank['max_rank']
+            maxRank = select_int('select MAX(rank) from creditcur where class=?',self.Class)
+            # sql = "select MAX(rank) from creditcur "\
+            #       "where Class = %d" % self.Class
+            #
+            # @mysql(sql)
+            # def get2(results=''):
+            #     if results:
+            #         return {'max_rank': results[0]}
+            #     else:
+            #         return {'max_rank': ''}
+            # max_rank = get2()
+            # your_recom['max_rank'] = max_rank['max_rank']
+            your_recom['max_rank'] = maxRank
             self.stu_amount = your_recom['max_rank']
             if self.stu_amount:
                 percent = self.stu_amount / 5
-                sql = "select *from creditcur where "\
-                      "Class = %d and rank= %d" % (self.Class, percent)
-
-                @mysql(sql)
-                def get(results=''):
-                    if results:
-                        return {'20gpa': results[4]}
-                    else:
-                        return {'20gpa': ''}
-                your_recom['twenty_per'] = get()['20gpa']
+                result = select_int('select gpa from creditcur where class=? and rank=?',self.Class, percent)
+                # sql = "select *from creditcur where "\
+                #       "Class = %d and rank= %d" % (self.Class, percent)
+                #
+                # @mysql(sql)
+                # def get(results=''):
+                #     if results:
+                #         return {'20gpa': results[4]}
+                #     else:
+                #         return {'20gpa': ''}
+                # your_recom['twenty_per'] = get()['20gpa']
+                your_recom['twenty_per'] = result
         return your_recom
 
     def get_tutor(self):
