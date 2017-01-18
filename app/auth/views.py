@@ -88,7 +88,7 @@ def choose_stu():
                 note_index(stu_list, nid)
                 note_content(article_url, image_url, title, nid)
                 note_response(nid)
-                if send(title, article_url, stu_list) == -1:
+                if send(title, nid, stu_list) == -1:
                     return render_template('auth/fail.html')
                 session['finish'] = 'finished'
                 return redirect(url_for('auth.finish'))

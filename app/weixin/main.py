@@ -9,6 +9,7 @@ from flask import request, make_response, redirect, render_template, session,jso
 from nova_weixin.app.weixin import weixin
 from nova_weixin.app.weixin.weixinconfig import TOKEN
 from nova_weixin.app.weixin.oauth_handler import (jiaowu,get_openid_from_code,
+                                                  get_url,
                                                   jiaowu_save,history_articles)
 from nova_weixin.app.nova.get_user_info import get_stuid,get_stu_name
 from nova_weixin.app.weixin.msg_handler import handle_mes_key,handle_event,save_into_database
@@ -51,27 +52,29 @@ def index():
     return render_template('index.html')
 
 
-@weixin.route('/code/<path:message_url>', methods=['GET', 'POST'])
-def oauth(message_url):
+@weixin.route('/code/<int:nid>', methods=['GET', 'POST'])
+def oauth(nid):
     """
-    这个函数用于获取微信公众号的文章链接并跳转
-    :param message_url:公众号文章链接
+    这个函数用于获取微信公众号的文章编号并跳转
+    :param nid:公众号文章编号
     :return:跳转至相应链接
     """
-    post_url = str(message_url).replace(':/', '://')
-    post_url = post_url.replace('$', '?').replace('@', '#').replace('!', '&')
+    # post_url = str(message_url).replace(':/', '://')
+    # post_url = post_url.replace('$', '?').replace('@', '#').replace('!', '&')
     code = request.args.get('code', '')
     if not code:
-        return redirect(post_url)
+        return redirect('/')
     else:
+        url = get_url(nid)
         openid = get_openid_from_code(code)
         try:
             from nova_weixin.app.weixin.oauth_handler import openid_handler
-            openid_handler(openid, post_url)
+            openid_handler(openid, nid)
         except:
             pass
         finally:
-            return redirect(post_url)
+            return redirect(url)
+
 
 @weixin.route('/history', methods=['GET', 'POST'])
 def oauth_history():
@@ -104,6 +107,7 @@ def handle_history():
         else:
             result = {'result':article_list[(page-1)*8:],'name':session['name']}
     return jsonify(result)
+
 
 @weixin.route('/jiaowu')
 def oauth_jiaowu():

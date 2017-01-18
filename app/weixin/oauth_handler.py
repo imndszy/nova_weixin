@@ -9,7 +9,7 @@ import logging
 from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
 from nova_weixin.app.nova.get_user_info import get_stuid
 from nova_weixin.app.lib.database import mysql
-from nova_weixin.packages.novamysql import select_one, update
+from nova_weixin.packages.novamysql import select_one, update, select_int
 
 
 def get_openid_from_code(code):
@@ -33,6 +33,10 @@ def get_openid_from_code(code):
           "&grant_type=authorization_code" % (APP_ID, SECRET, code)
     result = urllib2.urlopen(url).read()
     return json.loads(result)['openid']
+
+
+def get_url(nid):
+    return select_int('select url from notecontent where nid=?',nid)
 
 
 def jiaowu(openid):
@@ -70,47 +74,43 @@ def jiaowu_save(stuid,email,status):
     else:
         return -1
 
-def openid_handler(openid, post_url):
+def openid_handler(openid, nid):
     """
     update the mysql database using openid and post_url
     :param openid: openid of the user who read the specific article
-    :param post_url: the url of the article
+    :param nid: the number of the article
     :return: return the result of the mysql's update
     """
     stuid = get_stuid(openid)
     read = int(time.time())
-    sql = "select nID from notecontent where url = '" + post_url + "'"
+    # sql = "select nID from notecontent where url = '" + post_url + "'"
+    #
+    # @mysql(sql)
+    # def get_url(results=None):
+    #     if len(results)>1:
+    #         nid = results[0][0]
+    #     elif len(results) == 1:
+    #         nid = results[0]
+    #     else:
+    #         nid = -1
+    #     return nid
+    # nid = get_url()
 
-    @mysql(sql)
-    def get_url(results=None):
-        if len(results)>1:
-            nid = results[0][0]
-        elif len(results) == 1:
-            nid = results[0]
-        else:
-            nid = -1
-        return nid
-    nid = get_url()
+    # sql2 = "select * from noteresponse where nID = %d" % nid
+    #
+    # @mysql(sql2)
+    # def get_read_info(results=None):
+    #     if results:
+    #         return results
+    #
+    # results = get_read_info()
 
-    sql2 = "select * from noteresponse where nID = %d" % nid
-
-    @mysql(sql2)
-    def get_read_info(results=None):
-        if results:
-            return results
-        else:
-            logging.basicConfig(level=logging.DEBUG,
-                                format='%(asctime)s %(filename)s[line:%(lineno)d]'
-                                       '%(levelname)s %(message)s',
-                                datefmt='%a, %d %b %Y %H:%M:%S',
-                                filename='./log/database.log',
-                                filemode='w')
-            pass
-    results = get_read_info()
-    earliest = results[1]
-    read_id = results[3].split(",")[:-1]  # "a list"
-    read_time = results[4].split(",")[:-1]  # "a list"
-    read_pop = results[5]
+    read_info = select_one('select * from noteresponse where nID =?', nid)
+    earliest = read_info['earlistread']
+    read_id = read_info['readlist'].split(",")[:-1]  # "a list"
+    # read_time = results[4].split(",")[:-1]  # "a list"
+    read_time = read_info['readtime']
+    read_pop = read_info['readpop']
     if earliest == 0:
         earliest = read
     latest = read
@@ -119,16 +119,21 @@ def openid_handler(openid, post_url):
         read_id = ','.join(read_id) + ','   #a string
         read_pop = read_pop + 1
 
-    read_time.append(str(stuid) + ':' + str(read))   #a list
-    read_time = ','.join(read_time) + ','   #a string
-    sql_all = "update noteresponse set readList='" + read_id + "'," + "readTime = '" + read_time + "',"\
-              + "earlistRead = %d,latestRead = %d,readPop =%d where nID = %d;" % (earliest,latest,read_pop,nid)
-
-    @mysql(sql_all)
-    def update(results=None):
-        #log here
-        return results
-    update()
+    read_time = read_time + str(stuid) + ':' + str(read) + ','
+    result = update('update noteresponse set readList=?,readtime=?,earlistread=?,latestread=?,readpop=? where nid=?',
+                    read_id, read_time, earliest, latest, read_pop, nid)
+    # sql_all = "update noteresponse set readList='" + read_id + "'," + "readTime = '" + read_time + "',"\
+    #           + "earlistRead = %d,latestRead = %d,readPop =%d where nID = %d;" % (earliest,latest,read_pop,nid)
+    #
+    # @mysql(sql_all)
+    # def update(results=None):
+    #     #log here
+    #     return results
+    # update()
+    if result == 1:
+        return 1
+    else:
+        return -1
 
 
 def history_articles(stuid):

@@ -61,15 +61,9 @@ def note_response(nid):
         return -1
 
 
-def send(_title, arti_url, stu_list):
-    logging.basicConfig(level=logging.DEBUG,
-                        format='%(asctime)s %(filename)s[line:%(lineno)d]'
-                               '%(levelname)s %(message)s',
-                        datefmt='%a, %d %b %Y %H:%M:%S',
-                        filename='./log/sendmsg.log',
-                        filemode='w')
-    arti_url = arti_url.replace('?', '$').replace('#', '@').replace('&', '!')
-    url = ADDRESS + '/code/' + arti_url
+def send(_title, nid, stu_list):
+
+    url = ADDRESS + '/code/' + str(nid)
     post_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?' \
         'appid=%s&redirect_uri=%s' \
         '&response_type=code&scope=snsapi_base&state=123'\
@@ -82,8 +76,6 @@ def send(_title, arti_url, stu_list):
         result = send_common_template_msg(post_url, title=_title,
                                           touser=openid)
         if result.get('errcode') != 0:
-            logging.warning("sending template msg error --send()"
-                            " noteprocess.py:" + str(result))
             cnt = cnt + 1
 #说明部分人发送成功
     if 0 < cnt < len(stu_list):
