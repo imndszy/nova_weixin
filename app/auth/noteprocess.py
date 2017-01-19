@@ -4,7 +4,7 @@
 import logging
 
 from nova_weixin.packages.novamysql import insert
-from nova_weixin.app.lib.database import mysql
+# from nova_weixin.app.lib.database import mysql
 from nova_weixin.app.weixin.template import send_common_template_msg
 from nova_weixin.app.nova.get_user_info import get_openid
 from nova_weixin.app.config import ADDRESS

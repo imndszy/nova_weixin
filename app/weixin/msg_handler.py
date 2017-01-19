@@ -8,7 +8,7 @@
 """
 import time
 from msg_format import *
-from nova_weixin.app.lib.database import mysql
+# from nova_weixin.app.lib.database import mysql
 from nova_weixin.app.nova.get_user_info import get_stuid, Student
 from nova_weixin.app.config import ADDRESS
 from nova_weixin.app.weixin.weixinconfig import APP_ID

@@ -3,7 +3,7 @@
 # github: https://github.com/imndszy
 import logging
 
-from nova_weixin.app.lib.database import mysql
+# from nova_weixin.app.lib.database import mysql
 from nova_weixin.packages.novamysql import (select, select_int, select_one)
 
 

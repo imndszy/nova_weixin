@@ -2,7 +2,7 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 from nova_weixin.packages.novamysql import select_int, insert
-from nova_weixin.app.lib.database import mysql
+# from nova_weixin.app.lib.database import mysql
 
 
 # def get_bind_info(stuid, passwd):

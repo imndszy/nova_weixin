@@ -4,11 +4,11 @@
 import json
 import urllib2
 import time
-import logging
+# import logging
 
 from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
 from nova_weixin.app.nova.get_user_info import get_stuid
-from nova_weixin.app.lib.database import mysql
+# from nova_weixin.app.lib.database import mysql
 from nova_weixin.packages.novamysql import select_one, update, select_int, select
 
 

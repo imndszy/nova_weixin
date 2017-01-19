@@ -1,7 +1,7 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-from nova_weixin.app.lib.database import mysql
+# from nova_weixin.app.lib.database import mysql
 from nova_weixin.packages.novamysql import select
 
 
