@@ -153,7 +153,7 @@ def handle_event(msg):
 
 def handle_mes_key(msg):
     stuid = get_stuid(msg['FromUserName'])
-    create_engine('szy', '123456', 'weixin', 'localhost', charset='utf8')
+
     send_info = select('select nid,stuids from noteindex')
 
     if not send_info:
@@ -220,7 +220,6 @@ def handle_mes_key(msg):
     # if isinstance(content[0],tuple):
     #     # content.reverse()
     #     send_content = content[:10]
-    #     print send_content
     # else:
     #     send_content = [tuple(content)]
     def transfer_url(nid):
