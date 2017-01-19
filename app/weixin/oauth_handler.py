@@ -9,7 +9,7 @@ import logging
 from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
 from nova_weixin.app.nova.get_user_info import get_stuid
 from nova_weixin.app.lib.database import mysql
-from nova_weixin.packages.novamysql import select_one, update, select_int
+from nova_weixin.packages.novamysql import select_one, update, select_int, select
 
 
 def get_openid_from_code(code):
@@ -137,27 +137,33 @@ def openid_handler(openid, nid):
 
 
 def history_articles(stuid):
-    sql = "select nid,stuids from noteindex"
+    send_info = select("select nid,stuids from noteindex")
 
-    @mysql(sql)
-    def get(results=None):
-        return results
-
-    result = get()
-    nids = []
-    for i in result:
-        if str(stuid) in i[1]:
-            nids.append(i[0])
+    if not send_info:
+        return None
+    # sql = "select nid,stuids from noteindex"
+    #
+    # @mysql(sql)
+    # def get(results=None):
+    #     return results
+    #
+    # result = get()
+    nids = [i['nid'] for i in send_info if str(stuid) in i['stuids']]
+    # for i in result:
+    #     if str(stuid) in i[1]:
+    #         nids.append(i[0])
     articles = []
     article_dict = dict()
     article_dict['articles'] = dict()
     for x in nids:
-        sql = "select nid,title,url from notecontent where nid = %d" % x
-
-        @mysql(sql)
-        def get_content(results=None):
-            return results
-
-        re = get_content()
-        articles.append(re)
+        re = select_one('select nid,title,url from notecontent where nid =?', x)
+        # sql = "select nid,title,url from notecontent where nid = %d" % x
+        #
+        # @mysql(sql)
+        # def get_content(results=None):
+        #     return results
+        #
+        # re = get_content()
+        # articles.append(re)
+        articles.append([re['nid'], re['title'], re['url']])
     return articles
