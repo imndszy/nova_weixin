@@ -179,6 +179,7 @@ def res_text_msg(msg, content):
     response.content_type = 'application/xml'
     return response
 
+
 def res_news_msg(content):
     response = make_response(content)
     response.content_type = 'application/xml'

@@ -12,7 +12,7 @@ from msg_format import *
 from nova_weixin.app.nova.get_user_info import get_stuid, Student
 from nova_weixin.app.config import ADDRESS
 from nova_weixin.app.weixin.weixinconfig import APP_ID
-from nova_weixin.packages.novamysql import insert, update, select, create_engine
+from nova_weixin.packages.novamysql import insert, update, select
 
 person_info_key = ['daily_assess', 'gpa', 'recom', 'tutor']
 mes_key = ['not_read_mes', 'history_mes']
