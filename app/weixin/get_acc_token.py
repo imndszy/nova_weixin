@@ -2,19 +2,15 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import time
-import urllib2
-import json
+import requests
 import os
-import logging
 
 from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-
 def get_token():
-    with open(basedir + '/acc_token') as f:
-        data = f.read()
+    data = os.getenv('nova_acc_token', '')
+    # with open(basedir + '/acc_token') as f:
+    #     data = f.read()
     if data:
         past_time = int(data[0:10])
         acc_token = data[10:]
@@ -27,18 +23,18 @@ def get_token():
         url = 'https://api.weixin.qq.com/cgi-bin/'\
               'token?grant_type=client_credential&appid=%s&secret=%s' % \
               (app_id, app_secret)
-        result = urllib2.urlopen(url).read()
-        if json.loads(result).get('errcode'):
-            logging.basicConfig(format='%(asctime)s %(message)s',
-                                datefmt='%Y/%m/%d %I:%M:%S %p',
-                                filename='./log/acc_token.log',
-                                level=logging.DEBUG)
-            logging.debug("fail to get acc_token --get_acc_token.py")
-            acc_token = "fail to get acc_token --get_acc_token.py"
+        result = requests.get(url).json()
 
+        if result.get('errcode'):
+            return -1
         else:
-            acc_token = json.loads(result).get('access_token')
-            string = str(int(time.time())) + acc_token
-            with open(basedir + '/acc_token', 'w') as f:
-                f.write(string)
-    return acc_token
+            acc_token = result.get('access_token')
+            env_string = str(int(time.time())) + acc_token
+            os.environ['nova_acc_token'] = env_string
+            # with open(basedir + '/acc_token', 'w') as f:
+            #     f.write(string)
+            return acc_token
+
+if __name__ == '__main__':
+    print(get_token())
+    print(os.getenv('nova_acc_token'))
