@@ -3,8 +3,8 @@
 # github: https://github.com/imndszy
 from nova_weixin.app.config import ADDRESS
 
-APP_ID = 'wx92a9c02f38'
-SECRET = 'aed361bef8658588'
+APP_ID = 'wx92a9c338a5d02f38'
+SECRET = 'aed361bef86c682fcc4f49db2df58588'
 TOKEN = ''
 TEMPLATE_ID = ''
 MENU = {
@@ -74,12 +74,6 @@ MENU = {
                            "&redirect_uri=%s"
                            "/jiaowu&response_type=code&scope=snsapi_base&state=123&connect_redirect=1#wechat_redirect"
                            % (APP_ID,ADDRESS)
-                },
-                {
-                    "type": "scancode_push",
-                    "name": "扫码推事件",
-                    "key": "rselfmenu_0_1",
-                    "sub_button": []
                 }
             ]
 
