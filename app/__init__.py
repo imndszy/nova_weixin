@@ -4,8 +4,8 @@
 import os
 
 from flask import Flask
-from flask.ext.bootstrap import Bootstrap
-from flask.ext.moment import Moment
+from flask_bootstrap import Bootstrap
+from flask_moment import Moment
 from .config import (config, DB_HOSTNAME, DB_PASSWORD,
                      DB_USERNAME, DB_NAME, DB_PORT)
 from nova_weixin.packages.novamysql import create_engine

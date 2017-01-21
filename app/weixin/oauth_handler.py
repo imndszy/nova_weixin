@@ -1,15 +1,14 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-import json
-import urllib2
+# import requests
 import time
-# import logging
 
 from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
 from nova_weixin.app.nova.get_user_info import get_stuid
 # from nova_weixin.app.lib.database import mysql
 from nova_weixin.packages.novamysql import select_one, update, select_int, select
+from nova_weixin.packages.nova_wxsdk import WxApiUrl, CommunicateWithApi
 
 
 def get_openid_from_code(code):
@@ -28,11 +27,13 @@ def get_openid_from_code(code):
                }
                有错误时返回的json:{"errcode":40029,"errmsg":"invalid code"}
     """
-    url = "https://api.weixin.qq.com/sns/oauth2/access_token?" \
-          "appid=%s&secret=%s&code=%s"\
-          "&grant_type=authorization_code" % (APP_ID, SECRET, code)
-    result = urllib2.urlopen(url).read()
-    return json.loads(result)['openid']
+    url = WxApiUrl.oauth2_auth_token.format(appid=APP_ID, appsecret=SECRET, code=code)
+    # url = "https://api.weixin.qq.com/sns/oauth2/access_token?" \
+    #       "appid=%s&secret=%s&code=%s"\
+    #       "&grant_type=authorization_code" % (APP_ID, SECRET, code)
+    # result = requests.get(url).json()
+    result = CommunicateWithApi.get_data(url).json()
+    return result['openid']
 
 
 def get_url(nid):

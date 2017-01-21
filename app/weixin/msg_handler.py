@@ -7,12 +7,13 @@
 
 """
 import time
-from msg_format import *
+from .msg_format import *
 # from nova_weixin.app.lib.database import mysql
 from nova_weixin.app.nova.get_user_info import get_stuid, Student
 from nova_weixin.app.config import ADDRESS
 from nova_weixin.app.weixin.weixinconfig import APP_ID
 from nova_weixin.packages.novamysql import insert, update, select
+from nova_weixin.packages.nova_wxsdk import WxApiUrl
 
 person_info_key = ['daily_assess', 'gpa', 'recom', 'tutor']
 mes_key = ['not_read_mes', 'history_mes']
@@ -224,10 +225,7 @@ def handle_mes_key(msg):
     #     send_content = [tuple(content)]
     def transfer_url(nid):
         url = ADDRESS + '/code/' + str(nid)
-        post_url = 'https://open.weixin.qq.com/connect/oauth2/authorize?' \
-                   'appid=%s&redirect_uri=%s' \
-                   '&response_type=code&scope=snsapi_base&state=123' \
-                   '#wechat_redirect' % (APP_ID, url)
+        post_url = WxApiUrl.oauth2_new_page.format(appid=APP_ID, redirect_url=url)
         return post_url
 
     send_content = [(x['title'],'',x['picurl'],transfer_url(x['url'])) for x in send_content if x['nid'] in not_read]

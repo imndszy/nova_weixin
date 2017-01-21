@@ -2,17 +2,19 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import json
-import urllib
-import urllib2
-import logging
 
 from nova_weixin.app.weixin.get_acc_token import get_token
+from nova_weixin.packages.nova_wxsdk import WxApiUrl, CommunicateWithApi
 
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
 
-def create_ticket(action_name, scene_id, expire_seconds=604800):
+def create_ticket(action_name, scene_id=0, expire_seconds=604800):
     acc_token = get_token()
     if acc_token:
-        url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=%s" % acc_token
+        url = WxApiUrl.create_qrcode.format(access_token=acc_token)
         if action_name == "QR_SCENE":
             data = {
                 "expire_seconds": expire_seconds,
@@ -30,41 +32,23 @@ def create_ticket(action_name, scene_id, expire_seconds=604800):
                         "scene": {"scene_id": scene_id}
                     }
             }
-        request = urllib2.urlopen(url, json.dumps(data, ensure_ascii=False)).read()
-        result = json.loads(request)
+        result = CommunicateWithApi.post_data(url, json.dumps(data, ensure_ascii=False).encode('utf8'))
         if result.get('errcode'):
-            logging.basicConfig(format='%(asctime)s %(message)s',
-                                datefmt='%Y/%m/%d %I:%M:%S %p',
-                                filename='./log/qrcode.log',
-                                level=logging.DEBUG)
-            logging.warning("failed to get ticket -- qrcode.py")
             return ''
         else:
             return result.get('ticket')
     else:
-        logging.basicConfig(format='%(asctime)s %(message)s',
-                            datefmt='%Y/%m/%d %I:%M:%S %p',
-                            filename='./log/acc_token.log',
-                            level=logging.DEBUG)
-        logging.warning("failed to get acc_token -- qrcode.py--create_ticket()")
         return ''
 
 
 def get_qrcode_url(ticket):
-    if ticket:
-        tic = 'ticket'
-        dic = {tic: ticket}
-        parameter = urllib.urlencode(dic)
-        url = "https://mp.weixin.qq.com/cgi-bin/showqrcode?%s" % parameter
-        return url
-    else:
-        logging.basicConfig(format='%(asctime)s %(message)s',
-                            datefmt='%Y/%m/%d %I:%M:%S %p',
-                            filename='./log/qrcode.log',
-                            level=logging.DEBUG)
-        logging.warning("invalid ticket,--get_qrcode_url() qrcode.py")
+    tic = 'ticket'
+    dic = {tic: ticket}
+    parameter = urlencode(dic)
+    return "https://mp.weixin.qq.com/cgi-bin/showqrcode?%s" % parameter
 
 
 if __name__ == "__main__":
     ticket = create_ticket("QR_SCENE")
-    get_qrcode_url(ticket)
+    print(ticket)
+    print(get_qrcode_url(ticket))

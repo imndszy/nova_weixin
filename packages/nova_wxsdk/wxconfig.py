@@ -36,9 +36,10 @@ class WxApiUrl(object):
 
     # 微信网页授权
     oauth2_token = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={appsecret}&code={code}&grant_type=authorization_code"
-    oauth2_userinfo = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN"
+    oauth2_user_info = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN"
     oauth2_refresh = "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid={appid}&grant_type=refresh_token&refresh_token={refresh_token}"
     oauth2_auth_token = "https://api.weixin.qq.com/sns/auth?access_token={access_token}&openid={openid}"
+    oauth2_new_page = "https://open.weixin.qq.com/connect/oauth2/authorize?appid={appid}&redirect_uri={redirect_url}&response_type=code&scope=snsapi_base&state=123#wechat_redirect"
 
     # 素材管理模块
     upload_temp_media = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token={access_token}&type={type}"
