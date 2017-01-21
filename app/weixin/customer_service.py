@@ -2,15 +2,15 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import json
-import requests
+
 from nova_weixin.app.weixin.get_acc_token import get_token
+from nova_weixin.packages.nova_wxsdk import WxApiUrl, CommunicateWithApi
 
 
-def send_customer_service_message_txt(touser='o19fSvhseI04YpNJkVYVIBTEjESs',
+def send_customer_service_message_txt(touser,
                                       content='你好！'):
     acc_token = get_token()
-    url = 'https://api.weixin.qq.com/cgi-bin/message/custom'\
-          '/send?access_token=%s' % acc_token
+    url = WxApiUrl.send_msg.format(access_token=acc_token)
     txt = {
             "touser": "%s" % touser,
             "msgtype": "text",
@@ -19,10 +19,4 @@ def send_customer_service_message_txt(touser='o19fSvhseI04YpNJkVYVIBTEjESs',
                 "content": "%s" % content
             }
     }
-    request = requests.post(url, json.dumps(txt, ensure_ascii=False))
-    return request.text
-
-
-if __name__ == "__main__":
-    print send_customer_service_message_txt()
-    print 'OK!'
+    return CommunicateWithApi.post_data(url, json.dumps(txt, ensure_ascii=False).encode('utf8'))
