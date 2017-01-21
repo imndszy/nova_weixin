@@ -2,6 +2,7 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import os
+import sys
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 ROOT_USER = 'nova_cac'
@@ -13,6 +14,7 @@ DB_USERNAME = 'szy'
 DB_PASSWORD = '123456'
 DB_NAME = 'weixin'
 ADDRESS = 'http://www.njuszy.cn'
+PY2 = sys.version_info < (3, 0)
 
 
 class Config:
