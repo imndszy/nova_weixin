@@ -3,8 +3,8 @@
 # github: https://github.com/imndszy
 from nova_weixin.app.config import ADDRESS
 
-APP_ID = 'wx92a9c338a5d02f38'
-SECRET = 'aed361bef86c682fcc4f49db2df58588'
+APP_ID = 'wx92a38'
+SECRET = ''
 TOKEN = ''
 TEMPLATE_ID = ''
 MENU = {
