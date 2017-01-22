@@ -7,6 +7,7 @@
 
 """
 import time
+from flask import make_response
 from .msg_format import *
 # from nova_weixin.app.lib.database import mysql
 from nova_weixin.app.nova.get_user_info import get_stuid, Student
@@ -34,6 +35,21 @@ def save_into_database(content, openid):
         return 0
     else:
         return -1
+
+
+def handle_msg(msg):
+    if msg['MsgType'] == 'text':
+        try:
+            save_into_database(msg['Content'], msg['FromUser'])
+        except:
+            pass
+        finally:
+            return ""
+
+    if msg['MsgType'] == 'event':
+        if msg['Event'] == 'CLICK' and msg['EventKey'] == 'not_read_mes':
+            return handle_mes_key(msg)
+        return res_text_msg(msg, handle_event(msg))
 
 
 def handle_event(msg):
@@ -138,10 +154,10 @@ def handle_event(msg):
                         content = content + '导师与您相同的有:\n\n'
                         info_list = []
                         for i in tutor['same_tutor']:
-                            info_list.append(i[1].encode('utf8') + ' ' +
-                                             i[2].encode('utf8') +
+                            info_list.append(i['name'].encode('utf8') + ' ' +
+                                             i['sex'].encode('utf8') +
                                              '\n宿舍: ' +
-                                             i[4].encode('utf8'))
+                                             i['campus'].encode('utf8'))
                         content = content + '\n\n'.join(info_list)
                     else:
                         content = content + '没有人和您有相同导师！'
@@ -152,7 +168,7 @@ def handle_event(msg):
             return content
 
 
-def handle_mes_key(msg):
+def handle_mes_key(msg): # 未读消息处理
     stuid = get_stuid(msg['FromUserName'])
 
     send_info = select('select nid,stuids from noteindex')
@@ -236,4 +252,15 @@ def handle_mes_key(msg):
 
     head_str = news_rep_front % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())),len(send_content))
     content = head_str+middle_str+news_rep_back
-    return content
+    return res_news_msg(content)
+
+def res_news_msg(content):
+    response = make_response(content)
+    response.content_type = 'application/xml'
+    return response
+
+
+def res_text_msg(msg, content):
+    response = make_response(text_rep % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())), content))
+    response.content_type = 'application/xml'
+    return response
