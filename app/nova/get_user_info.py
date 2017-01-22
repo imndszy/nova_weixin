@@ -182,7 +182,7 @@ class Student(object):
                 #     tutor_info['same_tutor'] = []
                 if temp:
                     tutor_info['same_tutor'] = temp
-                    # [{},{]]
+                    # [{},{}]
             return tutor_info
         else:
             return "您尚未绑定学号！"

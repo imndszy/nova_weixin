@@ -13,7 +13,7 @@ DB_PORT = 3306
 DB_USERNAME = 'szy'
 DB_PASSWORD = '123456'
 DB_NAME = 'weixin'
-ADDRESS = 'http://www.njuszy.cn'
+ADDRESS = 'http://121.42.216.141'
 PY2 = sys.version_info < (3, 0)
 
 
