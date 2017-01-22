@@ -12,7 +12,7 @@ from nova_weixin.app.weixin.oauth_handler import (jiaowu,get_openid_from_code,
                                                   get_url,
                                                   jiaowu_save,history_articles)
 from nova_weixin.app.nova.get_user_info import get_stuid,get_stu_name
-from nova_weixin.app.weixin.msg_handler import handle_mes_key,handle_event,save_into_database
+from nova_weixin.app.weixin.msg_handler import handle_msg,handle_mes_key,handle_event,save_into_database
 
 
 @weixin.route('/', methods=['GET'])
@@ -28,23 +28,7 @@ def wechat_msg():
     rec = request.data
     if rec:
         msg = parse(rec)
-        if msg['MsgType'] == 'text':
-            try:
-                save_into_database(msg['Content'],msg['FromUser'])
-            except:
-                pass
-            finally:
-                return ""
-
-        if msg['MsgType'] == 'event':
-            if msg['Event'] == 'CLICK' and msg['EventKey'] == 'not_read_mes':
-                content = handle_mes_key(msg)
-                if content:
-                    return res_news_msg(content)
-                else:
-                    return res_text_msg(msg, '暂无未读消息')
-            content = handle_event(msg)
-            return res_text_msg(msg, content)
+        return handle_msg(msg)
 
 
 @weixin.route('/index', methods=['GET', 'POST'])
@@ -121,9 +105,9 @@ def oauth_jiaowu():
         if result == -1:
             return '您尚未绑定学号！'
         if result:
-            session['email'] = result[0]
-            session['status'] = result[1]
-            session['stuid'] = result[2]
+            session['email'] = result['email']
+            session['status'] = result['status']
+            session['stuid'] = result['stuid']
             session['jiaowu'] = 'jiaowu'
     return render_template('jiaowu.html')
 
@@ -170,17 +154,3 @@ def parse(rec):
     for child in root:
         msg[child.tag] = child.text
     return msg
-
-text_rep = "<xml><ToUserName><![CDATA[%s]]></ToUserName><FromUserName><![CDATA[%s]]></FromUserName><CreateTime>%s</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[%s]]></Content><FuncFlag>0</FuncFlag></xml>"
-
-
-def res_text_msg(msg, content):
-    response = make_response(text_rep % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())), content))
-    response.content_type = 'application/xml'
-    return response
-
-
-def res_news_msg(content):
-    response = make_response(content)
-    response.content_type = 'application/xml'
-    return response
