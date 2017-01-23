@@ -27,12 +27,12 @@ def get_openid_from_code(code):
                }
                有错误时返回的json:{"errcode":40029,"errmsg":"invalid code"}
     """
-    url = WxApiUrl.oauth2_auth_token.format(appid=APP_ID, appsecret=SECRET, code=code)
+    url = WxApiUrl.oauth2_token.format(appid=APP_ID, appsecret=SECRET, code=code)
     # url = "https://api.weixin.qq.com/sns/oauth2/access_token?" \
     #       "appid=%s&secret=%s&code=%s"\
     #       "&grant_type=authorization_code" % (APP_ID, SECRET, code)
     # result = requests.get(url).json()
-    result = CommunicateWithApi.get_data(url).json()
+    result = CommunicateWithApi.get_data(url)
     return result['openid']
 
 
