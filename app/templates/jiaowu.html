@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>教务信息邮箱推送</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<link rel="stylesheet" href="./js/f_jiaowu/common.css">
+	<script type="text/javascript" src="./js/f_jiaowu/jquery.js"></script>
+	<script type="text/javascript" src="./js/f_jiaowu/winpop.js"></script>
+	<script type="text/javascript" src="./js/f_jiaowu/check.js"></script>
+<style>
+	.carditems_list { padding: 10px 0 9px 10px; border-bottom: 1px solid #ececec; background: #fff; position: relative; }
+	.cont{ padding-bottom: 120px;}
+	p{ color:#888; }
+	.sql{ color:#000; padding-left:10px; padding-right:10px; font-size:16px;}
+	.btn-success{ font-size:16px; }
+	.mybr{height:12px; clear:both; }
+</style>
+<script>
+$(document).ready(function() {
+	var $dldd=$('.row');
+	$('.btn-success').click(function() {
+		if( $('.cb').eq(0).prop('checked') ){
+			status = '1';
+		}else{
+			status = '0';
+		}
+		var 
+			email  = $dldd.find('.form-control').eq(0).val(),
+			stuid  = $dldd.find('.form-control').eq(1).val();
+		if (!tcheck(email,'1,30','请正确填写邮箱','length')) { return false; }
+		if(stuid==''){
+			wintq("请在微信打开");
+			return false;
+		}
+		wintq('正在提交');
+		
+		$.ajax({
+			url:'/',
+			dataType:'json',
+			type:'POST',
+			data:{
+				num : 1,
+				email : email,
+				status : status
+			}//'email='+email+'&stuid='+stuid+'&status='+status,
+			success: function(data) {
+				if (data.s=='ok') {
+					wintq('提交成功');
+				}else{
+					wintq('提交失败');
+				}
+			}
+		});
+	});
+});
+$(document).ready(function(){
+	$.ajax({
+			url:'/',
+			dataType:'json',
+			type:'get',
+			data:{
+				num:2
+			}
+			success: function(data) {
+				document.getElementById("Email").value=data.Email;
+				document.getElementById("stu").value=data.stuID;
+				document.getElementById("stu").s=data.Status;
+			}
+	});
+});
+
+</script>
+
+</head>
+
+<body>
+<div class="head">
+    <span class="htit">输入个人邮箱</span>
+</div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-xs-1 col-sm-1 col-md-4"></div>
+		<div class="col-xs-10 col-sm-10 col-md-4">
+		
+			<div style="padding:20px 0px;">
+			   <!--<form class="bs-example bs-example-form" role="form">-->
+			
+				<div class="input-group">
+				   <input type="text" class="form-control" placeholder="Email" id="Email" value="">
+				   <span class="input-group-addon">
+					  <input type="checkbox" class="cb">
+				   </span>				   
+				</div><!-- /input-group --><div class="mybr"></div>
+				
+				<input type="hidden" class="form-control" placeholder="" id="stu" value="" s="">
+				
+				<button type="button" class="btn btn-success btn-block">提交修改</button>
+			   <!--</form>-->
+			<p class="text-primary"></br>
+				注：填写邮箱后，打钩表示 该邮箱第一时间接收教务网最新通知
+			</p>
+			</div>
+
+		</div>
+		<div class="col-xs-1 col-sm-1 col-md-4"></div>
+	</div>
+</div>
+	<script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script>
+var str= '';
+str = $("input[type='hidden']").attr("s");
+
+if(str=='1'){
+	$("input[class='cb']").eq(0).attr("checked","checked"); 
+}
+
+</script>
+</body>
+</html>
