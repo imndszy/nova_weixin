@@ -13,6 +13,11 @@ from nova_weixin.app.auth.noteprocess import (note_index,
 from nova_weixin.app.config import USER_EMAIL, USER_PASSWD
 
 
+@auth.route('/', methods=['GET', 'POST'])
+def index():
+    return redirect(url_for('auth.article'))
+
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -62,7 +67,7 @@ def choose_class():
             session['stu_dict'] = stu_dict_all
 #           #create_stu_html(stu_dict_all, class_dict_all)
             return redirect(url_for('auth.choose_stu'))
-        return render_template('auth/class1.html', class_dict=class_dict_all)
+        return render_template('auth/class.html', class_dict=class_dict_all)
     return redirect(url_for('auth.login'))
 
 
@@ -74,7 +79,7 @@ def choose_stu():
             image_url = session['image_url'].encode('utf8')
             title = session['title'].encode('utf8')
             stu_dict_all = session['stu_dict']
-            if request.method == 'POST':
+            if request.method == 'POST': # 确定被选择的学生
                 stu_list = request.form.getlist('checked')
                 class_list = session['classes']
                 chosen_class_stu = []
@@ -92,7 +97,7 @@ def choose_stu():
                     return render_template('auth/fail.html')
                 session['finish'] = 'finished'
                 return redirect(url_for('auth.finish'))
-            return render_template('auth/stu1.html',
+            return render_template('auth/stu.html',
                                    stu_dict=stu_dict_all,
                                    class_dict=session['class_dict'])
         return redirect(url_for('auth.article'))
@@ -105,32 +110,15 @@ def finish():
         if session.get('finish') == 'finished':
             return render_template('auth/finish.html')
         return redirect(url_for('auth.article'))
-    return redirect(url_for('login'))
+    return redirect(url_for('auth.login'))
 
 
 @auth.route('/logout')
 def logout():
     if session.get('login'):
         session.pop('login')
-        session.pop('classes')
-        session.pop('stu_dict')
+        session.pop('classes') if session.get('classes') else 0
+        session.pop('stu_dict') if session.get('stu_dict') else 0
         flash('You have been logged out.')
         return redirect(url_for('main.index'))
     return redirect(url_for('login'))
-
-
-# @auth.route('/register', methods=['GET', 'POST'])
-# def register():
-#     form = RegistrationForm()
-#     if form.validate_on_submit():
-#         if form.username.data == ROOT_USER:
-#             user = User(email=form.email.data,
-#                         username=form.username.data,
-#                         password=form.password.data)
-#             db.session.add(user)
-#             flash('You can now login.')
-#             return redirect(url_for('auth.login'))
-#         else:
-#             flash('Must be Novaer!')
-#             return redirect(url_for('main.wrong'))
-#     return render_template('auth/register.html', form=form)

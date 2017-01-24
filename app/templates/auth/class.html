@@ -8,21 +8,11 @@
 </div>
 <form method="post">
 <input type = "checkbox" name = "checked" value ="choose_all"> 全选 <br/>
-<input type="checkbox" name="checked" value="111111" > 山西 
-<br/><input type="checkbox" name="checked" value="131278" > 13工工 
-<br/><input type="checkbox" name="checked" value="131279" > 13金工 
-<br/><input type="checkbox" name="checked" value="151271" > 15自动 
-<br/><input type="checkbox" name="checked" value="121271" > 12信工 
-<br/><input type="checkbox" name="checked" value="121270" > 12自动 
-<br/><input type="checkbox" name="checked" value="131270" > 13自动 
-<br/><input type="checkbox" name="checked" value="131271" > 13信工 
-<br/><input type="checkbox" name="checked" value="151278" > 15工工 
-<br/><input type="checkbox" name="checked" value="121279" > 12金工 
-<br/><input type="checkbox" name="checked" value="121278" > 12工工 
-<br/><input type="checkbox" name="checked" value="141271" > 14信工 
-<br/><input type="checkbox" name="checked" value="141270" > 14自动 
-<br/><input type="checkbox" name="checked" value="141279" > 14金工 
-<br/><input type="checkbox" name="checked" value="141278" > 14工工 
+<input type="checkbox" name="checked" value="111111" > 山西
+{% for i in class_dict %}
+    <br/><input type="checkbox" name="checked" value="{{i}}" > {{class_dict[i]}}
+{% endfor %}
+
 <br/><input type="submit">
 </form>
 {% endblock %}

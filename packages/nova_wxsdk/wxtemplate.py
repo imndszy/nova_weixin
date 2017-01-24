@@ -11,7 +11,7 @@ from nova_weixin.app.weixin.weixinconfig import TEMPLATE_ID
 
 
 # 以下是用于南京大学交换生网站的预留接口
-# def send_exchange_template_msg(mes_url,template_id = config.TEMPLATE_ID, title='这里是标题', touser='hahhh'):
+# def send_exchange_template_msg(mes_url,template_id = config.TEMPLATE_ID, title='这里是标题', touser=''):
 #     acc_token = get_token()
 #     ISOTIMEFORMAT='%Y-%m-%d %X'
 #     now = time.strftime(ISOTIMEFORMAT, time.localtime())
@@ -40,13 +40,13 @@ from nova_weixin.app.weixin.weixinconfig import TEMPLATE_ID
 #                    }
 #            }
 #        }
-#     request = requests.post(url, json.dumps(data, ensure_ascii=False))
+#     request = requests.post(url, json.dumps(data, ensure_ascii=False).encode('utf8))
 #     return request.text
 
-
-def send_common_template_msg(mes_url, title='这里是标题', touser='o19fSvhseI04YpNJkVYVIBTEjESs',template_id=TEMPLATE_ID):
+# 发送普通模板消息
+def send_common_template_msg(mes_url, title='这里是标题', touser='',template_id=TEMPLATE_ID):
     if touser == -1:
-        return {'errcode': 1, 'errmsg': 'unknown openid ,check user.log'}
+        return {'errcode': 1, 'errmsg': 'unknown openid --send_common_template_msg'}
     if os.environ.get('config_flask') == 'development' or os.environ.get('config_flask') == 'default':
         return {'errcode': 0, 'errmsg': 'send_common_template_msg tested ok'}
     acc_token = get_token()
@@ -77,5 +77,5 @@ def send_common_template_msg(mes_url, title='这里是标题', touser='o19fSvhse
                     }
                     }
             }
-    request = requests.post(url, json.dumps(data, ensure_ascii=False))
+    request = requests.post(url, json.dumps(data, ensure_ascii=False).encode('utf8'))
     return request.json()
