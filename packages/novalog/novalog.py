@@ -32,7 +32,7 @@ class NovaLog:
 
 
 if __name__ =='__main__':
-    log = NovaLog('a.log',logging.DEBUG)
+    log = NovaLog('weixin.log', logging.DEBUG)
     log.debug('一个debug信息')
     log.info('一个info信息')
     log.warn('一个warning信息')

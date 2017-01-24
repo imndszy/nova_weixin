@@ -42,14 +42,16 @@
 """
 
 import time
-import uuid
 import functools
 import threading
 import logging
 
+from nova_weixin.packages.novalog import NovaLog
+
 
 # global engine object:
 engine = None
+log = NovaLog(path='./log/db.log')
 
 
 def _profiling(start, sql=''):
@@ -58,9 +60,9 @@ def _profiling(start, sql=''):
     """
     t = time.time() - start
     if t > 0.1:
-        logging.warning('[PROFILING] [DB] %s: %s' % (t, sql))
+        log.warn('[PROFILING] [DB] %s: %s' % (t, sql))
     else:
-        logging.info('[PROFILING] [DB] %s: %s' % (t, sql))
+        log.info('[PROFILING] [DB] %s: %s' % (t, sql))
 
 
 def create_engine(user, password, database, host='127.0.0.1', port=3306, **kw):
@@ -82,7 +84,7 @@ def create_engine(user, password, database, host='127.0.0.1', port=3306, **kw):
     # params['buffered'] = True
     engine = _Engine(lambda: pymysql.connect(**params))
     # test connection...
-    logging.info('Init mysql engine <%s> ok.' % hex(id(engine)))
+    log.info('Init mysql engine <%s> ok.' % hex(id(engine)))
 
 def close_engine():
     global engine
@@ -166,7 +168,7 @@ def _select(sql, first, *args):
     global _db_ctx
     cursor = None
     sql = sql.replace('?', '%s')
-    logging.info('SQL: %s, ARGS: %s' % (sql, args))
+    log.info('SQL: %s, ARGS: %s' % (sql, args))
     try:
         cursor = _db_ctx.connection.cursor()
         cursor.execute(sql, args)
@@ -491,7 +493,6 @@ class _TransactionCtx(object):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
     create_engine('szy', '123456', 'weixin', 'localhost', charset='utf8')
     update('drop table if exists user')
     update('create table user (id int primary key, name text, email text, passwd text, last_modified real)')
