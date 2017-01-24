@@ -12,7 +12,8 @@ from nova_weixin.app.config import ADDRESS
 from nova_weixin.packages.nova_wxsdk import WxApiUrl
 
 
-log = NovaLog(path='log/program.log')
+log = NovaLog(path='log/db_operation.log')
+send_log = NovaLog(path='log/runtime.log')
 
 def note_index(stu_list, nid):
     stu_text = ''
@@ -84,7 +85,7 @@ def send(_title, nid, stu_list):
                                           touser=openid)
         if result.get('errcode') != 0:
             cnt = cnt + 1
-            log.warn('send msg error {stuid}, errmsg: {errmsg}'.format(stuid=str(i), errmsg=result.get('errmsg')))
+            send_log.warn('send msg error {stuid}, errmsg: {errmsg}'.format(stuid=str(i), errmsg=result.get('errmsg')))
 #说明部分人发送成功
     if 0 < cnt < len(stu_list):
         return -2

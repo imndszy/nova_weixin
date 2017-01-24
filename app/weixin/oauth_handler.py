@@ -1,7 +1,6 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-# import requests
 import time
 
 from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
@@ -9,6 +8,9 @@ from nova_weixin.app.nova.get_user_info import get_stuid
 # from nova_weixin.app.lib.database import mysql
 from nova_weixin.packages.novamysql import select_one, update, select_int, select
 from nova_weixin.packages.nova_wxsdk import WxApiUrl, CommunicateWithApi
+from nova_weixin.packages.novalog import NovaLog
+
+log = NovaLog('log/db_operation.log')
 
 
 def get_openid_from_code(code):
@@ -60,6 +62,7 @@ def jiaowu(openid):
         info['stuid'] = stuid
         return info
     else:
+        log.warn("unable to get {stuid}'s email status")
         return -1
 
 def jiaowu_save(stuid,email,status):
@@ -73,6 +76,7 @@ def jiaowu_save(stuid,email,status):
     if result == 1:
         return 1
     else:
+        log.warn("unable to update {stuid}'s email to '{email}'".format(stuid=stuid, email=email))
         return -1
 
 def openid_handler(openid, nid):
@@ -134,6 +138,7 @@ def openid_handler(openid, nid):
     if result == 1:
         return 1
     else:
+        log.warn("unable to upate noteresponse")
         return -1
 
 

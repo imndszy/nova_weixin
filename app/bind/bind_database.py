@@ -2,6 +2,9 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 from nova_weixin.packages.novamysql import select_int, insert
+from nova_weixin.packages.novalog import NovaLog
+
+log = NovaLog(path='log/db_operation.log')
 # from nova_weixin.app.lib.database import mysql
 
 
@@ -33,6 +36,7 @@ def verify_password(stuid, passwd):
     #     else:
     #         return False
     if not result:
+        log.info("no certificationcode in database for student {stuid}".format(stuid=stuid))
         return -1
     if(result == passwd):
         return True
@@ -54,7 +58,5 @@ def save_new_student(stuid):
     if result == 1:
         return 0
     else:
+        log.warn("insert into database error -- save_new_student")
         return -1
-
-# if __name__ == '__main__':
-#     print get_bind_info(141270033,'asd')

@@ -2,10 +2,13 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import time
-import requests
 import os
 
 from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
+from nova_weixin.packages.nova_wxsdk import WxApiUrl, CommunicateWithApi
+from nova_weixin.packages.novalog import NovaLog
+
+log = NovaLog('log/runtime.log')
 
 def get_token():
     data = os.getenv('nova_acc_token', '')
@@ -18,14 +21,14 @@ def get_token():
         past_time = 1400000000
     now_time = int(time.time())
     if now_time - past_time > 1000:
-        app_id = APP_ID
-        app_secret = SECRET
-        url = 'https://api.weixin.qq.com/cgi-bin/'\
-              'token?grant_type=client_credential&appid=%s&secret=%s' % \
-              (app_id, app_secret)
-        result = requests.get(url).json()
+        url = WxApiUrl.token.format(appid=APP_ID, appsecret=SECRET)
+        # url = 'https://api.weixin.qq.com/cgi-bin/'\
+        #       'token?grant_type=client_credential&appid=%s&secret=%s' % \
+        #       (app_id, app_secret)
+        result = CommunicateWithApi.get_data(url)
 
         if result.get('errcode'):
+            log.warn("get access token error with errmsg:{errmsg}".format(errmsg=result.get('errmsg')))
             return -1
         else:
             acc_token = result.get('access_token')

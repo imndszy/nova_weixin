@@ -1,8 +1,6 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-import logging
-
 # from nova_weixin.app.lib.database import mysql
 from nova_weixin.packages.novamysql import (select, select_int, select_one)
 
@@ -201,7 +199,10 @@ def get_stuid(openid):
     #         # stuid = "NOT_IN_LIST"
     #         return -1
     # return get()
-    return stuid
+    if stuid:
+        return stuid
+    else:
+        return None
 
 
 def get_openid(stuid):

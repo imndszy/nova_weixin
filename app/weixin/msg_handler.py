@@ -15,12 +15,14 @@ from nova_weixin.app.config import ADDRESS
 from nova_weixin.app.weixin.weixinconfig import APP_ID
 from nova_weixin.packages.novamysql import insert, update, select
 from nova_weixin.packages.nova_wxsdk import WxApiUrl
+from nova_weixin.packages.novalog import NovaLog
 
 person_info_key = ['daily_assess', 'gpa', 'recom', 'tutor']
 mes_key = ['not_read_mes', 'history_mes']
 
+log = NovaLog('log/db_operation.log')
 
-def save_into_database(content, openid):
+def __save_into_database(content, openid):
     stuid = get_stuid(openid)
     result = insert('queryrecord', keyword=content, time=int(time.time()), username=stuid, describe='')
     # sql = "insert into queryrecord "\
@@ -40,7 +42,7 @@ def save_into_database(content, openid):
 def handle_msg(msg):
     if msg['MsgType'] == 'text':
         try:
-            save_into_database(msg['Content'], msg['FromUser'])
+            __save_into_database(msg['Content'], msg['FromUser'])
         except:
             pass
         finally:
@@ -48,11 +50,11 @@ def handle_msg(msg):
 
     if msg['MsgType'] == 'event':
         if msg['Event'] == 'CLICK' and msg['EventKey'] == 'not_read_mes':
-            return handle_mes_key(msg)
-        return res_text_msg(msg, handle_event(msg))
+            return __handle_mes_key(msg)
+        return __res_text_msg(msg, __handle_event(msg))
 
 
-def handle_event(msg):
+def __handle_event(msg):
     if msg['Event'] == 'subscribe':
         if msg['EventKey']:
             stuid = msg['EventKey'][8:]
@@ -65,6 +67,8 @@ def handle_event(msg):
             # def update_binding(results=None):
             #     return results
             # update_binding()
+            if result != 1:
+                log.critical("unable bide openid={openid} and stuid={stuid}".format(openid=openid, stuid=stuid))
             return "您已成功关注工程管理！"
         return "感谢关注！"
 
@@ -112,7 +116,6 @@ def handle_event(msg):
                           '\n前一名的绩点: ' + your_prev_gpa + '\n后一名的绩点: ' \
                           + your_next_gpa + '\n第一名的绩点: ' \
                           + your_first_gpa
-
             else:
                 content = gpa
             return content
@@ -168,7 +171,7 @@ def handle_event(msg):
             return content
 
 
-def handle_mes_key(msg): # 未读消息处理
+def __handle_mes_key(msg): # 未读消息处理
     stuid = get_stuid(msg['FromUserName'])
 
     send_info = select('select nid,stuids from noteindex')
@@ -252,15 +255,15 @@ def handle_mes_key(msg): # 未读消息处理
 
     head_str = news_rep_front % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())),len(send_content))
     content = head_str+middle_str+news_rep_back
-    return res_news_msg(content)
+    return __res_news_msg(content)
 
-def res_news_msg(content):
+def __res_news_msg(content):
     response = make_response(content)
     response.content_type = 'application/xml'
     return response
 
 
-def res_text_msg(msg, content):
+def __res_text_msg(msg, content):
     response = make_response(text_rep % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())), content))
     response.content_type = 'application/xml'
     return response

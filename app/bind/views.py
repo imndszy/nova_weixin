@@ -29,7 +29,8 @@ def register():
                 session['openid'] = openid
                 return redirect(url_for('bind.rebind'))
             else:
-                save_new_student(stuid)
+                if save_new_student(stuid) == -1:
+                    return "注册失败，请联系管理员！"
                 return redirect(url_for('bind.get_qrcode'))
         elif verify_status == -1:
             return render_template('404.html')

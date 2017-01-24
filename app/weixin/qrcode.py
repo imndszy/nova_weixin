@@ -5,6 +5,9 @@ import json
 
 from nova_weixin.app.weixin.get_acc_token import get_token
 from nova_weixin.packages.nova_wxsdk import WxApiUrl, CommunicateWithApi
+from nova_weixin.packages.novalog import NovaLog
+
+log = NovaLog('log/runtime.log')
 
 try:
     from urllib import urlencode
@@ -13,7 +16,7 @@ except ImportError:
 
 def create_ticket(action_name, scene_id=0, expire_seconds=604800):
     acc_token = get_token()
-    if acc_token:
+    if acc_token != -1:
         url = WxApiUrl.create_qrcode.format(access_token=acc_token)
         if action_name == "QR_SCENE":
             data = {
@@ -34,10 +37,12 @@ def create_ticket(action_name, scene_id=0, expire_seconds=604800):
             }
         result = CommunicateWithApi.post_data(url, json.dumps(data, ensure_ascii=False).encode('utf8'))
         if result.get('errcode'):
+            log.warn('unable to get ticket with errmsg:{errmsg}'.format(errmsg=result.get('errmsg')))
             return ''
         else:
             return result.get('ticket')
     else:
+        log.warn('unable to get ticket since acc_token is -1')
         return ''
 
 

@@ -20,7 +20,6 @@ def create_app(config_name):
     config[config_name].init_app(app)
     os.environ['config_flask'] = config_name
 
-    close_engine()
     create_engine(DB_USERNAME, DB_PASSWORD, DB_NAME, DB_HOSTNAME, DB_PORT)
     bootstrap.init_app(app)
     moment.init_app(app)

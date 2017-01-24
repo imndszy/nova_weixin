@@ -1,7 +1,6 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
-import time
 import hashlib
 import xml.etree.ElementTree as ET
 from flask import request, make_response, redirect, render_template, session,jsonify
@@ -12,7 +11,7 @@ from nova_weixin.app.weixin.oauth_handler import (jiaowu,get_openid_from_code,
                                                   get_url,
                                                   jiaowu_save,history_articles)
 from nova_weixin.app.nova.get_user_info import get_stuid,get_stu_name
-from nova_weixin.app.weixin.msg_handler import handle_msg,handle_mes_key,handle_event,save_into_database
+from nova_weixin.app.weixin.msg_handler import handle_msg
 
 
 @weixin.route('/', methods=['GET'])
@@ -76,7 +75,7 @@ def oauth_history():
 
 @weixin.route('/handle_history')
 def handle_history():
-    if session.get('history_checked'):
+    if session.get('history_checked'): # 确认是否从history路由跳转过来
         page = int(request.args.get('page'))
         if not page:
             return redirect('')
