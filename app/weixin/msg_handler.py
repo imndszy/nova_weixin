@@ -9,7 +9,6 @@
 import time
 from flask import make_response
 from .msg_format import *
-# from nova_weixin.app.lib.database import mysql
 from nova_weixin.app.nova.get_user_info import get_stuid, Student
 from nova_weixin.app.config import ADDRESS
 from nova_weixin.app.weixin.weixinconfig import APP_ID
@@ -25,14 +24,7 @@ log = NovaLog('log/db_operation.log')
 def __save_into_database(content, openid):
     stuid = get_stuid(openid)
     result = insert('queryrecord', keyword=content, time=int(time.time()), username=stuid, describe='')
-    # sql = "insert into queryrecord "\
-    #       "values('%s',%d,'%s','')" % (content, int(time.time()), stuid)
-    #
-    # @mysql(sql)
-    # def save(results=''):
-    #     return results
-    # save()
-    # return 0
+
     if result == 1:
         return 0
     else:
@@ -60,13 +52,7 @@ def __handle_event(msg):
             stuid = msg['EventKey'][8:]
             openid = msg['FromUserName']
             result = update('update biding set openid = ? where stuid = ?', openid, stuid)
-            # sql = "update biding set openid = '%s' "\
-            #       "where stuid = %s" % (openid, stuid)
-            #
-            # @mysql(sql)
-            # def update_binding(results=None):
-            #     return results
-            # update_binding()
+
             if result != 1:
                 log.critical("unable bide openid={openid} and stuid={stuid}".format(openid=openid, stuid=stuid))
             return "您已成功关注工程管理！"
@@ -190,39 +176,6 @@ def __handle_mes_key(msg): # 未读消息处理
         return ''
 
     read = [i['nid'] for i in read_info if str(stuid) in i['readlist']]
-    # sql = 'select nid,readlist from noteresponse'
-    #
-    # @mysql(sql)
-    # def sel(results=None):
-    #     return results
-    # re = sel()
-    # if not re:
-    #     return ''
-    # if isinstance(re[0],tuple):
-    #     read = [i[0] for i in re if str(stuid) in i[1]]
-    #     print read
-    # else:
-    #     if str(stuid) not in re[1]:
-    #         read = []
-    #     else:
-    #         read = re[:1]
-    #
-    # sql = 'select nid,stuids from noteindex'
-    #
-    # @mysql(sql)
-    # def sel2(results=None):
-    #     return results
-    #
-    # re2 = sel2()
-    # if not re2:
-    #     return ''
-    # if isinstance(re2[0],tuple):
-    #     send = [j[0] for j in re2 if str(stuid) in j[1]]
-    # else:
-    #     if str(stuid) not in re2[1]:
-    #         send = []
-    #     else:
-    #         send = re2[:1]
 
     not_read = list(set(send)-set(read))
 
@@ -230,18 +183,7 @@ def __handle_mes_key(msg): # 未读消息处理
         return ''
 
     send_content = select('select nid,title,picurl,url from notecontent order by nid desc')
-    #
-    # sql = 'select nid,title,picurl,url from notecontent order by nid desc'
-    # @mysql(sql)
-    # def sel3(results=None):
-    #     return results
-    #
-    # content = sel3()
-    # if isinstance(content[0],tuple):
-    #     # content.reverse()
-    #     send_content = content[:10]
-    # else:
-    #     send_content = [tuple(content)]
+
     def transfer_url(nid):
         url = ADDRESS + '/code/' + str(nid)
         post_url = WxApiUrl.oauth2_new_page.format(appid=APP_ID, redirect_url=url)

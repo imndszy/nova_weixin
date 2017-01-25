@@ -12,8 +12,7 @@ log = NovaLog('log/runtime.log')
 
 def get_token():
     data = os.getenv('nova_acc_token', '')
-    # with open(basedir + '/acc_token') as f:
-    #     data = f.read()
+
     if data:
         past_time = int(data[0:10])
         acc_token = data[10:]
@@ -22,9 +21,7 @@ def get_token():
     now_time = int(time.time())
     if now_time - past_time > 1000:
         url = WxApiUrl.token.format(appid=APP_ID, appsecret=SECRET)
-        # url = 'https://api.weixin.qq.com/cgi-bin/'\
-        #       'token?grant_type=client_credential&appid=%s&secret=%s' % \
-        #       (app_id, app_secret)
+
         result = CommunicateWithApi.get_data(url)
 
         if result.get('errcode'):
@@ -34,8 +31,6 @@ def get_token():
             acc_token = result.get('access_token')
             env_string = str(int(time.time())) + acc_token
             os.environ['nova_acc_token'] = env_string
-            # with open(basedir + '/acc_token', 'w') as f:
-            #     f.write(string)
             return acc_token
 
 if __name__ == '__main__':
