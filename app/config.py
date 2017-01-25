@@ -7,7 +7,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 ROOT_USER = 'nova_cac'
 USER_EMAIL = 'sme@nju.edu.cn'
-USER_PASSWD = '789456'
+USER_PASSWD = ''
 DB_HOSTNAME = 'localhost'
 DB_PORT = 3306
 DB_USERNAME = 'szy'

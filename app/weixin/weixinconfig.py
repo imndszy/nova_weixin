@@ -3,7 +3,7 @@
 # github: https://github.com/imndszy
 from nova_weixin.app.config import ADDRESS
 
-APP_ID = 'wx92a38'
+APP_ID = ''
 SECRET = ''
 TOKEN = ''
 TEMPLATE_ID = ''
