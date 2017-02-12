@@ -6,9 +6,8 @@
 <div class="page-header">
     <h1>choose classes first</h1>
 </div>
-<form method="post">
-<input type = "checkbox" name = "checked" value ="choose_all"> 全选 <br/>
-<input type="checkbox" name="checked" value="111111" > 山西
+<form action="" method="post">
+<input type = "checkbox" name = "checked" value ="choose_all"> 全选
 {% for i in class_dict %}
     <br/><input type="checkbox" name="checked" value="{{i}}" > {{class_dict[i]}}
 {% endfor %}
