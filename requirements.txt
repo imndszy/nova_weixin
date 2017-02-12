@@ -7,4 +7,4 @@ Jinja2==2.8
 WTForms==1.0.5
 Werkzeug==0.10.4
 requests==2.10.0
-Mysql-python==1.2.5
+PyMySQL==0.7.9
