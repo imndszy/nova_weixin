@@ -3,11 +3,17 @@
 # github: https://github.com/imndszy
 import json
 import time
-import requests
 import os
+import sys
 
-from nova_weixin.app.weixin.get_acc_token import get_token
+from nova_weixin.app.config import PY2
+
+if PY2:
+    reload(sys)
+    sys.setdefaultencoding('utf8')
+
 from nova_weixin.app.weixin.weixinconfig import TEMPLATE_ID
+from nova_weixin.packages.nova_wxsdk.wxapi import CommunicateWithApi
 
 
 # 以下是用于南京大学交换生网站的预留接口
@@ -40,16 +46,15 @@ from nova_weixin.app.weixin.weixinconfig import TEMPLATE_ID
 #                    }
 #            }
 #        }
-#     request = requests.post(url, json.dumps(data, ensure_ascii=False).encode('utf8))
-#     return request.text
+#     return CommunicateWithApi.post_data(url, data=json.dumps(data, ensure_ascii=False).encode('utf8'))
 
 # 发送普通模板消息
-def send_common_template_msg(mes_url, title='这里是标题', touser='',template_id=TEMPLATE_ID):
+def send_common_template_msg(mes_url, title='这里是标题', touser='',template_id=TEMPLATE_ID, acc_token=''):
     if touser == -1:
         return {'errcode': 1, 'errmsg': 'unknown openid --send_common_template_msg'}
     if os.environ.get('config_flask') == 'development' or os.environ.get('config_flask') == 'default':
         return {'errcode': 0, 'errmsg': 'send_common_template_msg tested ok'}
-    acc_token = get_token()
+
     ISOTIMEFORMAT = '%Y-%m-%d %X'
     now = time.strftime(ISOTIMEFORMAT, time.localtime())
     url = 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=%s' % acc_token
@@ -77,5 +82,4 @@ def send_common_template_msg(mes_url, title='这里是标题', touser='',templat
                     }
                     }
             }
-    request = requests.post(url, json.dumps(data, ensure_ascii=False).encode('utf8'))
-    return request.json()
+    return CommunicateWithApi.post_data(url, data=json.dumps(data, ensure_ascii=False).encode('utf8'))
