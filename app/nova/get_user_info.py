@@ -140,3 +140,6 @@ def get_stu_name(stuid):
         return name['name']
     else:
         return None
+
+def get_all_users():
+    return select('select openid,stuid from biding ')
