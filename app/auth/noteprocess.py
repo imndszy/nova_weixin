@@ -43,28 +43,3 @@ def note_response(nid):
     else:
         log.warn("insert into database error -- note_response")
         return -1
-
-
-def send(_title, nid, stu_list):
-
-    url = ADDRESS + '/code/' + str(nid)
-    post_url = WxApiUrl.oauth2_new_page.format(appid=APP_ID, redirect_url=url)
-
-    cnt = 0
-    for i in stu_list:
-        openid = get_openid(i)
-        if openid:
-            openid = openid.encode('utf8')
-        result = send_common_template_msg(post_url, title=_title,
-                                          touser=openid)
-        if result.get('errcode') != 0:
-            cnt = cnt + 1
-            send_log.warn('send msg error {stuid}, errmsg: {errmsg}'.format(stuid=str(i), errmsg=result.get('errmsg')))
-#说明部分人发送成功
-    if 0 < cnt < len(stu_list):
-        return -2
-#说明一个都没发送成功
-    elif cnt == len(stu_list):
-        return -1
-    else:
-        return 0

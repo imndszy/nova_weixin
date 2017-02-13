@@ -9,7 +9,9 @@ from nova_weixin.app.auth.forms import LoginForm, ArticleForm
 from nova_weixin.app.auth.get_users import classes, stu
 from nova_weixin.app.auth.noteprocess import (note_index,
                                               note_content,
-                                              note_response, send)
+                                              note_response)
+from nova_weixin.packages.nova_admin import send
+# from nova_weixin.app.auth.noteprocess import send
 from nova_weixin.app.config import USER_EMAIL, USER_PASSWD
 
 
@@ -45,7 +47,6 @@ def article():
             session['class_dict'] = class_dict_all
             if class_dict_all == -1:
                 return render_template('auth/fail.html')
-#            #create_class_html(class_dict_all)
             return redirect(request.args.get('next') or
                             url_for('auth.choose_class'))
         return render_template('auth/article.html', form=form)
@@ -58,14 +59,10 @@ def choose_class():
         class_dict_all = session['class_dict']
         if request.method == 'POST':
             class_list = request.form.getlist('checked')
-            # class_dict_all = classes()
             if 'choose_all' in class_list:
                 class_list = [i for i in class_dict_all.keys()
                               if i not in class_list]
             session['classes'] = class_list
-            stu_dict_all = stu(class_list)
-            session['stu_dict'] = stu_dict_all
-#           #create_stu_html(stu_dict_all, class_dict_all)
             return redirect(url_for('auth.choose_stu'))
         return render_template('auth/class.html', class_dict=class_dict_all)
     return redirect(url_for('auth.login'))
@@ -78,24 +75,29 @@ def choose_stu():
             article_url = session['article_url'].encode('utf8')
             image_url = session['image_url'].encode('utf8')
             title = session['title'].encode('utf8')
-            stu_dict_all = session['stu_dict']
+            stu_dict_all = stu(session['classes'])
             if request.method == 'POST': # 确定被选择的学生
                 stu_list = request.form.getlist('checked')
+
                 class_list = session['classes']
-                chosen_class_stu = []
+                chosen_class_stu = []  # 获取除全选外选中班级的所有学生
                 for m in stu(class_list).values():
                     for n in m:
                         chosen_class_stu.append(str(n[0]))
                 if 'choose_stu_all' in stu_list:
                     stu_list = [i for i in chosen_class_stu
                                 if i not in stu_list]
+                stu_list = list(set(stu_list))
                 nid = int(time.time())
                 note_index(stu_list, nid)
                 note_content(article_url, image_url, title, nid)
                 note_response(nid)
-                if send(title, nid, stu_list) == -1:
+                if send(title, nid, stu_list) == -1:   # 如果发送失败
+                    session['classes'] = None
                     return render_template('auth/fail.html')
+                session['classes'] = None
                 session['finish'] = 'finished'
+
                 return redirect(url_for('auth.finish'))
             return render_template('auth/stu.html',
                                    stu_dict=stu_dict_all,
