@@ -8,7 +8,7 @@ from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from .config import (config, DB_HOSTNAME, DB_PASSWORD,
                      DB_USERNAME, DB_NAME, DB_PORT)
-from nova_weixin.packages.novamysql import create_engine, close_engine
+from nova_weixin.packages.novamysql import create_engine
 
 bootstrap = Bootstrap()
 moment = Moment()
