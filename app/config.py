@@ -7,7 +7,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 ROOT_USER = 'nova_cac'
 USER_EMAIL = 'sme@nju.edu.cn'
-USER_PASSWD = ''
+USER_PASSWD = 'test'
 DB_HOSTNAME = 'localhost'
 DB_PORT = 3306
 DB_USERNAME = 'szy'
@@ -18,7 +18,7 @@ PY2 = sys.version_info < (3, 0)
 
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'xxxxx'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'hqgg09-9(G_)dert-jg'
 
     @staticmethod
     def init_app(app):
