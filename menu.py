@@ -10,13 +10,12 @@ if PY2:
     reload(sys)
     sys.setdefaultencoding('utf8')
 
-from nova_weixin.app.weixin.get_acc_token import get_token
-from nova_weixin.app.weixin.weixinconfig import MENU
-from nova_weixin.packages.nova_wxsdk import WxApiUrl, CommunicateWithApi
+from nova_weixin.app.weixin.weixinconfig import MENU, APP_ID, SECRET
+from nova_weixin.packages.nova_wxsdk import WxApiUrl, CommunicateWithApi, get_token
 
 
 def create_menu():
-    acc_token = get_token()
+    acc_token = get_token(appid=APP_ID, appsecret=SECRET)
     if acc_token:
         url = WxApiUrl.create_menu.format(access_token=acc_token)
         data = MENU

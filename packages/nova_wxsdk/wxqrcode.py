@@ -3,8 +3,7 @@
 # github: https://github.com/imndszy
 import json
 
-from nova_weixin.app.weixin.get_acc_token import get_token
-from nova_weixin.packages.nova_wxsdk import WxApiUrl, CommunicateWithApi
+from . import WxApiUrl, CommunicateWithApi
 from nova_weixin.packages.novalog import NovaLog
 
 log = NovaLog('log/runtime.log')
@@ -14,8 +13,7 @@ try:
 except ImportError:
     from urllib.parse import urlencode
 
-def create_ticket(action_name, scene_id=0, expire_seconds=604800):
-    acc_token = get_token()
+def create_ticket(action_name, acc_token, scene_id=0, expire_seconds=604800):
     if acc_token != -1:
         url = WxApiUrl.create_qrcode.format(access_token=acc_token)
         if action_name == "QR_SCENE":
@@ -54,6 +52,6 @@ def get_qrcode_url(ticket):
 
 
 if __name__ == "__main__":
-    ticket = create_ticket("QR_SCENE")
+    ticket = create_ticket("QR_SCENE", acc_token=-1)
     print(ticket)
     print(get_qrcode_url(ticket))

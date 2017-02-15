@@ -4,13 +4,12 @@
 import time
 import os
 
-from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
-from nova_weixin.packages.nova_wxsdk import WxApiUrl, CommunicateWithApi
+from . import WxApiUrl, CommunicateWithApi
 from nova_weixin.packages.novalog import NovaLog
 
 log = NovaLog('log/runtime.log')
 
-def get_token():
+def get_token(appid=None, appsecret=None):
     data = os.getenv('nova_acc_token', '')
 
     if data:
@@ -20,7 +19,7 @@ def get_token():
         past_time = 1400000000
     now_time = int(time.time())
     if now_time - past_time > 1000:
-        url = WxApiUrl.token.format(appid=APP_ID, appsecret=SECRET)
+        url = WxApiUrl.token.format(appid=appid, appsecret=appsecret)
 
         result = CommunicateWithApi.get_data(url)
 
@@ -32,7 +31,3 @@ def get_token():
             env_string = str(int(time.time())) + acc_token
             os.environ['nova_acc_token'] = env_string
             return acc_token
-
-if __name__ == '__main__':
-    print(get_token())
-    print(os.getenv('nova_acc_token'))

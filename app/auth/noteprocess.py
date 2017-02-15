@@ -3,10 +3,6 @@
 # github: https://github.com/imndszy
 from nova_weixin.packages.novalog import NovaLog
 from nova_weixin.packages.novamysql import insert
-from nova_weixin.packages.nova_wxsdk import WxApiUrl, send_common_template_msg
-from nova_weixin.app.nova.get_user_info import get_openid
-from nova_weixin.app.weixin.weixinconfig import APP_ID
-from nova_weixin.app.config import ADDRESS
 
 
 log = NovaLog(path='log/db_operation.log')

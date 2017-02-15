@@ -3,13 +3,13 @@
 # github: https://github.com/imndszy
 import json
 
-from nova_weixin.app.weixin.get_acc_token import get_token
-from nova_weixin.packages.nova_wxsdk import WxApiUrl, CommunicateWithApi
+from nova_weixin.packages.nova_wxsdk import WxApiUrl, CommunicateWithApi, get_token
+from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
 
 
 def send_customer_service_message_txt(touser,
                                       content='你好！'):
-    acc_token = get_token()
+    acc_token = get_token(appid=APP_ID, appsecret=SECRET)
     url = WxApiUrl.send_msg.format(access_token=acc_token)
     txt = {
             "touser": "%s" % touser,

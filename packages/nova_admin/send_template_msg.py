@@ -4,10 +4,9 @@
 import sys
 import threading
 from nova_weixin.packages.novalog import NovaLog
-from nova_weixin.packages.nova_wxsdk import WxApiUrl, send_common_template_msg
-from nova_weixin.app.weixin.get_acc_token import get_token
+from nova_weixin.packages.nova_wxsdk import WxApiUrl, send_common_template_msg, get_token
 from nova_weixin.app.nova.get_user_info import  get_all_users
-from nova_weixin.app.weixin.weixinconfig import APP_ID
+from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
 from nova_weixin.app.config import ADDRESS
 
 PY2 = sys.version_info[0] == 2
@@ -46,7 +45,7 @@ class SendTemplateMsg(threading.Thread):
 
 def send(_title, nid, stu_list):
     users = get_all_users()
-    acc_token = get_token()
+    acc_token = get_token(appid=APP_ID, appsecret=SECRET)
 
     if acc_token == -1:
         return -1

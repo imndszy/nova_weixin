@@ -12,8 +12,7 @@ if PY2:
     reload(sys)
     sys.setdefaultencoding('utf8')
 
-from nova_weixin.app.weixin.weixinconfig import TEMPLATE_ID
-from nova_weixin.packages.nova_wxsdk.wxapi import CommunicateWithApi
+from . import CommunicateWithApi
 
 
 # 以下是用于南京大学交换生网站的预留接口
@@ -49,7 +48,7 @@ from nova_weixin.packages.nova_wxsdk.wxapi import CommunicateWithApi
 #     return CommunicateWithApi.post_data(url, data=json.dumps(data, ensure_ascii=False).encode('utf8'))
 
 # 发送普通模板消息
-def send_common_template_msg(mes_url, title='这里是标题', touser='',template_id=TEMPLATE_ID, acc_token=''):
+def send_common_template_msg(mes_url, title='这里是标题', touser='',template_id='', acc_token=''):
     if touser == -1:
         return {'errcode': 1, 'errmsg': 'unknown openid --send_common_template_msg'}
     if os.environ.get('config_flask') == 'development' or os.environ.get('config_flask') == 'default':

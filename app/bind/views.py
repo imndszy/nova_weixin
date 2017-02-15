@@ -7,8 +7,7 @@ from nova_weixin.app.bind.forms import BindForm, ReBindForm
 from nova_weixin.app.bind import bind
 from nova_weixin.app.bind.bind_database import (verify_password,
                                                 save_new_student)
-from nova_weixin.app.weixin.qrcode import (create_ticket,
-                                           get_qrcode_url)
+from nova_weixin.packages.nova_wxsdk import create_ticket,get_qrcode_url
 from nova_weixin.app.nova.get_user_info import get_openid
 
 
