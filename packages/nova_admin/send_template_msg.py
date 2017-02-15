@@ -1,6 +1,7 @@
 # -*- coding:utf8 -*-
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
+import sys
 import threading
 from nova_weixin.packages.novalog import NovaLog
 from nova_weixin.packages.nova_wxsdk import WxApiUrl, send_common_template_msg
@@ -9,6 +10,7 @@ from nova_weixin.app.nova.get_user_info import  get_all_users
 from nova_weixin.app.weixin.weixinconfig import APP_ID
 from nova_weixin.app.config import ADDRESS
 
+PY2 = sys.version_info[0] == 2
 send_log = NovaLog(path='log/runtime.log')
 
 
@@ -20,7 +22,10 @@ class SendTemplateMsg(threading.Thread):
     def __init__(self, nid, title, stuid, openid, token):
         threading.Thread.__init__(self)
         self.nid = nid
-        self.title = title
+        if PY2:
+            self.title = title
+        else:
+            self.title = title.decode('utf8')
         self.stuid = stuid
         self.openid = openid
         self.token = token
@@ -31,7 +36,7 @@ class SendTemplateMsg(threading.Thread):
         if result.get('errcode') != 0:
             SendTemplateMsg.send_lock.acquire()
             SendTemplateMsg.error_cnt += 1
-            send_log.warn('send msg error {stuid}, errmsg: {errmsg}'.format(stuid=self.stuid, errmsg=result.get('errmsg')))
+            send_log.warn('send msg error {stuid}, errmsg: {errmsg}'.format(stuid=str(self.stuid)+str(self.openid), errmsg=result.get('errmsg')))
             SendTemplateMsg.send_lock.release()
 
     def __get_url(self):
@@ -51,7 +56,10 @@ def send(_title, nid, stu_list):
     for i in users:
         if str(i['stuid']) in stu_list:
             if i['openid']:
-                openids.append({'stuid': i['stuid'], 'openid': i['openid'].encode('utf8')})
+                if PY2:
+                    openids.append({'stuid': i['stuid'], 'openid': i['openid'].encode('utf8')})
+                else:
+                    openids.append({'stuid': i['stuid'], 'openid': i['openid']})
             else:
                 error_openid += 1
                 send_log.warn('send msg error {stuid}, errmsg: can not get openid'.format(stuid=i['stuid']))
