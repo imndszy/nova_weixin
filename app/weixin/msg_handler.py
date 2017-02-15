@@ -161,24 +161,22 @@ def __handle_mes_key(msg): # 未读消息处理
     stuid = get_stuid(msg['FromUserName'])
 
     send_info = select('select nid,stuids from noteindex')
-
     if not send_info:
         return ''
 
+    # 发送给某学生的所有消息
     send = [j['nid'] for j in send_info if str(stuid) in j['stuids']]
-
     if not send:
         return ''
 
     read_info = select('select nid,readlist from noteresponse')
-
     if not read_info:
         return ''
 
+    # 该学生已读的所有消息
     read = [i['nid'] for i in read_info if str(stuid) in i['readlist']]
 
     not_read = list(set(send)-set(read))
-
     if not not_read:
         return ''
 
@@ -198,6 +196,7 @@ def __handle_mes_key(msg): # 未读消息处理
     head_str = news_rep_front % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())),len(send_content))
     content = head_str+middle_str+news_rep_back
     return __res_news_msg(content)
+
 
 def __res_news_msg(content):
     response = make_response(content)
