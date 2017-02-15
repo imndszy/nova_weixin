@@ -3,11 +3,11 @@
 # github: https://github.com/imndszy
 import logging
 
-class NovaLog:
+class NovaLog(object):
     def __init__(self, path, level = logging.DEBUG):
         self.logger = logging.getLogger(path)
         self.logger.setLevel(logging.DEBUG)
-        fmt = logging.Formatter('%(asctime)s - %(filename)s - %(levelname)s - %(message)s')
+        fmt = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 
         #设置文件日志
         fh = logging.FileHandler(path)
