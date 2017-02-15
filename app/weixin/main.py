@@ -138,7 +138,7 @@ def verification():
     s = [timestamp, nonce, token]
     s.sort()
     s = ''.join(s)
-    if hashlib.sha1(s).hexdigest() == signature:
+    if hashlib.sha1(s.encode('utf8')).hexdigest() == signature:
         return 1
     return 0
 
