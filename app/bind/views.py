@@ -2,8 +2,8 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 from flask import (render_template, redirect, url_for, flash, session)
-from forms import BindForm, ReBindForm
 
+from nova_weixin.app.bind.forms import BindForm, ReBindForm
 from nova_weixin.app.bind import bind
 from nova_weixin.app.bind.bind_database import (verify_password,
                                                 save_new_student)

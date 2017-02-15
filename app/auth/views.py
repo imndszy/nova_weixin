@@ -11,7 +11,6 @@ from nova_weixin.app.auth.noteprocess import (note_index,
                                               note_content,
                                               note_response)
 from nova_weixin.packages.nova_admin import send
-# from nova_weixin.app.auth.noteprocess import send
 from nova_weixin.app.config import USER_EMAIL, USER_PASSWD
 
 
