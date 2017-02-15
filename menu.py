@@ -1,6 +1,9 @@
 # -*- coding:utf8 -*- 
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
+"""
+该文件放在最外面文件夹中是为了方便更新微信自定义菜单
+"""
 import json
 import sys
 
