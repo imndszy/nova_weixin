@@ -44,7 +44,6 @@
 import time
 import functools
 import threading
-import logging
 
 from nova_weixin.packages.novalog import NovaLog
 
@@ -78,7 +77,7 @@ def create_engine(user, password, database, host='127.0.0.1', port=3306, **kw):
     params = dict(user=user, password=password, database=database, host=host, port=port)
     defaults = dict(use_unicode=True, charset='utf8', autocommit=False)
     #若kw中添加了参数，就用kw中的，否则用默认的
-    for k, v in defaults.iteritems():
+    for k, v in defaults.items():
         params[k] = kw.pop(k, v)
     params.update(kw)
     # params['buffered'] = True
@@ -269,14 +268,14 @@ def _update(sql, *args):
     global _db_ctx
     cursor = None
     sql = sql.replace('?', '%s')
-    logging.info('SQL: %s, ARGS: %s' % (sql, args))
+    log.info('SQL: %s, ARGS: %s' % (sql, args))
     try:
         cursor = _db_ctx.connection.cursor()
         cursor.execute(sql, args)
         r = cursor.rowcount
         if _db_ctx.transactions == 0:
             # no transaction environment:
-            logging.info('auto commit')
+            log.info('auto commit')
             _db_ctx.connection.commit()
         return r
     finally:
@@ -295,7 +294,7 @@ def insert(table, **kw):
     """
     执行insert语句
     """
-    cols, args = zip(*kw.iteritems())
+    cols, args = zip(*kw.items())
     sql = "insert into `%s` (%s) values (%s)" % \
           (table, ','.join(['`%s`' % col for col in cols]), ','.join(['?' for i in range(len(cols))]))
     return _update(sql, *args)
@@ -352,7 +351,7 @@ class _LazyConnection(object):
     def cursor(self):
         if self.connection is None:
             _connection = engine.connect()
-            logging.info('[CONNECTION] [OPEN] connection <%s>...' % hex(id(_connection)))
+            log.info('[CONNECTION] [OPEN] connection <%s>...' % hex(id(_connection)))
             self.connection = _connection
         return self.connection.cursor()
 
@@ -366,7 +365,7 @@ class _LazyConnection(object):
         if self.connection:
             _connection = self.connection
             self.connection = None
-            logging.info('[CONNECTION] [CLOSE] connection <%s>...' % hex(id(connection)))
+            log.info('[CONNECTION] [CLOSE] connection <%s>...' % hex(id(connection)))
             _connection.close()
 
 
@@ -390,7 +389,7 @@ class _DbCtx(threading.local):
         """
         初始化连接的上下文对象，获得一个惰性连接对象
         """
-        logging.info('open lazy connection...')
+        log.info('open lazy connection...')
         self.connection = _LazyConnection()
         self.transactions = 0
 
