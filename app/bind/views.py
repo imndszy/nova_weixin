@@ -7,7 +7,8 @@ from nova_weixin.app.bind.forms import BindForm, ReBindForm
 from nova_weixin.app.bind import bind
 from nova_weixin.app.bind.bind_database import (verify_password,
                                                 save_new_student)
-from nova_weixin.packages.nova_wxsdk import create_ticket,get_qrcode_url
+from nova_weixin.packages.nova_wxsdk import create_ticket, get_qrcode_url, get_token
+from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
 from nova_weixin.app.nova.get_user_info import get_openid
 
 
@@ -41,7 +42,8 @@ def register():
 @bind.route('/qrcode', methods=['GET', 'POST'])
 def get_qrcode():
     if session.get('register'):
-        ticket = create_ticket("QR_SCENE", int(session['stuid']))
+        acc_token = get_token(appid=APP_ID, appsecret=SECRET)
+        ticket = create_ticket("QR_SCENE", acc_token=acc_token.get('acc_token'), scene_id=int(session['stuid']))
         url = get_qrcode_url(ticket)
         return redirect(url)
     return render_template('404.html')
@@ -54,7 +56,8 @@ def rebind():
         if form.validate_on_submit():
             coverage = form.coverage.data
             if coverage == 'yes':
-                ticket = create_ticket("QR_SCENE", int(session['stuid']))
+                acc_token = get_token(appid=APP_ID, appsecret=SECRET)
+                ticket = create_ticket("QR_SCENE", acc_token=acc_token.get('acc_token'), scene_id=int(session['stuid']))
                 url = get_qrcode_url(ticket)
                 return redirect(url)
             else:

@@ -47,7 +47,7 @@ def send(_title, nid, stu_list):
     users = get_all_users()
     acc_token = get_token(appid=APP_ID, appsecret=SECRET)
 
-    if acc_token == -1:
+    if acc_token['status'] == -1:
         return -1
 
     openids = []
@@ -73,7 +73,7 @@ def send(_title, nid, stu_list):
 
     threads = []
     for stu in openids:
-        post = SendTemplateMsg(nid, _title, stu['stuid'], stu['openid'], acc_token)
+        post = SendTemplateMsg(nid, _title, stu['stuid'], stu['openid'], acc_token['acc_token'])
         threads.append(post)
         post.start()
 

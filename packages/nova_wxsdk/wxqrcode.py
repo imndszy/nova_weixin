@@ -14,7 +14,7 @@ except ImportError:
     from urllib.parse import urlencode
 
 def create_ticket(action_name, acc_token, scene_id=0, expire_seconds=604800):
-    if acc_token != -1:
+    if acc_token:
         url = WxApiUrl.create_qrcode.format(access_token=acc_token)
         if action_name == "QR_SCENE":
             data = {
@@ -35,13 +35,11 @@ def create_ticket(action_name, acc_token, scene_id=0, expire_seconds=604800):
             }
         result = CommunicateWithApi.post_data(url, json.dumps(data, ensure_ascii=False).encode('utf8'))
         if result.get('errcode'):
-            log.warn('unable to get ticket with errmsg:{errmsg}'.format(errmsg=result.get('errmsg')))
-            return ''
+            return {'status': -1, 'errcode': result.get('errcode'), 'errmsg': result.get('errmsg')}
         else:
-            return result.get('ticket')
+            return {'status': 1, 'ticket': result.get('ticket')}
     else:
-        log.warn('unable to get ticket since acc_token is -1')
-        return ''
+        return {'status': -1, 'errcode': 100000, 'errmsg': 'acc_token is none'}
 
 
 def get_qrcode_url(ticket):

@@ -5,9 +5,6 @@ import time
 import os
 
 from . import WxApiUrl, CommunicateWithApi
-from nova_weixin.packages.novalog import NovaLog
-
-log = NovaLog('log/runtime.log')
 
 def get_token(appid=None, appsecret=None):
     data = os.getenv('nova_acc_token', '')
@@ -24,10 +21,9 @@ def get_token(appid=None, appsecret=None):
         result = CommunicateWithApi.get_data(url)
 
         if result.get('errcode'):
-            log.warn("get access token error with errmsg:{errmsg}".format(errmsg=result.get('errmsg')))
-            return -1
+            return {'status': -1, 'errmsg': result.get('errmsg'), 'errcode': result.get('errcode')}
         else:
             acc_token = result.get('access_token')
             env_string = str(int(time.time())) + acc_token
             os.environ['nova_acc_token'] = env_string
-            return acc_token
+            return {'status': 1, 'acc_token': acc_token}
