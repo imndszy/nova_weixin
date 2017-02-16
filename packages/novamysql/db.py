@@ -45,23 +45,15 @@ import time
 import functools
 import threading
 
-from nova_weixin.packages.novalog import NovaLog
-
-
 # global engine object:
 engine = None
-log = NovaLog(path='./log/db.log')
 
 
 def _profiling(start, sql=''):
     """
     用于剖析sql的执行时间
     """
-    t = time.time() - start
-    if t > 0.1:
-        log.warn('[PROFILING] [DB] %s: %s' % (t, sql))
-    else:
-        log.info('[PROFILING] [DB] %s: %s' % (t, sql))
+    return time.time() - start
 
 
 def create_engine(user, password, database, host='127.0.0.1', port=3306, **kw):
@@ -83,7 +75,6 @@ def create_engine(user, password, database, host='127.0.0.1', port=3306, **kw):
     # params['buffered'] = True
     engine = _Engine(lambda: pymysql.connect(**params))
     # test connection...
-    log.info('Init mysql engine <%s> ok.' % hex(id(engine)))
 
 def close_engine():
     global engine
@@ -167,7 +158,6 @@ def _select(sql, first, *args):
     global _db_ctx
     cursor = None
     sql = sql.replace('?', '%s')
-    log.info('SQL: %s, ARGS: %s' % (sql, args))
     try:
         cursor = _db_ctx.connection.cursor()
         cursor.execute(sql, args)
@@ -268,14 +258,12 @@ def _update(sql, *args):
     global _db_ctx
     cursor = None
     sql = sql.replace('?', '%s')
-    log.info('SQL: %s, ARGS: %s' % (sql, args))
     try:
         cursor = _db_ctx.connection.cursor()
         cursor.execute(sql, args)
         r = cursor.rowcount
         if _db_ctx.transactions == 0:
             # no transaction environment:
-            log.info('auto commit')
             _db_ctx.connection.commit()
         return r
     finally:
@@ -351,7 +339,6 @@ class _LazyConnection(object):
     def cursor(self):
         if self.connection is None:
             _connection = engine.connect()
-            log.info('[CONNECTION] [OPEN] connection <%s>...' % hex(id(_connection)))
             self.connection = _connection
         return self.connection.cursor()
 
@@ -365,7 +352,6 @@ class _LazyConnection(object):
         if self.connection:
             _connection = self.connection
             self.connection = None
-            log.info('[CONNECTION] [CLOSE] connection <%s>...' % hex(id(connection)))
             _connection.close()
 
 
@@ -389,7 +375,6 @@ class _DbCtx(threading.local):
         """
         初始化连接的上下文对象，获得一个惰性连接对象
         """
-        log.info('open lazy connection...')
         self.connection = _LazyConnection()
         self.transactions = 0
 
@@ -456,7 +441,6 @@ class _TransactionCtx(object):
             _db_ctx.init()
             self.should_close_conn = True
         _db_ctx.transactions += 1
-        logging.info('begin transaction...' if _db_ctx.transactions == 1 else 'join current transaction...')
         return self
 
     def __exit__(self, exctype, excvalue, traceback):
@@ -474,21 +458,15 @@ class _TransactionCtx(object):
 
     def commit(self):
         global _db_ctx
-        logging.info('commit transaction...')
         try:
             _db_ctx.connection.commit()
-            logging.info('commit ok.')
         except:
-            logging.warning('commit failed. try rollback...')
             _db_ctx.connection.rollback()
-            logging.warning('rollback ok.')
             raise
 
     def rollback(self):
         global _db_ctx
-        logging.warning('rollback transaction...')
         _db_ctx.connection.rollback()
-        logging.info('rollback ok.')
 
 
 if __name__ == '__main__':
