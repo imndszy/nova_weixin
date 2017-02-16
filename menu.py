@@ -19,12 +19,11 @@ from nova_weixin.packages.nova_wxsdk import WxApiUrl, CommunicateWithApi, get_to
 
 def create_menu():
     acc_token = get_token(appid=APP_ID, appsecret=SECRET)
-    if acc_token:
-        url = WxApiUrl.create_menu.format(access_token=acc_token)
+    if acc_token['status'] == 1:
+        url = WxApiUrl.create_menu.format(access_token=acc_token['acc_token'])
         data = MENU
         return CommunicateWithApi.post_data(url, data=json.dumps(data, ensure_ascii=False).encode('utf8'))
     else:
-        # log
         return -1
 
 
