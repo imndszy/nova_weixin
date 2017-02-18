@@ -7,12 +7,12 @@ from nova_weixin.packages.novalog import NovaLog
 log = NovaLog(path='log/db_operation.log')
 
 def verify_password(stuid, passwd):
-    result = select_int('select certificationcode from password where stuid =?',stuid)
+    result = str(select_int('select certificationcode from password where stuid =?', stuid))
 
     if not result:
         log.info("no certificationcode in database for student {stuid}".format(stuid=stuid))
         return -1
-    if(result == passwd):
+    if result == passwd:
         return True
     else:
         return False
