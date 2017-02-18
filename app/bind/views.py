@@ -58,8 +58,11 @@ def rebind():
             if coverage == 'yes':
                 acc_token = get_token(appid=APP_ID, appsecret=SECRET)
                 ticket = create_ticket("QR_SCENE", acc_token=acc_token.get('acc_token'), scene_id=int(session['stuid']))
-                url = get_qrcode_url(ticket['ticket'])
-                return redirect(url)
+                if ticket['status'] == 1:
+                    url = get_qrcode_url(ticket['ticket'])
+                    return redirect(url)
+                else:
+                    return ticket['errmsg']
             else:
                 return redirect(url_for('main.index'))
         return render_template('bind/rebind.html', form=form)
