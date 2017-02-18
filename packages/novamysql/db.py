@@ -223,7 +223,7 @@ def select_int(sql, *args):
     d = _select(sql, True, *args)
     if len(d) != 1:
         raise MultiColumnsError('Expect only one column.')
-    return d.values()[0]
+    return list(d.values())[0]
 
 
 def select(sql, *args):
