@@ -6,7 +6,7 @@ import threading
 from nova_weixin.packages.novalog import NovaLog
 from nova_weixin.packages.nova_wxsdk import WxApiUrl, send_common_template_msg, get_token
 from nova_weixin.app.nova.get_user_info import  get_all_users
-from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET
+from nova_weixin.app.weixin.weixinconfig import APP_ID, SECRET, TEMPLATE_ID
 from nova_weixin.app.config import ADDRESS
 
 PY2 = sys.version_info[0] == 2
@@ -30,7 +30,7 @@ class SendTemplateMsg(threading.Thread):
         self.token = token
 
     def run(self):
-        result = send_common_template_msg(self.__get_url(), title=self.title,
+        result = send_common_template_msg(self.__get_url(), title=self.title, template_id=TEMPLATE_ID,
                                           touser=self.openid ,acc_token=self.token)
         if result.get('errcode') != 0:
             SendTemplateMsg.send_lock.acquire()
@@ -62,14 +62,6 @@ def send(_title, nid, stu_list):
             else:
                 error_openid += 1
                 send_log.warn('send msg error {stuid}, errmsg: can not get openid'.format(stuid=i['stuid']))
-
-    # for i in stu_list:
-    #     openid = get_openid(i)
-    #     if openid:
-    #         openid = openid.encode('utf8')
-    #         openids.append(openid)
-    #     else:
-    #         send_log.warn('send msg error {stuid}, errmsg: can not get openid'.format(stuid=i))
 
     threads = []
     for stu in openids:
