@@ -16,6 +16,7 @@ send_log = NovaLog(path='log/runtime.log')
 class SendTemplateMsg(threading.Thread):
 
     error_cnt = 0
+    success_stus = []
     send_lock = threading.Lock()
 
     def __init__(self, nid, title, stuid, openid, token):
@@ -36,6 +37,10 @@ class SendTemplateMsg(threading.Thread):
             SendTemplateMsg.send_lock.acquire()
             SendTemplateMsg.error_cnt += 1
             send_log.warn('send msg error {stuid}, errmsg: {errmsg}'.format(stuid=str(self.stuid)+str(self.openid), errmsg=result.get('errmsg')))
+            SendTemplateMsg.send_lock.release()
+        else:
+            SendTemplateMsg.send_lock.acquire()
+            SendTemplateMsg.success_stus.append(self.stuid)
             SendTemplateMsg.send_lock.release()
 
     def __get_url(self):
@@ -74,6 +79,6 @@ def send(_title, nid, stu_list):
 
 #说明部分人发送成功
     if 0 < SendTemplateMsg.error_cnt + error_openid <= len(stu_list):
-        return -1
+        return {'status': -1, 'success_stus': SendTemplateMsg.success_stus}
     else:
-        return 0
+        return {'status': 0, 'success_stus': SendTemplateMsg.success_stus}

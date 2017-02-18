@@ -88,15 +88,15 @@ def choose_stu():
                                 if i not in stu_list]
                 stu_list = list(set(stu_list))
                 nid = int(time.time())
-                note_index(stu_list, nid)
                 note_content(article_url, image_url, title, nid)
                 note_response(nid)
-                if send(title, nid, stu_list) == -1:   # 如果发送失败
-                    session['classes'] = None
+                result = send(title, nid, stu_list)
+                note_index(result['success_stus'], nid)  # 将收到消息的学生添加到数据库
+                session.pop('classes')
+                if result['status'] == -1:
                     return render_template('auth/fail.html')
-                session['classes'] = None
-                session['finish'] = 'finished'
 
+                session['finish'] = 'finished'
                 return redirect(url_for('auth.finish'))
             return render_template('auth/stu.html',
                                    stu_dict=stu_dict_all,
