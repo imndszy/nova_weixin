@@ -10,8 +10,9 @@ from nova_weixin.app.weixin.weixinconfig import TOKEN
 from nova_weixin.app.weixin.oauth_handler import (jiaowu,get_openid_from_code,
                                                   get_url,
                                                   jiaowu_save,history_articles)
-from nova_weixin.app.nova.get_user_info import get_stuid,get_stu_name
+from nova_weixin.app.nova.get_user_info import get_stu_name
 from nova_weixin.app.weixin.msg_handler import handle_msg
+from nova_weixin.app.config import PY2
 
 
 @weixin.route('/', methods=['GET'])
@@ -66,9 +67,10 @@ def oauth_history():
         return redirect('')
     openid = get_openid_from_code(code)
     session['openid'] = openid
-    stuid = get_stuid(openid)
-    session['stuid'] = stuid
-    session['name'] = get_stu_name(stuid).encode('utf8')
+    if PY2:
+        session['name'] = get_stu_name(openid=openid, first=False).encode('utf8')
+    else:
+        session['name'] = get_stu_name(openid=openid, first=False)
     session['history_checked'] = 'history'
     return render_template('note.html')
 
@@ -83,7 +85,10 @@ def handle_history():
         article_list = []
         for i in result:
             if len(i):
-                article_list.append({'title':i[1].encode('utf8'),'url':i[2].encode('utf8')})
+                if PY2:
+                    article_list.append({'title':i[1].encode('utf8'),'url':i[2].encode('utf8')})
+                else:
+                    article_list.append({'title': i[1], 'url': i[2]})
         article_list.reverse()
         if len(article_list)-page*8>8:
             result = {'result':article_list[(page-1)*8:8*page],'name':session['name']}

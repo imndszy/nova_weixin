@@ -2,6 +2,7 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 from nova_weixin.packages.novamysql import (select, select_int, select_one)
+from nova_weixin.app.config import PY2
 
 
 class Student(object):
@@ -19,8 +20,8 @@ class Student(object):
         self.routine_develop = 0
         self.routine_rank = 100
         self.stu_amount = 55
-        self.tutor = '我'
-        self.tutor_mail = 'imjtrszy@163.com'
+        self.tutor = ''
+        self.tutor_mail = ''
 
     def get_routine_appraise(self):
         if self.stuid != -1:
@@ -97,8 +98,12 @@ class Student(object):
         if self.stuid != -1:
             tutor = select_one('select *from tutor where StuID = ?', self.stuid)
 
-            self.tutor = tutor['tutor']
-            self.tutor_mail = tutor['mail']
+            if PY2:
+                self.tutor = tutor['tutor'].encode('utf8')
+                self.tutor_mail = tutor['mail'].encode('utf8')
+            else:
+                self.tutor = tutor['tutor']
+                self.tutor_mail = tutor['mail']
             tutor_info = dict()
             tutor_info['status'] = 1
             tutor_info['same_tutor'] = []
@@ -108,6 +113,11 @@ class Student(object):
                 temp = select('select *from tutor where tutor = ? and stuid <> ?', self.tutor, self.stuid)
 
                 if temp:
+                    if PY2:
+                        for i in temp:
+                            i['name'] = i['name'].encode('utf8')
+                            i['sex'] = i['sex'].encode('utf8')
+                            i['campus'] = i['campus'].encode('utf8')
                     tutor_info['same_tutor'] = temp
                     # [{},{}]
             return tutor_info
@@ -133,13 +143,17 @@ def get_openid(stuid):
         return None
 
 
-def get_stu_name(stuid):
-    name = select_one('select name from stuinfo where stuid = ?', stuid)
+def get_stu_name(stuid=None, openid=None, first=True):
+    if first:
+        name = select_one('select name from stuinfo where stuid = ?', stuid)
+    else:
+        name = select_one('select name from stuinfo where stuid=(select stuid from biding where openid = ?)', openid)
 
     if name:
         return name['name']
     else:
         return None
+
 
 def get_all_users():
     return select('select openid,stuid from biding ')

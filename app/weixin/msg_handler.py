@@ -136,17 +136,17 @@ def __handle_event(msg):
             tutor = stu.get_tutor()
             if isinstance(tutor, dict):
                 if tutor['status']:
-                    content = '您的导师是: ' + stu.tutor.encode('utf8') \
-                              + '\nemail:' + stu.tutor_mail.encode('utf8') \
+                    content = '您的导师是: ' + stu.tutor \
+                              + '\nemail:' + stu.tutor_mail \
                               + '\n' + '=' * 18 + '\n'
                     if tutor['same_tutor']:
                         content = content + '导师与您相同的有:\n\n'
                         info_list = []
                         for i in tutor['same_tutor']:
-                            info_list.append(i['name'].encode('utf8') + ' ' +
-                                             i['sex'].encode('utf8') +
+                            info_list.append(i['name'] + ' ' +
+                                             i['sex'] +
                                              '\n宿舍: ' +
-                                             i['campus'].encode('utf8'))
+                                             i['campus'])
                         content = content + '\n\n'.join(info_list)
                     else:
                         content = content + '没有人和您有相同导师！'
