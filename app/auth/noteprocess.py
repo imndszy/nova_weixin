@@ -11,7 +11,7 @@ send_log = NovaLog(path='log/runtime.log')
 def note_index(stu_list, nid):
     stu_text = ''
     for i in stu_list:
-        stu_text = stu_text + i
+        stu_text = stu_text + str(i)
     result = insert('noteindex', nid=nid, publishTime=nid, sort=0, topic='', stuids=stu_text, expire=0)
 
     if result == 1:
