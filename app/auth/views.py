@@ -91,9 +91,11 @@ def choose_stu():
                 note_content(article_url, image_url, title, nid)
                 note_response(nid)
                 result = send(title, nid, stu_list)
+                if result['status'] == -1:
+                    return render_template('auth/fail.html')
                 note_index(result['success_stus'], nid)  # 将收到消息的学生添加到数据库
                 session.pop('classes')
-                if result['status'] == -1:
+                if result['status'] == -2:
                     return render_template('auth/fail.html')
 
                 session['finish'] = 'finished'

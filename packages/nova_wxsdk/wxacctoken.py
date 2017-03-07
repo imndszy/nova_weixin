@@ -27,3 +27,5 @@ def get_token(appid=None, appsecret=None):
             env_string = str(int(time.time())) + acc_token
             os.environ['nova_acc_token'] = env_string
             return {'status': 1, 'acc_token': acc_token}
+    else:
+        return {'status': 1, 'acc_token': acc_token}

@@ -53,7 +53,8 @@ def send(_title, nid, stu_list):
     acc_token = get_token(appid=APP_ID, appsecret=SECRET)
 
     if acc_token['status'] == -1:
-        return -1
+        send_log.warn(acc_token['errmsg'])
+        return {'status': -1, 'wrong_msg': 'wrong acc_token'}
 
     openids = []
     error_openid = 0
@@ -79,6 +80,6 @@ def send(_title, nid, stu_list):
 
 #说明部分人发送成功
     if 0 < SendTemplateMsg.error_cnt + error_openid <= len(stu_list):
-        return {'status': -1, 'success_stus': SendTemplateMsg.success_stus}
+        return {'status': -2, 'success_stus': SendTemplateMsg.success_stus}
     else:
         return {'status': 0, 'success_stus': SendTemplateMsg.success_stus}
