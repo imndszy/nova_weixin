@@ -180,14 +180,20 @@ def __handle_mes_key(msg): # 未读消息处理
     if not not_read:
         return ''
 
-    send_content = select('select nid,title,picurl,url from notecontent order by nid desc')
+    send_content = select('select nid,title,picurl,url from notecontent order by nid desc limit 50')
 
     def transfer_url(nid):
         url = ADDRESS + '/code/' + str(nid)
         post_url = WxApiUrl.oauth2_new_page.format(appid=APP_ID, redirect_url=url)
         return post_url
 
-    send_content = [(x['title'],'',x['picurl'],transfer_url(x['url'])) for x in send_content if x['nid'] in not_read]
+    send_content = [(x['title'],'',x['picurl'],transfer_url(x['nid'])) for x in send_content if x['nid'] in not_read]
+    if len(send_content) == 0:
+        head_str = news_rep_front % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())), 1)
+        middle_str = news_rep_middle % ('当前没有未读消息哦～', '',
+                                        'http://www.nju.edu.cn/_upload/tpl/01/36/310/template310/images/logo.png',
+                                        'http://weixin.njunova.com')
+        return __res_news_msg(head_str+middle_str+news_rep_back)
 
     middle_str=''
     for i in send_content:
