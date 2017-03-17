@@ -5,15 +5,15 @@ import os
 import sys
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-ROOT_USER = 'nova_cac'
-USER_EMAIL = 'sme@nju.edu.cn'
-USER_PASSWD = 'test'
-DB_HOSTNAME = 'localhost'
-DB_PORT = 3306
+ROOT_USER = 'nova_cac'               # 后台管理员用户名
+USER_EMAIL = 'sme@nju.edu.cn'        # 后台管理员邮箱
+USER_PASSWD = 'test'                 # 后台管理员密码
+DB_HOSTNAME = 'localhost'            # 数据库地址
+DB_PORT = 3306             
 DB_USERNAME = 'szy'
 DB_PASSWORD = '123456'
-DB_NAME = 'weixin'
-ADDRESS = 'http://121.42.216.141'
+DB_NAME = 'weixin' 
+ADDRESS = 'http://121.42.216.141'    # 主机地址
 PY2 = sys.version_info[0] == 2
 
 

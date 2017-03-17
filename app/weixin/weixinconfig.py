@@ -3,10 +3,10 @@
 # github: https://github.com/imndszy
 from nova_weixin.app.config import ADDRESS
 
-APP_ID = ''
-SECRET = ''
-TOKEN = ''
-TEMPLATE_ID = ''
+APP_ID = ''        # APP_ID
+SECRET = ''        # APP_SECRET
+TOKEN = ''         # TOKEN
+TEMPLATE_ID = ''   # 模板消息ID
 MENU = {
     "button": [
         {
@@ -65,7 +65,7 @@ MENU = {
                 {
                     "type": "view",
                     "name": "微信问问",
-                    "url": "http://121.42.216.141"
+                    "url": "http://smeug.nju.edu.cn/q2a/index.php"
                 },
                 {
                     "type": "view",

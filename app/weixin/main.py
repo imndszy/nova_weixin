@@ -10,7 +10,7 @@ from nova_weixin.app.weixin.weixinconfig import TOKEN
 from nova_weixin.app.weixin.oauth_handler import (jiaowu,get_openid_from_code,
                                                   get_url,
                                                   jiaowu_save,history_articles)
-from nova_weixin.app.nova.get_user_info import get_stu_name
+from nova_weixin.app.nova.get_user_info import get_stu_name, get_stuid
 from nova_weixin.app.weixin.msg_handler import handle_msg
 from nova_weixin.app.config import PY2
 
@@ -81,7 +81,7 @@ def handle_history():
         page = int(request.args.get('page'))
         if not page:
             return redirect('')
-        result = history_articles(session['stuid'])
+        result = history_articles(get_stuid(session['openid']))
         article_list = []
         for i in result:
             if len(i):
