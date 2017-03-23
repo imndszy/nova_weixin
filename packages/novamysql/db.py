@@ -221,6 +221,8 @@ def select_int(sql, *args):
     MultiColumnsError: Expect only one column.
     """
     d = _select(sql, True, *args)
+    if not d:
+        return None
     if len(d) != 1:
         raise MultiColumnsError('Expect only one column.')
     return list(d.values())[0]

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="page-header">
+        <h1>choose classes first</h1>
+    </div>
+    {% extends "base.html" %} {% import "bootstrap/wtf.html" as wtf %} {% block title %}Nova {% endblock %} {% block page_content %}
+    <div class="page-header">
+        <h1>choose classes first</h1>
+    </div>
+    <form method="post">
+        <button value="0" id="choose_all"> 全选/全不选</button>
+        <br/>
+        <input type="checkbox" name="checked" value="111111"> 山西 {% for i in class_dict %}
+        <br/>
+        <input type="checkbox" name="checked" value="{{i}}"> {{class_dict[i]}} {% endfor %}
+        <br/>
+        <input type="submit">
+    </form>
+    {% endblock %}
+    <script>
+    var EventUtil = {
+
+        addHandler: function(element, type, handler) {
+            if (element.addEventListener) {
+                element.addEventListener(type, handler);
+            } else if (element.attachEvent) {
+                element.attachEvent("on" + type, handler);
+            } else {
+                element["on" + type] = handler;
+            }
+        },
+
+        preventDefault: function(event) {
+            if (event.preventDefault) {
+                event.preventDefault();
+            } else {
+                event.returnValue = false;
+            }
+        }
+    }
+    window.onload = function() {
+        var btn = document.getElementById('choose_all'),
+            checkboxs = document.querySelectorAll('input[type=checkbox]');
+        EventUtil.addHandler(btn, 'click', function(e) {
+            if (btn.value === "0") {
+                for (var i = 0; i < checkboxs.length; i++) {
+                    checkboxs[i].checked = true;
+                }
+                btn.value = "1";
+            }else{
+            	for (var i = 0; i < checkboxs.length; i++) {
+                    checkboxs[i].checked = false;
+                }
+                btn.value = "0";
+            }
+            var evt = e ? e : window.event;
+            EventUtil.preventDefault(e);
+        })
+    }
+    </script>
+</body>
+
+</html>

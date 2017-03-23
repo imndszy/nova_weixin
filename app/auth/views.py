@@ -2,14 +2,18 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import time
-from flask import (render_template, redirect, request, url_for, flash, session)
+import json
+from flask import (render_template, redirect, request,
+                   url_for, flash, session, jsonify)
 
 from nova_weixin.app.auth import auth
 from nova_weixin.app.auth.forms import LoginForm, ArticleForm
 from nova_weixin.app.auth.get_users import classes, stu
 from nova_weixin.app.auth.noteprocess import (note_index,
                                               note_content,
-                                              note_response)
+                                              note_response,
+                                              get_read_info,
+                                              get_activity_info)
 from nova_weixin.packages.nova_admin import send
 from nova_weixin.app.config import USER_EMAIL, USER_PASSWD
 
@@ -114,6 +118,46 @@ def finish():
             return render_template('auth/finish.html')
         return redirect(url_for('auth.article'))
     return redirect(url_for('auth.login'))
+
+
+@auth.route('/view')
+def view_read():
+    if session.get('login'):
+        return render_template('auth/nova.html')
+    return redirect(url_for('auth.login'))
+
+
+@auth.route('/view/handler')
+def view_handle():
+    if session.get('login'):
+        data = request.args
+        if data.get('quest') == 'activity':
+            activities = get_activity_info()
+            return jsonify({'status':0, 'activities': activities})
+    return redirect(url_for('auth.login'))
+
+
+@auth.route('/view/readinfo')
+def view_read_info():
+    if session.get('login'):
+        data = request.args
+        if data.get('quest') == 'stus':
+            if(data.get('nid', None)):
+                 stus = get_read_info(data.get('nid'))
+                 return jsonify({'status': 0, 'stus': stus})
+            else:
+                return jsonify({'status': -1, 'errmsg': '未获取到nid'})
+    return redirect(url_for('auth.login'))
+
+
+@auth.route('test')
+def test():
+    return jsonify(get_read_info(nid=213))
+
+
+@auth.route('/view/stus')
+def view_stus():
+    pass
 
 
 @auth.route('/logout')

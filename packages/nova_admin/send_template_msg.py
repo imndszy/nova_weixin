@@ -36,11 +36,12 @@ class SendTemplateMsg(threading.Thread):
         if result.get('errcode') != 0:
             SendTemplateMsg.send_lock.acquire()
             SendTemplateMsg.error_cnt += 1
-            send_log.warn('send msg error {stuid}, errmsg: {errmsg}'.format(stuid=str(self.stuid)+str(self.openid), errmsg=result.get('errmsg')))
+            send_log.warn('send msg error {stuid}, errmsg: {errmsg}'.format(stuid=str(self.stuid)+' '+str(self.openid), errmsg=result.get('errmsg')))
             SendTemplateMsg.send_lock.release()
         else:
             SendTemplateMsg.send_lock.acquire()
             SendTemplateMsg.success_stus.append(self.stuid)
+            send_log.info('send msg success {stuid}'.format(stuid=str(self.stuid) +' ' + str(self.openid)))
             SendTemplateMsg.send_lock.release()
 
     def __get_url(self):
@@ -49,6 +50,7 @@ class SendTemplateMsg(threading.Thread):
 
 
 def send(_title, nid, stu_list):
+    stu_list = list(set(stu_list))
     users = get_all_users()
     acc_token = get_token(appid=APP_ID, appsecret=SECRET)
 

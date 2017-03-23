@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../static/css/nova.css">
+    <style>
+    table {
+        border-collapse: collapse; //重点在这里
+        border-right: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+        margin: 0 auto;
+    }
+    
+    table tr {
+        font-size: 12px;
+    }
+    
+    table tr:nth-child(2n+1) {
+        font-weight: bold;
+        font-size: 14px;
+        background-color: #fff;
+    }
+    
+    table tr:nth-child(2n) {
+        font-weight: bold;
+        font-size: 14px;
+        background-color: #aaa;
+    }
+    
+    table tr:first-child {
+        font-weight: bold;
+        font-size: 14px;
+        color: #fff;
+        background-color: #333;
+    }
+    
+    table tr:hover {
+        opacity: 0.8;
+        background-color: rgb(144, 238, 144)
+    }
+    
+    table tr:first-child:hover {
+        opacity: 1;
+        font-weight: bold;
+        font-size: 14px;
+        color: #fff;
+        background-color: #333;
+    }
+    
+    table td {
+        text-align: center;
+        min-width: 100px;
+        max-width: 600px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 5px;
+        border-left: 1px solid #ccc;
+        border-top: 1px solid #ccc;
+    }
+    
+    table td a {
+        color: inherit;
+        text-decoration: none;
+        display: inline;
+        width: 100%;
+    }
+    
+    table td a:hover {
+        text-decoration: underline;
+    }
+    
+    button {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 20px;
+    }
+    
+    td button {
+        height: 30px;
+        width: 60px;
+        margin-bottom: 5px;
+    }
+    
+    .grade nav {
+        background: none;
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+    }
+    
+    #person {
+        z-index: 9999999;
+        display: none;
+        position: fixed;
+        top: 100px;
+        left: 50%;
+        transform: translate(-50%, 0);
+        width: 700px;
+        height: 300px;
+        background-color: #fff
+    }
+    
+    #person h2 {
+        padding: 0;
+        margin: 0;
+    }
+    
+    #read {
+        float: left;
+        width: 345px;
+        height: 300px;
+        margin-right: 10px;
+        overflow: auto
+    }
+    
+    #unread {
+        float: left;
+        width: 345px;
+        height: 300px;
+        overflow: auto
+    }
+    
+    #bg {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        /*弹出窗口后，添加遮罩层，采用此CSS，将该层置于弹出DIV和页面层之间
+     z-index控制Z轴的坐标，数值越大，离用户越近 rgba(72, 74, 68, 0.46)
+    */
+        z-index: 1001;
+        background-color: #8f9f8f;
+        -moz-opacity: 0.7;
+        opacity: .70;
+        filter: alpha(opacity=70);
+    }
+    </style>
+</head>
+
+<body>
+    <div id="person">
+        <div id="read">
+            <h2>read:</h2></div>
+        <div id="unread">
+            <h2>unread:</h2></div>
+    </div>
+    <section>
+        <div class="tabs">
+            <nav>
+                <ul>
+                    <li><a href="#section-bar-1"><span>Personal</span></a></li>
+                    <li><a href="#section-bar-2"><span>All</span></a></li>
+                </ul>
+            </nav>
+            <div class="content-wrap">
+                <section id="section-bar-1">
+                    <div>
+                        <table border="0" id="tab1">
+                            <tr>
+                                <th>Id</th>
+                                <th>Time</th>
+                                <th>Title</th>
+                                <th>read</th>
+                                <th>unread</th>
+                                <th>operator</th>
+                            </tr>
+
+                        </table>
+                    </div>
+                </section>
+                <section id="section-bar-2">
+                    <div class="grade">
+                        <nav>
+                            <button name="12"><span>12</span></button>
+                            <button name="13"><span>13</span></button>
+                            <button name="14"><span>14</span></button>
+                            <button name="15"><span>15</span></button>
+                            <button name="16"><span>16</span></button>
+                        </nav>
+                        <div id="grade-section">
+                            <table border="0" id="tab2">
+                                <tr>
+                                    <th>number</th>
+                                    <th>name</th>
+                                    <th>readers</th>
+                                    <th>operator</th>
+                                </tr>
+                                <tr>
+                                    <td>1234</td>
+                                    <td>2017-3-24</td>
+                                    <td><a href="">theme</a></td>
+                                    <td>查看详情</td>
+                                </tr>
+                                <tr>
+                                    <td>1234</td>
+                                    <td>time</td>
+                                    <td><a href="">www.***.comwww.***.comwww.***.comwww.***.comwww.***.comwww.***.comwww.***.comwww.***.comwww.***.comwww.***.com</a></td>
+                                    <td>查看详情</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /content -->
+                </section>
+            </div>
+            <!-- /content -->
+        </div>
+        <!-- /tabs -->
+    </section>
+    <script src="../../static/js/tabs.js"></script>
+    <script src="../../static/js/jquery-3.1.1.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        new CBNTabs(document.querySelector('.tabs'));
+        $.ajax({
+            url: '/auth/view/handler',
+            type: 'GET',
+            dataType: 'JSON',
+            data: {
+                quest: "activity"
+            },
+            success: function(data) {
+                if (data.status === 0) {
+                    res = data.activities;
+                    for (var i = 0; i < res.length; i++) {
+                        $('#tab1').append("<tr><td>" + res[i].nid + "</td><td>" + res[i].time + "</td><td><a href=\"" + res[i].url + "\">" + res[i].title + "</a></td><td>" + res[i].read + "</td><td>" + res[i].unread + "</td><td><button class=\"detail\" value=\"" + res[i].nid + "\">详情</button></td></tr>")
+                    }
+                }
+            }
+        });
+        $('#tab1').delegate('.detail', 'click', function(e) {
+            var evt = e ? e : window.event,
+                target = evt.target || evt.srcElement;
+            $.ajax({
+                url: '/auth/view/readinfo',
+                type: 'GET',
+                dataType: 'JSON',
+                data: {
+                    quest: "stus",
+                    nid: target.value
+                },
+                success: function(data) {
+                    if (data.status === 0) {
+                        res = data.stus;
+                        $('#read').empty();
+                        for(var i = 0; i < res.read_list.length;i++ ){
+                            $('#read').append(res.read_list[i].name+"、 ");
+                        }
+                        $('#unread').empty();
+                        for(var i = 0; i < res.unread_list.length;i++ ){
+                            $('#unread').append(res.unread_list[i].name+"、 ");
+                        }
+                    }
+                }
+            });
+
+            $("<div id='bg'></div>").click(function() {
+                hideDiv("person");
+            }).appendTo("body").fadeIn(200);
+
+            $('#person').show().animate({
+                opacity: "show"
+            }, "slow");
+
+            function hideDiv(id) {
+                $("#bg").remove();
+                $("#" + id).css({
+                    "display": "none"
+                })
+            }
+        })
+    });
+    </script>
+</body>
+
+</html>
