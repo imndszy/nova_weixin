@@ -157,8 +157,11 @@ def __handle_event(msg):
             return content
 
 
-def __handle_mes_key(msg): # 未读消息处理
-    stuid = get_stuid(msg['FromUserName'])
+def __handle_mes_key(msg, count=False, stu=False): # 未读消息处理
+    if stu:
+        stuid = msg
+    else:
+        stuid = get_stuid(msg['FromUserName'])
 
     send_info = select('select nid,stuids from noteindex')
     if not send_info:
@@ -180,14 +183,25 @@ def __handle_mes_key(msg): # 未读消息处理
     if not not_read:
         return ''
 
-    send_content = select('select nid,title,picurl,url from notecontent order by nid desc limit 50')
+    send_content = select('select nid,title,picurl,url from notecontent order by nid desc limit 100')
+
+    if count:
+        temp = []
+        for x in send_content:
+            if x['nid'] in not_read:
+                temp.append({'title': x['title'], 'url': x['url']})
+        return {'read': len(read),
+                'not_read': len(not_read),
+                'not_read_content': temp}
+
 
     def transfer_url(nid):
         url = ADDRESS + '/code/' + str(nid)
         post_url = WxApiUrl.oauth2_new_page.format(appid=APP_ID, redirect_url=url)
         return post_url
 
-    send_content = [(x['title'],'',x['picurl'],transfer_url(x['nid'])) for x in send_content if x['nid'] in not_read]
+    send_content = [(x['title'], '', x['picurl'], transfer_url(x['nid'])) for x in send_content if x['nid'] in not_read]
+
     if len(send_content) == 0:
         head_str = news_rep_front % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())), 1)
         middle_str = news_rep_middle % ('当前没有未读消息哦～', '',
@@ -214,3 +228,7 @@ def __res_text_msg(msg, content):
     response = make_response(text_rep % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())), content))
     response.content_type = 'application/xml'
     return response
+
+
+def read_info(stuid):
+    return __handle_mes_key(str(stuid), True, True)

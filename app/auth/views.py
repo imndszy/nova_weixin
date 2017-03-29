@@ -2,7 +2,6 @@
 # Author: shizhenyu96@gamil.com
 # github: https://github.com/imndszy
 import time
-import json
 from flask import (render_template, redirect, request,
                    url_for, flash, session, jsonify)
 
@@ -16,6 +15,7 @@ from nova_weixin.app.auth.noteprocess import (note_index,
                                               get_activity_info)
 from nova_weixin.packages.nova_admin import send
 from nova_weixin.app.config import USER_EMAIL, USER_PASSWD
+from nova_weixin.app.weixin.msg_handler import read_info
 
 
 @auth.route('/', methods=['GET', 'POST'])
@@ -142,7 +142,7 @@ def view_read_info():
     if session.get('login'):
         data = request.args
         if data.get('quest') == 'stus':
-            if(data.get('nid', None)):
+            if data.get('nid', None):
                  stus = get_read_info(data.get('nid'))
                  return jsonify({'status': 0, 'stus': stus})
             else:
@@ -150,14 +150,42 @@ def view_read_info():
     return redirect(url_for('auth.login'))
 
 
-@auth.route('test')
+@auth.route('/test')
 def test():
     return jsonify(get_read_info(nid=213))
 
 
 @auth.route('/view/stus')
 def view_stus():
-    pass
+    if session.get('login'):
+        data = request.args
+        if data.get('quest') == 'grades':
+            return jsonify({'status': 0, 'classes': classes()})
+        else:
+            return redirect(url_for('auth.index'))
+    return redirect(url_for('auth.login'))
+
+
+@auth.route('/view/stus/class_readinfo')
+def handle_classes():
+    if session.get('login'):
+        data = request.args
+        if data.get('quest') == 'classes':
+            if data.get('classid'):
+                return jsonify(stu([data.get('classid')]))
+        else:
+            return redirect(url_for('auth.index'))
+    return redirect(url_for('auth.login'))
+
+
+@auth.route('/view/stus/personal')
+def handle_person():
+    if session.get('login'):
+        data = request.args
+        if data.get('quest') == 'person' and data.get('stuid'):
+            return jsonify(read_info(data.get('stuid')))
+        return redirect(url_for('auth.index'))
+    return redirect(url_for('auth.login'))
 
 
 @auth.route('/logout')
