@@ -76,7 +76,7 @@ def get_read_info(nid, simple=False):
 
 
 def get_activity_info():
-    activities = select('select nid,title,url from notecontent where nid<1463993178 order by nid desc limit 30')
+    activities = select('select nid,title,url from notecontent order by nid desc limit 30')
     for i in activities:
         i['time'] = __transfer_time(i['nid'])
         read_info = get_read_info(i['nid'], simple=True)
