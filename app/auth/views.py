@@ -66,6 +66,7 @@ def choose_class():
                 class_list = [i for i in class_dict_all.keys()
                               if i not in class_list]
             session['classes'] = class_list
+            print session['classes']
             return redirect(url_for('auth.choose_stu'))
         return render_template('auth/class.html', class_dict=class_dict_all)
     return redirect(url_for('auth.login'))

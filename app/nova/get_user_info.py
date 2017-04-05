@@ -56,7 +56,9 @@ class Student(object):
                 your_gpa['max'] = max_rank
                 if self.gpa_rank != max_rank:
                     next_gpa = select_one('select *from creditcur where Class = ? and rank= ?', self.Class, self.gpa_rank_next)
-
+                    if next_gpa is None:
+                        self.gpa_rank_next += 1
+                        next_gpa = select_one('select *from creditcur where Class = ? and rank= ?', self.Class, self.gpa_rank_next)
                     your_gpa['next'] = next_gpa['gpa']
                 else:
                     your_gpa['nonnext'] = 1   # 排名是否最后的标志位
@@ -81,15 +83,15 @@ class Student(object):
             return "您尚未绑定学号！"
 
     def get_recom(self):
-        your_recom = self.get_gpa()
+        your_recom = self.__get_gpa(True)
         if isinstance(your_recom, dict):
-            maxRank = select_int('select MAX(rank) from creditcur where class=?',self.Class)
+            maxRank = select_int('select MAX(rank) from credit where class=?',self.Class)
 
             your_recom['max_rank'] = maxRank
             self.stu_amount = your_recom['max_rank']
             if self.stu_amount:
                 percent = self.stu_amount / 5
-                result = select_int('select gpa from creditcur where class=? and rank=?',self.Class, percent)
+                result = select_int('select gpa from credit where class=? and rank=?',self.Class, percent)
 
                 your_recom['twenty_per'] = result
         return your_recom
@@ -123,6 +125,106 @@ class Student(object):
             return tutor_info
         else:
             return "您尚未绑定学号！"
+
+    def __get_gpa(self, recom=False):
+        if not recom:
+            if self.stuid != -1:
+                your_gpa = select_one('select *from creditcur where StuID = ?', self.stuid)
+
+                if not your_gpa:
+                    return "当前没有您的GPA信息!!"
+                if your_gpa.get('gpa'):
+                    self.gpa = round(your_gpa['gpa'], 4)
+                    self.Class = your_gpa['class']
+                    self.gpa_rank = your_gpa['rank']
+                    self.gpa_rank_next = self.gpa_rank + 1
+                    self.gpa_rank_prev = self.gpa_rank - 1
+
+                    max_rank = select_int('select max(rank) as max_rank from creditcur where class = ?', self.Class)
+
+                    your_gpa['max'] = max_rank
+                    if self.gpa_rank != max_rank:
+                        next_gpa = select_one('select *from creditcur where Class = ? and rank= ?', self.Class,
+                                              self.gpa_rank_next)
+                        if next_gpa is None:
+                            self.gpa_rank_next += 1
+                            next_gpa = select_one('select *from creditcur where Class = ? and rank= ?', self.Class,
+                                                  self.gpa_rank_next)
+                        your_gpa['next'] = next_gpa['gpa']
+                    else:
+                        your_gpa['nonnext'] = 1  # 排名是否最后的标志位
+                        your_gpa['next'] = '悲剧…后面没有了'
+
+                    if self.gpa_rank_prev != 0:
+                        prev_gpa = select_one('select *from creditcur where Class = ? and rank= ?', self.Class,
+                                              self.gpa_rank_prev)
+                        if prev_gpa is None:
+                            self.gpa_rank_prev -= 1
+                            prev_gpa = select_one('select *from creditcur where Class = ? and rank= ?', self.Class,
+                                                  self.gpa_rank_prev)
+                        your_gpa['prev'] = prev_gpa['gpa']
+                    else:
+                        your_gpa['nonprev'] = 1
+                        your_gpa['prev'] = '很强！前面木有了'
+
+                    first_gpa = select_one('select *from creditcur where Class = ? and rank= ?', self.Class, 1)
+
+                    your_gpa['first'] = first_gpa['gpa']
+
+                    return your_gpa
+                else:
+                    return '您没有记录在案的GPA数据！'
+            else:
+                return "您尚未绑定学号！"
+        else:
+            if self.stuid != -1:
+                your_gpa = select_one('select *from credit where StuID = ?', self.stuid)
+
+                if not your_gpa:
+                    return "当前没有您的GPA信息!!"
+                if your_gpa.get('gpa'):
+                    self.gpa = round(your_gpa['gpa'], 4)
+                    self.Class = your_gpa['class']
+                    self.gpa_rank = your_gpa['rank']
+                    self.gpa_rank_next = self.gpa_rank + 1
+                    self.gpa_rank_prev = self.gpa_rank - 1
+
+                    max_rank = select_int('select max(rank) as max_rank from credit where class = ?', self.Class)
+
+                    your_gpa['max'] = max_rank
+                    if self.gpa_rank != max_rank:
+                        next_gpa = select_one('select *from credit where Class = ? and rank= ?', self.Class,
+                                              self.gpa_rank_next)
+                        if next_gpa is None:
+                            self.gpa_rank_next += 1
+                            next_gpa = select_one('select *from creditcur where Class = ? and rank= ?', self.Class,
+                                                  self.gpa_rank_next)
+                        your_gpa['next'] = next_gpa['gpa']
+                    else:
+                        your_gpa['nonnext'] = 1  # 排名是否最后的标志位
+                        your_gpa['next'] = '悲剧…后面没有了'
+
+                    if self.gpa_rank_prev != 0:
+                        prev_gpa = select_one('select *from credit where Class = ? and rank= ?', self.Class,
+                                              self.gpa_rank_prev)
+                        if prev_gpa is None :
+                            self.gpa_rank_prev -= 1
+                            prev_gpa = select_one('select *from credit where Class = ? and rank= ?', self.Class,
+                                                  self.gpa_rank_prev)
+                        your_gpa['prev'] = prev_gpa['gpa']
+                    else:
+                        your_gpa['nonprev'] = 1
+                        your_gpa['prev'] = '很强！前面木有了'
+
+                    first_gpa = select_one('select *from credit where Class = ? and rank= ?', self.Class, 1)
+
+                    your_gpa['first'] = first_gpa['gpa']
+
+                    return your_gpa
+                else:
+                    return '您没有记录在案的GPA数据！'
+            else:
+                return "您尚未绑定学号！"
 
 
 def get_stuid(openid):

@@ -51,6 +51,7 @@ def get_read_info(nid, simple=False):
         stu_send_list = send_stus['stuids'].split(',')[:-1]
     else:
         stu_send_list = [send_stus['stuids']]
+    stu_send_list = list(set(stu_send_list))
     if simple:
         read_number = select_int('select readpop from noteresponse where nid=?', nid)
         if read_number is None:
