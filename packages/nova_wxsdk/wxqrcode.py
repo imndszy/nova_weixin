@@ -44,7 +44,7 @@ def create_ticket(action_name, acc_token, scene_id=0, expire_seconds=604800):
 
 def get_qrcode_url(ticket):
     tic = 'ticket'
-    dic = {tic: ticket}
+    dic = {tic: ticket.get('ticket')}
     parameter = urlencode(dic)
     return "https://mp.weixin.qq.com/cgi-bin/showqrcode?%s" % parameter
 

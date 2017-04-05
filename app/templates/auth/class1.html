@@ -14,7 +14,7 @@
     <div class="page-header">
         <h1>choose classes first</h1>
     </div>
-    <form method="post">
+    <form method="post" action="">
         <button value="0" id="choose_all"> 全选/全不选</button>
         <br/>
         <input type="checkbox" name="checked" value="111111"> 山西 {% for i in class_dict %}
@@ -61,7 +61,7 @@
                 btn.value = "0";
             }
             var evt = e ? e : window.event;
-            EventUtil.preventDefault(e);
+            e.preventDefault();
         })
     }
     </script>

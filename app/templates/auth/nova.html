@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>科明后台</title>
     <link rel="stylesheet" href="../../static/css/nova.css">
     <style>
     table {
@@ -97,9 +97,24 @@
         top: 100px;
         left: 50%;
         transform: translate(-50%, 0);
-        width: 700px;
-        height: 300px;
+        width: 960px;
+        height: 440px;
+        border-radius: 5px;
         background-color: #fff
+    }
+    #person2 {
+        z-index: 9999999;
+        display: none;
+        position: fixed;
+        top: 100px;
+        left: 50%;
+        transform: translate(-50%, 0);
+        width: 840px;
+        height: 440px;
+        border-radius: 5px;
+        padding:20px;
+        background-color: #fff;
+        overflow:auto
     }
     
     #person h2 {
@@ -109,23 +124,40 @@
     
     #read {
         float: left;
-        width: 345px;
-        height: 300px;
+        width: 450px;
+        height: 400px;
         margin-right: 10px;
+        padding: 10px;
+        border-right: 1px solid #eee;
         overflow: auto
+    }
+    
+    #read span {
+        margin: 5px 10px;
+        display: block;
+        width: 190px;
+        text-align: center;
+        float: left;
     }
     
     #unread {
         float: left;
-        width: 345px;
-        height: 300px;
+        width: 450px;
+        height: 400px;
+        padding: 10px;
         overflow: auto
     }
-    
+    #unread span {
+        margin: 5px 10px;
+        display: block;
+        width: 190px;
+        text-align: center;
+        float: left;
+    }
     #bg {
         width: 100%;
         height: 100%;
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         /*弹出窗口后，添加遮罩层，采用此CSS，将该层置于弹出DIV和页面层之间
@@ -137,22 +169,38 @@
         opacity: .70;
         filter: alpha(opacity=70);
     }
+    
+    nav {
+        overflow: hidden
+    }
+    
+    select {
+        min-width: 150px;
+        height: 40px;
+        float: left;
+    }
+    
+    select option {
+        height: 15px;
+        padding: 10px;
+    }
     </style>
 </head>
 
 <body>
     <div id="person">
-        <div id="read">
-            <h2>read:</h2></div>
-        <div id="unread">
-            <h2>unread:</h2></div>
+        <div id="read"></div>
+        <div id="unread"></div>
+    </div>
+    <div id="person2">
+        
     </div>
     <section>
         <div class="tabs">
             <nav>
                 <ul>
-                    <li><a href="#section-bar-1"><span>Personal</span></a></li>
-                    <li><a href="#section-bar-2"><span>All</span></a></li>
+                    <li><a href="#section-bar-1"><span>全部统计</span></a></li>
+                    <li><a href="#section-bar-2"><span>个人统计</span></a></li>
                 </ul>
             </nav>
             <div class="content-wrap">
@@ -160,46 +208,31 @@
                     <div>
                         <table border="0" id="tab1">
                             <tr>
-                                <th>Id</th>
-                                <th>Time</th>
-                                <th>Title</th>
-                                <th>read</th>
-                                <th>unread</th>
-                                <th>operator</th>
+                                <th>编号</th>
+                                <th>发表时间</th>
+                                <th>标题</th>
+                                <th>已读人数</th>
+                                <th>未读人数</th>
+                                <th>操作</th>
                             </tr>
-
                         </table>
                     </div>
                 </section>
                 <section id="section-bar-2">
                     <div class="grade">
                         <nav>
-                            <button name="12"><span>12</span></button>
-                            <button name="13"><span>13</span></button>
-                            <button name="14"><span>14</span></button>
-                            <button name="15"><span>15</span></button>
-                            <button name="16"><span>16</span></button>
+                            <select name="" id="classes">
+                                <option value="0">班级选择</option>
+                            </select>
                         </nav>
                         <div id="grade-section">
                             <table border="0" id="tab2">
                                 <tr>
-                                    <th>number</th>
-                                    <th>name</th>
-                                    <th>readers</th>
-                                    <th>operator</th>
+                                    <th>学号</th>
+                                    <th>姓名</th>
+                                    <th>查看详情</th>
                                 </tr>
-                                <tr>
-                                    <td>1234</td>
-                                    <td>2017-3-24</td>
-                                    <td><a href="">theme</a></td>
-                                    <td>查看详情</td>
-                                </tr>
-                                <tr>
-                                    <td>1234</td>
-                                    <td>time</td>
-                                    <td><a href="">www.***.comwww.***.comwww.***.comwww.***.comwww.***.comwww.***.comwww.***.comwww.***.comwww.***.comwww.***.com</a></td>
-                                    <td>查看详情</td>
-                                </tr>
+
                             </table>
                         </div>
                     </div>
@@ -224,13 +257,14 @@
             },
             success: function(data) {
                 if (data.status === 0) {
-                    res = data.activities;
+                    var res = data.activities;
                     for (var i = 0; i < res.length; i++) {
                         $('#tab1').append("<tr><td>" + res[i].nid + "</td><td>" + res[i].time + "</td><td><a href=\"" + res[i].url + "\">" + res[i].title + "</a></td><td>" + res[i].read + "</td><td>" + res[i].unread + "</td><td><button class=\"detail\" value=\"" + res[i].nid + "\">详情</button></td></tr>")
                     }
                 }
             }
         });
+
         $('#tab1').delegate('.detail', 'click', function(e) {
             var evt = e ? e : window.event,
                 target = evt.target || evt.srcElement;
@@ -244,14 +278,16 @@
                 },
                 success: function(data) {
                     if (data.status === 0) {
-                        res = data.stus;
+                        var res = data.stus;
                         $('#read').empty();
-                        for(var i = 0; i < res.read_list.length;i++ ){
-                            $('#read').append(res.read_list[i].name+"、 ");
+                        $('#read').append("<h2>已读:</h2>");
+                        for (var i = 0; i < res.read_list.length; i++) {
+                            $('#read').append("<span>" + res.read_list[i].name + " " + res.read_list[i].stuid + "</span>");
                         }
                         $('#unread').empty();
-                        for(var i = 0; i < res.unread_list.length;i++ ){
-                            $('#unread').append(res.unread_list[i].name+"、 ");
+                        $('#unread').append("<h2>未读:</h2>");
+                        for (var i = 0; i < res.unread_list.length; i++) {
+                            $('#unread').append("<span>" + res.unread_list[i].name + " " + res.unread_list[i].stuid + "</span>");
                         }
                     }
                 }
@@ -262,6 +298,75 @@
             }).appendTo("body").fadeIn(200);
 
             $('#person').show().animate({
+                opacity: "show"
+            }, "slow");
+
+            function hideDiv(id) {
+                $("#bg").remove();
+                $("#" + id).css({
+                    "display": "none"
+                })
+            }
+        });
+
+        var currentGrade;
+        $.ajax({
+            url: '/auth/view/stus?quest=grades',
+            type: 'GET',
+            dataType: 'JSON',
+            success: function(data) {
+                if (data.status === 0) {
+                    var res = data.classes;
+                    for (var key in res) {
+                        $('#classes').append("<option value=\"" + key + "\">" + res[key] + "</option>");
+                    }
+                }
+            }
+        });
+
+        $('#classes').change(function() {
+            console.log(this.value);
+            var cur = this.value;
+            if (cur !== "0") {
+                $.ajax({
+                    url: '/auth/view/stus/class_readinfo?quest=classes&classid=' + cur,
+                    type: 'GET',
+                    dataType: 'JSON',
+                    success: function(data) {
+                        var res = data[cur];
+                        $('#tab2 tr').not(":first").remove();
+
+                        for (var i = 0; i < res.length; i++) {
+                            $('#tab2').append("<tr><td>" + res[i][0] + "</td><td>" + res[i][1] + "</td><td><button class=\"perdetail\" value=\"" + res[i][0] + "\">详情</button></td</tr>")
+                        }
+                    }
+                })
+            }
+        });
+
+        $('#tab2').delegate('.perdetail', 'click', function(e) {
+            var evt = e ? e : window.event,
+                target = evt.target || evt.srcElement;
+            $.ajax({
+                url: '/auth/view/stus/personal?quest=person&stuid=' + target.value,
+                type: 'GET',
+                dataType: 'JSON',
+                success: function(data) {
+                    $('#person2').empty();
+                    $('#person2').append("<h2>"+ target.value +"</h2><span>Read: " + data.read + "</span><br><span>Unread: " + data.not_read + "</span><br><span>以下为未读列表:<br></span>");
+                    var res = data.not_read_content;
+                    for(var i = 0 ; i < res.length; i++){
+                        $('#person2').append("<a href=\"" + res[i].url + "\">" + res[i].title + "</a><br>");
+                    }
+
+                }
+            });
+
+            $("<div id='bg'></div>").click(function() {
+                hideDiv("person2");
+            }).appendTo("body").fadeIn(200);
+
+            $('#person2').show().animate({
                 opacity: "show"
             }, "slow");
 

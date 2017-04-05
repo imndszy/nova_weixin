@@ -45,6 +45,7 @@ def get_qrcode():
         acc_token = get_token(appid=APP_ID, appsecret=SECRET)
         ticket = create_ticket("QR_SCENE", acc_token=acc_token.get('acc_token'), scene_id=int(session['stuid']))
         url = get_qrcode_url(ticket)
+        print url
         return redirect(url)
     return render_template('404.html')
 

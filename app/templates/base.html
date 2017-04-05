@@ -24,6 +24,7 @@
             <ul class="nav navbar-nav">
                 <li><a href="{{ url_for('auth.article') }}">消息发布</a></li>
                 <li><a href="{{ url_for('auth.view_read') }}">信息统计</a></li>
+                <li><a href="{{ url_for('bind.register') }}">学生绑定</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if session.get('login') %}
