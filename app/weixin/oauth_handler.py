@@ -107,6 +107,7 @@ def history_articles(stuid):
     article_dict['articles'] = dict()
     for x in nids:
         re = select_one('select nid,title,url from notecontent where nid =?', x)
-
+        if re is None:
+            continue
         articles.append([re['nid'], re['title'], re['url']])
     return articles
