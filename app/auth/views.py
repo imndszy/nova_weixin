@@ -66,7 +66,6 @@ def choose_class():
                 class_list = [i for i in class_dict_all.keys()
                               if i not in class_list]
             session['classes'] = class_list
-            print session['classes']
             return redirect(url_for('auth.choose_stu'))
         return render_template('auth/class.html', class_dict=class_dict_all)
     return redirect(url_for('auth.login'))
@@ -84,6 +83,7 @@ def choose_stu():
                 stu_list = request.form.getlist('checked')
 
                 class_list = session['classes']
+                print class_list
                 chosen_class_stu = []  # 获取除全选外选中班级的所有学生
                 for m in stu(class_list).values():
                     for n in m:

@@ -36,6 +36,7 @@ class SendTemplateMsg(threading.Thread):
         if result.get('errcode') != 0:
             SendTemplateMsg.send_lock.acquire()
             SendTemplateMsg.error_cnt += 1
+            SendTemplateMsg.success_stus.append(self.stuid)
             send_log.warn('send msg error {stuid}, errmsg: {errmsg}'.format(stuid=str(self.stuid)+' '+str(self.openid), errmsg=result.get('errmsg')))
             SendTemplateMsg.send_lock.release()
         else:
@@ -72,6 +73,9 @@ def send(_title, nid, stu_list):
                 send_log.warn('send msg error {stuid}, errmsg: can not get openid'.format(stuid=i['stuid']))
 
     threads = []
+
+    SendTemplateMsg.success_stus=[]   # 多线程情况下没有这条语句会出bug
+
     for stu in openids:
         post = SendTemplateMsg(nid, _title, stu['stuid'], stu['openid'], acc_token['acc_token'])
         threads.append(post)
