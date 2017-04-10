@@ -51,8 +51,8 @@ from . import CommunicateWithApi
 def send_common_template_msg(mes_url, title='这里是标题', touser='',template_id='', acc_token=''):
     if touser == -1:
         return {'errcode': 1, 'errmsg': 'unknown openid --send_common_template_msg'}
-    # if os.environ.get('config_flask') == 'development' or os.environ.get('config_flask') == 'default':
-    #     return {'errcode': 0, 'errmsg': 'send_common_template_msg tested ok'}
+    if os.environ.get('config_flask') == 'development' or os.environ.get('config_flask') == 'default':
+        return {'errcode': 0, 'errmsg': 'send_common_template_msg tested ok'}
 
     ISOTIMEFORMAT = '%Y-%m-%d %X'
     now = time.strftime(ISOTIMEFORMAT, time.localtime())
