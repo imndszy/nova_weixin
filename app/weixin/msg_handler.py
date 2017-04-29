@@ -34,7 +34,7 @@ def __save_into_database(content, openid):
 def handle_msg(msg):
     if msg['MsgType'] == 'text':
         try:
-            __save_into_database(msg['Content'], msg['FromUser'])
+            __save_into_database(msg['Content'], msg['FromUserName'])
         except:
             pass
         finally:
@@ -210,7 +210,9 @@ def __handle_mes_key(msg, count=False, stu=False): # 未读消息处理
         return __res_news_msg(head_str+middle_str+news_rep_back)
 
     middle_str=''
-    for i in send_content:
+
+    # 只返回前8条未读消息
+    for i in send_content[:8]:
         middle_str += news_rep_middle % i
 
     head_str = news_rep_front % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())),len(send_content))
