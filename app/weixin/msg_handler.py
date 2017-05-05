@@ -200,7 +200,7 @@ def __handle_mes_key(msg, count=False, stu=False): # 未读消息处理
         post_url = WxApiUrl.oauth2_new_page.format(appid=APP_ID, redirect_url=url)
         return post_url
 
-    send_content = [(x['title'], '', x['picurl'], transfer_url(x['nid'])) for x in send_content if x['nid'] in not_read]
+    send_content = [(x['title'], '', x['picurl'], transfer_url(x['nid'])) for x in send_content if x['nid'] in not_read][:8]
 
     if len(send_content) == 0:
         head_str = news_rep_front % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())), 1)
@@ -212,7 +212,7 @@ def __handle_mes_key(msg, count=False, stu=False): # 未读消息处理
     middle_str=''
 
     # 只返回前8条未读消息
-    for i in send_content[:8]:
+    for i in send_content:
         middle_str += news_rep_middle % i
 
     head_str = news_rep_front % (msg['FromUserName'], msg['ToUserName'], str(int(time.time())),len(send_content))
